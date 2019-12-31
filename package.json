@@ -27,9 +27,6 @@
       "cordova-plugin-vibration": {},
       "cordova.plugins.diagnostic": {
         "ANDROID_SUPPORT_VERSION": "28.+"
-      },
-      "cordova-plugin-request-location-accuracy": {
-        "PLAY_SERVICES_LOCATION_VERSION": "16.+"
       }
     },
     "platforms": [
@@ -42,7 +39,6 @@
     "cordova-android": "^8.1.0",
     "cordova-browser": "^6.0.0",
     "cordova-ios": "^5.1.1",
-    "cordova-plugin-request-location-accuracy": "^2.3.0",
     "cordova.plugins.diagnostic": "^5.0.1"
   }
 }

@@ -457,14 +457,6 @@ cordova.define('cordova/plugin_list', function(require, exports, module) {
       "merges": [
         "cordova.plugins.diagnostic.external_storage"
       ]
-    },
-    {
-      "id": "cordova-plugin-request-location-accuracy.RequestLocationAccuracy",
-      "file": "plugins/cordova-plugin-request-location-accuracy/www/android/RequestLocationAccuracy.js",
-      "pluginId": "cordova-plugin-request-location-accuracy",
-      "clobbers": [
-        "cordova.plugins.locationAccuracy"
-      ]
     }
   ];
   module.exports.metadata = {
@@ -479,8 +471,6 @@ cordova.define('cordova/plugin_list', function(require, exports, module) {
     "cordova-plugin-media-capture": "1.4.3",
     "cordova-plugin-network-information": "1.3.4",
     "cordova-plugin-vibration": "2.1.6",
-    "cordova-plugin-whitelist": "1.3.4",
-    "cordova.plugins.diagnostic": "5.0.1",
-    "cordova-plugin-request-location-accuracy": "2.3.0"
+    "cordova.plugins.diagnostic": "5.0.1"
   };
 });

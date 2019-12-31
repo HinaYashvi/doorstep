@@ -97,9 +97,6 @@
         <param name="ios-package" value="Diagnostic_Motion" />
         <param name="onload" value="true" />
     </feature>
-    <feature name="RequestLocationAccuracy">
-        <param name="ios-package" value="RequestLocationAccuracy" />
-    </feature>
     <name>Doorstep</name>
     <description>
         Hello World sample application that responds to the deviceready event.

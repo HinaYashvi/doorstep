@@ -429,16 +429,57 @@ function customer_exists(mobile_no){
   } 
 }
 // -------------------------------------- DATA NAME : CUSTOMER DASHBOARD --------------------------------- //
-function onDeviceReady(){
-  openLOC();
+function onDeviceReady(){   
+  openLOC();  
+}
+function openLOC(){
+  alert("openLOC");
+  cordova.plugins.diagnostic.isLocationEnabled(function(enabled){ //isLocationEnabled
+  alert("GPS location is " + (enabled ? "enabled" : "disabled"));
+      if(!enabled){
+        alert("Enabled GPS manually");
+        cordova.plugins.diagnostic.switchToLocationSettings(onRequestSuccess,onRequestFailure);
+         //mainView.loadPage("current-location.html");
+      }else{
+        alert("Location service is ON");
+        navigator.geolocation.getCurrentPosition(onSuccess, onError,{ maximumAge: 3000, timeout: 5000, enableHighAccuracy: true });
+        //app.router.navigate("/current-location/");
+      }
+  }, function(error){
+    console.error("The following error occurred: "+error);
+  });   
+}
+function onSuccess(position){ 
+    alert("in function");
+    alert('Latitude: '          + position.coords.latitude          + '\n' +
+          'Longitude: '         + position.coords.longitude         + '\n' +
+          'Altitude: '          + position.coords.altitude          + '\n' +
+          'Accuracy: '          + position.coords.accuracy          + '\n' +
+          'Altitude Accuracy: ' + position.coords.altitudeAccuracy  + '\n' +
+          'Heading: '           + position.coords.heading           + '\n' +
+          'Speed: '             + position.coords.speed             + '\n' +
+          'Timestamp: '         + position.timestamp                + '\n');
+    var longitude = position.coords.longitude;
+    var latitude = position.coords.latitude;
+    cordova.plugins.locationAccuracy.request();
+    var LatLong = new google.maps.LatLng(latitude,longitude);
+    alert(LatLong);
+    var mapOptions = {
+        center : LatLong,
+        zoom : 17,
+        mapTypeId : google.maps.MapTypeId.ROADMAP
+    };
+    var map = new google.maps.Map(document.getElementById("map-canvas"), mapOptions);
+}
+function onError(error){
+  alert('code: '    + error.code    + '\n' + 'message: ' + error.message + '\n');
 }
 $$(document).on('page:init', '.page[data-name="customer_dash"]', function (page) {  
-  checkConnection();
-  
-  //navigator.geolocation.getCurrentPosition(onSuccess, onError);
+  checkConnection();  
 
+  //navigator.geolocation.getCurrentPosition(onSuccess, onError);
 });
-function openLOC(){
+/*function openLOC(){
   alert("openLOC"); 
 //alert(cordova.plugins.diagnostic.enableDebug());
 //cordova.plugins.diagnostic.enableDebug();
@@ -491,7 +532,7 @@ function onSuccess(position){
 }
 function onError(error){
   alert('code: '    + error.code    + '\n' + 'message: ' + error.message + '\n');
-}
+}*/
 /*var onSuccess = function(position) {
         alert('Latitude: '          + position.coords.latitude          + '\n' +
               'Longitude: '         + position.coords.longitude         + '\n' +
