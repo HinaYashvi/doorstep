@@ -7,44 +7,6 @@
     "files": {}
   },
   "installed_plugins": {
-    "cordova-plugin-battery-status": {
-      "PACKAGE_NAME": "com.phonegap.doorstep"
-    },
-    "cordova-plugin-camera": {
-      "PACKAGE_NAME": "com.phonegap.doorstep"
-    },
-    "cordova-plugin-device": {
-      "PACKAGE_NAME": "com.phonegap.doorstep"
-    },
-    "cordova-plugin-dialogs": {
-      "PACKAGE_NAME": "com.phonegap.doorstep"
-    },
-    "cordova-plugin-globalization": {
-      "PACKAGE_NAME": "com.phonegap.doorstep"
-    },
-    "cordova-plugin-inappbrowser": {
-      "PACKAGE_NAME": "com.phonegap.doorstep"
-    },
-    "cordova-plugin-media-capture": {
-      "PACKAGE_NAME": "com.phonegap.doorstep"
-    },
-    "cordova-plugin-network-information": {
-      "PACKAGE_NAME": "com.phonegap.doorstep"
-    },
-    "cordova-plugin-vibration": {
-      "PACKAGE_NAME": "com.phonegap.doorstep"
-    },
-    "cordova-plugin-geolocation": {
-      "PACKAGE_NAME": "com.phonegap.doorstep"
-    },
-    "cordova.plugins.diagnostic": {
-      "ANDROID_SUPPORT_VERSION": "28.+",
-      "PACKAGE_NAME": "com.phonegap.doorstep"
-    },
-    "cordova-plugin-request-location-accuracy": {
-      "PLAY_SERVICES_LOCATION_VERSION": "16.+",
-      "PACKAGE_NAME": "com.phonegap.doorstep"
-    },
     "cordova-android-play-services-gradle-release": {
       "PLAY-SERVICES-ADS": "18.0.0",
       "PLAY-SERVICES-ADS-IDENTIFIER": "17.0.0",
@@ -98,6 +60,44 @@
       "PLAY-SERVICES-VISION-IMAGE-LABEL": "18.0.0",
       "PLAY-SERVICES-WALLET": "17.0.0",
       "PLAY-SERVICES-WEARABLE": "17.0.0",
+      "PACKAGE_NAME": "com.phonegap.doorstep"
+    },
+    "cordova-plugin-battery-status": {
+      "PACKAGE_NAME": "com.phonegap.doorstep"
+    },
+    "cordova-plugin-camera": {
+      "PACKAGE_NAME": "com.phonegap.doorstep"
+    },
+    "cordova-plugin-device": {
+      "PACKAGE_NAME": "com.phonegap.doorstep"
+    },
+    "cordova-plugin-dialogs": {
+      "PACKAGE_NAME": "com.phonegap.doorstep"
+    },
+    "cordova-plugin-geolocation": {
+      "PACKAGE_NAME": "com.phonegap.doorstep"
+    },
+    "cordova-plugin-globalization": {
+      "PACKAGE_NAME": "com.phonegap.doorstep"
+    },
+    "cordova-plugin-inappbrowser": {
+      "PACKAGE_NAME": "com.phonegap.doorstep"
+    },
+    "cordova-plugin-media-capture": {
+      "PACKAGE_NAME": "com.phonegap.doorstep"
+    },
+    "cordova-plugin-network-information": {
+      "PACKAGE_NAME": "com.phonegap.doorstep"
+    },
+    "cordova-plugin-request-location-accuracy": {
+      "PLAY_SERVICES_LOCATION_VERSION": "16.+",
+      "PACKAGE_NAME": "com.phonegap.doorstep"
+    },
+    "cordova-plugin-vibration": {
+      "PACKAGE_NAME": "com.phonegap.doorstep"
+    },
+    "cordova.plugins.diagnostic": {
+      "ANDROID_SUPPORT_VERSION": "28.+",
       "PACKAGE_NAME": "com.phonegap.doorstep"
     }
   },
