@@ -97,7 +97,6 @@
       "PACKAGE_NAME": "com.phonegap.doorstep"
     },
     "cordova.plugins.diagnostic": {
-      "ANDROID_SUPPORT_VERSION": "28.+",
       "PACKAGE_NAME": "com.phonegap.doorstep"
     }
   },

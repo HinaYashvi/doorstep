@@ -95,14 +95,6 @@
     "is_top_level": true,
     "variables": {}
   },
-  "cordova.plugins.diagnostic": {
-    "source": {
-      "type": "registry",
-      "id": "cordova.plugins.diagnostic@5.0.1"
-    },
-    "is_top_level": true,
-    "variables": {}
-  },
   "cordova-plugin-request-location-accuracy": {
     "source": {
       "type": "registry",
@@ -120,5 +112,13 @@
     "variables": {
       "PLAY-SERVICES-LOCATION": "17.0.0"
     }
+  },
+  "cordova.plugins.diagnostic": {
+    "source": {
+      "type": "registry",
+      "id": "cordova.plugins.diagnostic@3.0.0"
+    },
+    "is_top_level": true,
+    "variables": {}
   }
 }
