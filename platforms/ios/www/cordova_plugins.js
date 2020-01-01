@@ -485,6 +485,7 @@ cordova.define('cordova/plugin_list', function(require, exports, module) {
     "cordova-plugin-vibration": "2.1.6",
     "cordova-plugin-geolocation": "4.0.2",
     "cordova.plugins.diagnostic": "5.0.1",
-    "cordova-plugin-request-location-accuracy": "2.3.0"
+    "cordova-plugin-request-location-accuracy": "2.3.0",
+    "cordova-android-play-services-gradle-release": "4.0.0"
   };
 });

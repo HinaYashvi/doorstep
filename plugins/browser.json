@@ -42,6 +42,9 @@
     },
     "cordova-plugin-request-location-accuracy": {
       "PACKAGE_NAME": "com.phonegap.doorstep"
+    },
+    "cordova-android-play-services-gradle-release": {
+      "PACKAGE_NAME": "com.phonegap.doorstep"
     }
   },
   "dependent_plugins": {
