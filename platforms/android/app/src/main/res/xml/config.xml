@@ -35,12 +35,6 @@
     <feature name="Vibration">
         <param name="android-package" value="org.apache.cordova.vibration.Vibration" />
     </feature>
-    <feature name="RequestLocationAccuracy">
-        <param name="android-package" value="cordova.plugin.RequestLocationAccuracy" />
-    </feature>
-    <feature name="Diagnostic">
-        <param name="android-package" value="cordova.plugins.Diagnostic" />
-    </feature>
     <name>Doorstep</name>
     <description>
         Hello World sample application that responds to the deviceready event.
