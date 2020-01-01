@@ -392,7 +392,6 @@ cordova.define('cordova/plugin_list', function(require, exports, module) {
     }
   ];
   module.exports.metadata = {
-    "cordova-android-play-services-gradle-release": "4.0.0",
     "cordova-plugin-battery-status": "1.2.4",
     "cordova-plugin-compat": "1.2.0",
     "cordova-plugin-camera": "2.4.1",

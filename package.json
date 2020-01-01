@@ -23,9 +23,6 @@
       "cordova-plugin-inappbrowser": {},
       "cordova-plugin-network-information": {},
       "cordova-plugin-vibration": {},
-      "cordova-android-play-services-gradle-release": {
-        "PLAY-SERVICES-LOCATION": "17.0.0"
-      },
       "cordova.plugins.diagnostic": {},
       "cordova-plugin-request-location-accuracy": {},
       "cordova-plugin-geolocation": {}
@@ -38,7 +35,6 @@
   },
   "dependencies": {
     "cordova-android": "^8.1.0",
-    "cordova-android-play-services-gradle-release": "~4.0.0",
     "cordova-browser": "^6.0.0",
     "cordova-ios": "^5.1.1",
     "cordova-plugin-compat": "~1.2.0",
