@@ -425,11 +425,46 @@ function customer_exists(mobile_no){
           }else{}
         }
       });
-    }else{}
+    }else{} 
   } 
 }
 // -------------------------------------- DATA NAME : CUSTOMER DASHBOARD --------------------------------- //
-function onDeviceReady(){   
+function onDeviceReady(){
+  alert("onDeviceReady");
+  openLOC();
+}
+
+function openLOC(){
+  alert("openLOC");
+    cordova.plugins.diagnostic.isLocationEnabled(function(enabled){ //isLocationEnabled
+  console.log("GPS location is " + (enabled ? "enabled" : "disabled"));
+      if(!enabled){
+        alert("Enabled GPS manually");
+        cordova.plugins.diagnostic.switchToLocationSettings(onRequestSuccess,onRequestFailure);
+         //mainView.loadPage("current-location.html");
+      }else{
+        alert("Location service is ON");
+        mainView.router.navigate("/current-location/");
+      }
+  }, function(error){
+    console.error("The following error occurred: "+error);
+  });   
+}
+$("#openclick").click(function(){
+  getLatlong();
+});
+function onRequestSuccess(success){
+    if(success){
+      mainView.router.navigate("/current-location/");
+    }
+}  
+function onRequestFailure(error){
+   if(error){
+     alert(error.message);
+   }
+}
+
+/*function onDeviceReady(){   
   openLOC();  
 }
 function openLOC(){
@@ -473,9 +508,33 @@ function onSuccess(position){
 }
 function onError(error){
   alert('code: '    + error.code    + '\n' + 'message: ' + error.message + '\n');
-}
+}*/
 $$(document).on('page:init', '.page[data-name="customer_dash"]', function (page) {  
   checkConnection();  
+
+swiper = new Swiper('.swiper-container_dash', {
+    parallax: true,
+    //autoHeight: true,
+    setWrapperSize: true,
+    slidesPerView: 1,
+    spaceBetween: 15,
+    centeredSlides: true,
+    autoplay: {
+      delay: 3000,
+      disableOnInteraction: false,
+    },
+    /*navigation: {
+      nextEl: '.swiper-button-next',
+      prevEl: '.swiper-button-prev',
+    },*/
+    pagination: {
+      el: '.swiper-pagination',
+      clickable: true, 
+      dynamicBullets: true,
+    },
+    observer: true,
+    observeParents: true, 
+  });  
 
   //navigator.geolocation.getCurrentPosition(onSuccess, onError);
 });

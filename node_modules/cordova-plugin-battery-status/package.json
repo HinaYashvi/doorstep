@@ -1,33 +1,33 @@
 {
-  "_from": "cordova-plugin-battery-status@~1.2.4",
-  "_id": "cordova-plugin-battery-status@1.2.5",
+  "_from": "cordova-plugin-battery-status@1.2.4",
+  "_id": "cordova-plugin-battery-status@1.2.4",
   "_inBundle": false,
-  "_integrity": "sha1-bGSPmzz1qwNLlcXP/lhPVXbULKk=",
+  "_integrity": "sha1-c6V2r8CmGp3Smv93ZZB+ysDJ8fk=",
   "_location": "/cordova-plugin-battery-status",
   "_phantomChildren": {},
   "_requested": {
-    "type": "range",
+    "type": "version",
     "registry": true,
-    "raw": "cordova-plugin-battery-status@~1.2.4",
+    "raw": "cordova-plugin-battery-status@1.2.4",
     "name": "cordova-plugin-battery-status",
     "escapedName": "cordova-plugin-battery-status",
-    "rawSpec": "~1.2.4",
+    "rawSpec": "1.2.4",
     "saveSpec": null,
-    "fetchSpec": "~1.2.4"
+    "fetchSpec": "1.2.4"
   },
   "_requiredBy": [
-    "#DEV:/",
-    "#USER"
+    "#USER",
+    "/"
   ],
-  "_resolved": "https://registry.npmjs.org/cordova-plugin-battery-status/-/cordova-plugin-battery-status-1.2.5.tgz",
-  "_shasum": "6c648f9b3cf5ab034b95c5cffe584f5576d42ca9",
-  "_spec": "cordova-plugin-battery-status@~1.2.4",
+  "_resolved": "https://registry.npmjs.org/cordova-plugin-battery-status/-/cordova-plugin-battery-status-1.2.4.tgz",
+  "_shasum": "73a576afc0a61a9dd29aff7765907ecac0c9f1f9",
+  "_spec": "cordova-plugin-battery-status@1.2.4",
   "_where": "C:\\xampp\\htdocs\\doorstep",
   "author": {
     "name": "Apache Software Foundation"
   },
   "bugs": {
-    "url": "https://issues.apache.org/jira/browse/CB"
+    "url": "https://github.com/apache/cordova-plugin-battery-status/issues"
   },
   "bundleDependencies": false,
   "cordova": {
@@ -47,13 +47,6 @@
   "deprecated": false,
   "description": "Cordova Battery Plugin",
   "devDependencies": {
-    "eslint": "^3.19.0",
-    "eslint-config-semistandard": "^11.0.0",
-    "eslint-config-standard": "^10.2.1",
-    "eslint-plugin-import": "^2.3.0",
-    "eslint-plugin-node": "^5.0.0",
-    "eslint-plugin-promise": "^3.5.0",
-    "eslint-plugin-standard": "^3.0.1",
     "jshint": "^2.6.0"
   },
   "engines": {
@@ -85,9 +78,9 @@
     "url": "git+https://github.com/apache/cordova-plugin-battery-status.git"
   },
   "scripts": {
-    "eslint": "node node_modules/eslint/bin/eslint www && node node_modules/eslint/bin/eslint src && node node_modules/eslint/bin/eslint tests",
-    "test": "npm run eslint"
+    "jshint": "node node_modules/jshint/bin/jshint www && node node_modules/jshint/bin/jshint src && node node_modules/jshint/bin/jshint tests",
+    "test": "npm run jshint"
   },
   "types": "./types/index.d.ts",
-  "version": "1.2.5"
+  "version": "1.2.4"
 }
