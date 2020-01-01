@@ -117,6 +117,8 @@
       "id": "cordova-android-play-services-gradle-release"
     },
     "is_top_level": true,
-    "variables": {}
+    "variables": {
+      "PLAY-SERVICES-LOCATION": "17.0.0"
+    }
   }
 }
