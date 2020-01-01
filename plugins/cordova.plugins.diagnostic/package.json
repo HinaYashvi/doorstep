@@ -1,27 +1,27 @@
 {
-  "_from": "cordova.plugins.diagnostic@3.0.0",
-  "_id": "cordova.plugins.diagnostic@3.0.0",
+  "_from": "cordova.plugins.diagnostic@5.0.1",
+  "_id": "cordova.plugins.diagnostic@5.0.1",
   "_inBundle": false,
-  "_integrity": "sha1-DyFc+y7XTZGmkpEpSu4vpoVcCMc=",
+  "_integrity": "sha512-nuHDm0EQZcoz1DIFLG7/cdxhFL2LHVi9hWZ+gLNO5GsMSvjMh1PRGuoBjOjvBjsqTFlYbWEetu1/tgZ/29qbfg==",
   "_location": "/cordova.plugins.diagnostic",
   "_phantomChildren": {},
   "_requested": {
     "type": "version",
     "registry": true,
-    "raw": "cordova.plugins.diagnostic@3.0.0",
+    "raw": "cordova.plugins.diagnostic@5.0.1",
     "name": "cordova.plugins.diagnostic",
     "escapedName": "cordova.plugins.diagnostic",
-    "rawSpec": "3.0.0",
+    "rawSpec": "5.0.1",
     "saveSpec": null,
-    "fetchSpec": "3.0.0"
+    "fetchSpec": "5.0.1"
   },
   "_requiredBy": [
     "#USER",
     "/"
   ],
-  "_resolved": "https://registry.npmjs.org/cordova.plugins.diagnostic/-/cordova.plugins.diagnostic-3.0.0.tgz",
-  "_shasum": "0f215cfb2ed74d91a69291294aee2fa6855c08c7",
-  "_spec": "cordova.plugins.diagnostic@3.0.0",
+  "_resolved": "https://registry.npmjs.org/cordova.plugins.diagnostic/-/cordova.plugins.diagnostic-5.0.1.tgz",
+  "_shasum": "63eb32020320777b7b3778786c2abc08ac3db7f8",
+  "_spec": "cordova.plugins.diagnostic@5.0.1",
   "_where": "C:\\xampp\\htdocs\\doorstep",
   "author": {
     "name": "Dave Alden"
@@ -39,8 +39,22 @@
     ]
   },
   "cordova_name": "Diagnostic",
+  "dependencies": {
+    "colors": "^1.1.2",
+    "elementtree": "^0.1.6",
+    "minimist": "1.2.0"
+  },
   "deprecated": false,
   "description": "Cordova/Phonegap plugin to check the state of Location/WiFi/Camera/Bluetooth device settings.",
+  "engines": {
+    "cordovaDependencies": {
+      "4.0.0": {
+        "cordova": ">=7.1.0",
+        "cordova-android": ">=6.3.0",
+        "cordova-ios": ">=4.3.0"
+      }
+    }
+  },
   "homepage": "https://github.com/dpa99c/cordova-diagnostic-plugin#readme",
   "issue": "https://github.com/dpa99c/cordova-diagnostic-plugin/issues",
   "keywords": [
@@ -64,5 +78,9 @@
     "type": "git",
     "url": "git+https://github.com/dpa99c/cordova-diagnostic-plugin.git"
   },
-  "version": "3.0.0"
+  "scripts": {
+    "postinstall": "node ./scripts/apply-modules.js"
+  },
+  "types": "./cordova.plugins.diagnostic.d.ts",
+  "version": "5.0.1"
 }

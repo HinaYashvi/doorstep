@@ -1,27 +1,27 @@
 {
-  "_from": "cordova-plugin-request-location-accuracy@2.1.0",
-  "_id": "cordova-plugin-request-location-accuracy@2.1.0",
+  "_from": "cordova-plugin-request-location-accuracy",
+  "_id": "cordova-plugin-request-location-accuracy@2.3.0",
   "_inBundle": false,
-  "_integrity": "sha1-Afmbjk6nl3RKRV3QlRMDx3saX6A=",
+  "_integrity": "sha512-Rgr3DnRC8PUQyxmsOs76KxvDJB28MoCoYFfceiGn9Nzwsg6nAJmAwEtrYzm283x1cDhBPvzkZ6lzuldTkmnWjA==",
   "_location": "/cordova-plugin-request-location-accuracy",
   "_phantomChildren": {},
   "_requested": {
-    "type": "version",
+    "type": "tag",
     "registry": true,
-    "raw": "cordova-plugin-request-location-accuracy@2.1.0",
+    "raw": "cordova-plugin-request-location-accuracy",
     "name": "cordova-plugin-request-location-accuracy",
     "escapedName": "cordova-plugin-request-location-accuracy",
-    "rawSpec": "2.1.0",
+    "rawSpec": "",
     "saveSpec": null,
-    "fetchSpec": "2.1.0"
+    "fetchSpec": "latest"
   },
   "_requiredBy": [
     "#USER",
     "/"
   ],
-  "_resolved": "https://registry.npmjs.org/cordova-plugin-request-location-accuracy/-/cordova-plugin-request-location-accuracy-2.1.0.tgz",
-  "_shasum": "01f99b8e4ea797744a455dd0951303c77b1a5fa0",
-  "_spec": "cordova-plugin-request-location-accuracy@2.1.0",
+  "_resolved": "https://registry.npmjs.org/cordova-plugin-request-location-accuracy/-/cordova-plugin-request-location-accuracy-2.3.0.tgz",
+  "_shasum": "46c21ca92e46b7f9a209fbb7f5662562f14cbb97",
+  "_spec": "cordova-plugin-request-location-accuracy",
   "_where": "C:\\xampp\\htdocs\\doorstep",
   "author": {
     "name": "Dave Alden"
@@ -62,5 +62,5 @@
     "type": "git",
     "url": "git+https://github.com/dpa99c/cordova-plugin-request-location-accuracy.git"
   },
-  "version": "2.1.0"
+  "version": "2.3.0"
 }

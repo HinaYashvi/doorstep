@@ -90,7 +90,7 @@
   "cordova-plugin-geolocation": {
     "source": {
       "type": "registry",
-      "id": "cordova-plugin-geolocation@2.1.0"
+      "id": "cordova-plugin-geolocation@latest"
     },
     "is_top_level": true,
     "variables": {}
@@ -98,7 +98,7 @@
   "cordova.plugins.diagnostic": {
     "source": {
       "type": "registry",
-      "id": "cordova.plugins.diagnostic@3.0.0"
+      "id": "cordova.plugins.diagnostic@5.0.1"
     },
     "is_top_level": true,
     "variables": {}
@@ -106,7 +106,7 @@
   "cordova-plugin-request-location-accuracy": {
     "source": {
       "type": "registry",
-      "id": "cordova-plugin-request-location-accuracy@2.1.0"
+      "id": "cordova-plugin-request-location-accuracy"
     },
     "is_top_level": true,
     "variables": {}
