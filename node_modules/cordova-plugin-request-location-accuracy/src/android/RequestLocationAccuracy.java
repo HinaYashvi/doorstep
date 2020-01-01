@@ -27,8 +27,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.Manifest;
-import android.app.Dialog;
-import android.content.DialogInterface;
 import android.util.Log;
 import android.os.Bundle;
 import android.app.Activity;
@@ -36,7 +34,6 @@ import android.content.Intent;
 import android.content.IntentSender;
 
 import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.PendingResult;
 import com.google.android.gms.common.api.ResultCallback;
@@ -59,11 +56,6 @@ public class RequestLocationAccuracy extends CordovaPlugin implements
      * Provides the entry point to Google Play services.
      */
     protected GoogleApiClient mGoogleApiClient = null;
-
-    /**
-     * Google API availability
-     */
-    protected GoogleApiAvailability googleApiAvailability;
 
 
     /**
@@ -169,7 +161,6 @@ public class RequestLocationAccuracy extends CordovaPlugin implements
     public void initialize(CordovaInterface cordova, CordovaWebView webView) {
         super.initialize(cordova, webView);
         try {
-            googleApiAvailability = GoogleApiAvailability.getInstance();
             buildGoogleApiClient();
         }catch(Exception e ) {
             handleError(e.getMessage(), ERROR_EXCEPTION);
@@ -281,12 +272,10 @@ public class RequestLocationAccuracy extends CordovaPlugin implements
     protected void handleSuccess(String msg, int code){
         try {
             Log.i(TAG, msg);
-            if(context != null){
-                JSONObject success = new JSONObject();
-                success.put("message", msg);
-                success.put("code", code);
-                context.success(success);
-            }
+            JSONObject success = new JSONObject();
+            success.put("message", msg);
+            success.put("code", code);
+            context.success(success);
         } catch (JSONException e) {
             handleError(e.getMessage(), ERROR_EXCEPTION);
         }
@@ -508,18 +497,5 @@ public class RequestLocationAccuracy extends CordovaPlugin implements
                 reason = "Unknown reason";
         }
         handleError("Failed to connect to Google Play Services: ".concat(reason), ERROR_GOOGLE_API_CONNECTION_FAILED);
-
-        int status = googleApiAvailability.isGooglePlayServicesAvailable(cordova.getActivity().getApplicationContext());
-        if (googleApiAvailability.isUserResolvableError (status)) {
-            Dialog dialog = googleApiAvailability.getErrorDialog(cordova.getActivity(),status, 0);
-            dialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
-                @Override
-                public void onCancel(DialogInterface dialogInterface) {
-                    cordova.getActivity().finish();
-                }
-            });
-            dialog.show();
-            permanentError = null;
-        }
     }
 }
