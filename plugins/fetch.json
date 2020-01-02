@@ -95,14 +95,12 @@
     "is_top_level": true,
     "variables": {}
   },
-  "cordova.plugins.diagnostic": {
+  "cordova-plugin-request-location-accuracy": {
     "source": {
       "type": "registry",
-      "id": "cordova.plugins.diagnostic@^3.0.0"
+      "id": "cordova-plugin-request-location-accuracy@2.3.0"
     },
     "is_top_level": true,
-    "variables": {
-      "ANDROID_SUPPORT_VERSION": "27.+"
-    }
+    "variables": {}
   }
 }

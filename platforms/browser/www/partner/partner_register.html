@@ -1,0 +1,159 @@
+<div data-name="partner_register" class="page navbar-fixed toolbar-fixed">
+	<!--div class="navbar inner-header nav-bg">
+	  <div class="navbar-inner sliding">
+	    <div class="left ">
+       
+        <a href="#" class="link back "><i class="f7-icons size-22 text-white">arrow_left</i></a>
+	    </div>
+	    <div class="title text-uppercase text-white">Partner Registration</div>
+	    <div class="right">
+        
+        <a href="#" class="link panel-open" data-panel="left" onclick="openPanel()"><i class="f7-icons size-22 leftbars text-white" >bars</i></a>
+      </div>
+	  </div>
+	</div--> 
+
+  <!--div class="toolbar toolbar-bottom toolbar-fixed footer-bg">
+    <div class="toolbar-inner">
+      <a class="link"></a>
+      <div class="link text-white text-capitalize ">powered by<a class="link external text-white text-uppercase linkspace poweredby" href="http://staroneweb.co.in" target="_system"> star one web</a></div>
+      <a class="link"></a> 
+    </div>
+  </div-->
+
+  <!--div class="page-content">
+    <form class="list no-hairlines register_partner" id="register_partner" >
+      <ul>
+
+      </ul>
+      <div class="block block-strong row">
+      <div class="col"><a class="button convert-form-to-data no-radius link-white form-btn create_btn" href="#" onclick="candidate_register()">Create</a></div>
+      
+    </div>
+  </form>
+  </div-->
+
+  <!--div class="navbar navbar-large navbar-large-transparent">
+    <div class="navbar-bg"></div>
+    <div class="navbar-inner sliding">
+      <div class="left">
+        <a class="link back">
+          <i class="icon icon-back text-white"></i>
+          <span class="if-not-md text-white">Back</span>
+        </a>
+      </div>
+      <div class="title text-white text-uppercase text-center">partner sign up</div>
+      
+      <div class="title-large">
+        <div class="title-large-text text-white text-uppercase text-center">partner sign up</div>
+      </div>
+    </div>
+  </div-->
+
+  <div class="page-content preg-screen-content">
+
+    <div class="login-content">
+      <div class="signup-txt">
+        <a href="#"><span class="text-white text-uppercase" id="app_ID">partner sign up</span></a>
+      </div>
+      
+      <form name="partner_register" id="partner_register" class="partner_register"> 
+      <div id="reg_formDiv">       
+        <div class="preg_inputbox">  
+          <i class="f7-icons text-white">phone</i>           
+          <input type="number" placeholder="Mobile No" name="mobile_partner" id='mobile_partner' class="pholder mobile_no" onkeyup="isNumber(event,this.value);partner_exists(this.value);" >
+        </div>
+        <span class="text-left text-red mt-0" id='mobreq'></span>
+                
+        <div class="preg_inputbox"> 
+          <i class="f7-icons text-white">lock</i>
+          <span class="showpass" ><span onclick="showpassword('show')" class="f7-icons text-white display-none fs-18" >eye</span></span>
+          <input type="password" placeholder="Password" id='pass' name="password" class="pholder pass p_pass" onkeyup="showeye();" onblur="pass_length(this.value)">
+        </div>
+        <span class="text-left text-red mt-0" id='passerror'></span>
+
+        <div class="preg_inputbox">   
+          <i class="f7-icons text-white">person</i>   
+          <input type="text" name="name" id="name" placeholder="Full Name" required validate data-error-message="Enter full name" class="pholder" onkeypress="return isText(event)"> 
+        </div>
+        <span class="text-left text-red mt-0" id='fullnmerror'></span>
+                
+        <div class="preg_inputbox">   
+          <i class="f7-icons text-white">envelope</i>
+          <input type="email" name="email" id="email" placeholder="Email Address" required validate data-error-message="Enter email address" class="pholder" onkeypress="validateEmail(this.value)">
+        </div>
+        <span class="text-left text-red mt-0" id='emailerror'></span>
+
+        <div class="preg_inputbox text-white">   
+          <textarea class="resizable tarea" rows="4" name="add_line1" id="add_line1" placeholder="Address line 1" required validate data-error-message="Enter address line 1" class="pholder"></textarea>
+        </div>
+        <span class="text-left text-red mt-0" id='add1error'></span>
+
+        <div class="preg_inputbox text-white">   
+          <textarea class="resizable tarea" rows="4" name="add_line2" id="add_line2" placeholder="Address line 2" required validate data-error-message="Enter address line 2" class="pholder"></textarea>
+        </div>
+        <span class="text-left text-red mt-0" id='add2error'></span>
+
+        <div class="preg_inputbox text-white">
+          <select name="serving_area" id="serving_area" required validate data-error-message="Please select serving area." class="res_sel "></select>
+        </div>
+        <span class="text-left text-red mt-0" id='sareaerror'></span>
+
+        <div class="preg_inputbox text-white">
+          <select name="serving_category" id="serving_category" required validate data-error-message="Please select serving category." onchange="getServices(this.value)" class="res_sel"></select>
+        </div>
+        <span class="text-left text-red mt-0" id='scaterror'></span>
+
+        <div class="preg_inputbox text-white border-white w-76 p-1">
+          <a href="#" class="item-link smart-select smart-select-init" data-searchbar="true" data-searchbar-placeholder="Search Service" data-open-in="popup">
+              <select name="service[]" id="service" multiple required validate data-error-message="Please select service." onchange="getJob(this.value)" class="text-left"></select>
+              <div class="item-content">
+                <!--div class="item-inner"-->
+                  <div class="item-title text-white text-left" id="serv_lbl">Service</div>
+                <!--/div-->
+              </div>
+            </a>
+        </div>
+        <span class="text-left text-red mt-0" id='serverror'></span>
+
+        <div class="preg_inputbox text-white border-white w-76 p-1">
+          <a href="#" class="item-link smart-select smart-select-init" data-searchbar="true" data-searchbar-placeholder="Search job" >
+              <select name="job[]" id="job" multiple required validate data-error-message="Please select service." class="text-left"></select>
+              <div class="item-content">
+                <!--div class="item-inner"-->
+                  <div class="item-title text-white text-left" id="job_lbl">Job</div>
+                <!--/div-->
+              </div>
+            </a>
+        </div>
+        <span class="text-left text-red mt-0" id='joberror'></span>
+        <!--div class="preg_inputbox text-white border-white w-74 p-2">
+          <a href="#" class="item-link smart-select smart-select-init" data-searchbar="true" data-searchbar-placeholder="Search Job" data-open-in="popup">
+              <select name="job[]" id="job" multiple required validate data-error-message="Please select job." class="text-left"></select>
+              <div class="item-content">
+                
+                  <div class="item-title text-white text-left" id="job_lbl">Job</div>
+                
+              </div>
+            </a>
+        </div-->
+        <div class="">
+          <div class="col"><a class="button form-btn text-white no-radius" href="#" 
+          onclick="register_part()">Create</a></div>  
+
+          <div class="col"><a class="button back-btn text-white no-radius back" href="#" 
+          >back</a></div>      
+        </div>
+        <!--div class="login-button submit-box text-uppercase">
+            <a href="#" onclick="logincheck()">Log In</a>
+        </div-->
+        </div>
+      </form>
+
+      
+      <!--p>Don’t have an account ? <a data-popup=".popup-register" class="open-popup" href="sign-up.html">Sign Up</a></p><br><br-->                  
+    </div>
+
+    
+  </div>
+</div>
