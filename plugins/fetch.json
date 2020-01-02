@@ -95,10 +95,10 @@
     "is_top_level": true,
     "variables": {}
   },
-  "cordova-plugin-request-location-accuracy": {
+  "cordova.plugins.diagnostic": {
     "source": {
       "type": "registry",
-      "id": "cordova-plugin-request-location-accuracy@2.3.0"
+      "id": "cordova.plugins.diagnostic@5.0.1"
     },
     "is_top_level": true,
     "variables": {}

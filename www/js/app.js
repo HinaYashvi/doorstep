@@ -436,11 +436,13 @@ function onDeviceReady(){
 
 function openLOC(){
   alert("openLOC");
+  //cordova.plugins.locationAccuracy.request(successCallback, errorCallback, accuracy);
     cordova.plugins.diagnostic.isLocationEnabled(function(enabled){ //isLocationEnabled
   console.log("GPS location is " + (enabled ? "enabled" : "disabled"));
       if(!enabled){
         alert("Enabled GPS manually");
         cordova.plugins.diagnostic.switchToLocationSettings(onRequestSuccess,onRequestFailure);
+        //cordova.plugins.locationAccuracy.request(successCallback, errorCallback, accuracy);
          //mainView.loadPage("current-location.html");
       }else{
         alert("Location service is ON");
@@ -448,7 +450,7 @@ function openLOC(){
       }
   }, function(error){
     console.error("The following error occurred: "+error);
-  });   
+  }); 
 }
 $("#openclick").click(function(){
   getLatlong();
