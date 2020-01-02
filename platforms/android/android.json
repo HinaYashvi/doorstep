@@ -113,6 +113,10 @@
         "parents": {
           "/*": [
             {
+              "xml": "<feature name=\"RequestLocationAccuracy\"><param name=\"android-package\" value=\"cordova.plugin.RequestLocationAccuracy\" /></feature>",
+              "count": 1
+            },
+            {
               "xml": "<feature name=\"Diagnostic\"><param name=\"android-package\" value=\"cordova.plugins.Diagnostic\" /><param name=\"onload\" value=\"true\" /></feature>",
               "count": 1
             },
@@ -178,6 +182,10 @@
       "PACKAGE_NAME": "com.phonegap.doorstep"
     },
     "cordova-plugin-network-information": {
+      "PACKAGE_NAME": "com.phonegap.doorstep"
+    },
+    "cordova-plugin-request-location-accuracy": {
+      "PLAY_SERVICES_LOCATION_VERSION": "15.0.0",
       "PACKAGE_NAME": "com.phonegap.doorstep"
     },
     "cordova-plugin-vibration": {
@@ -552,6 +560,14 @@
       ]
     },
     {
+      "id": "cordova-plugin-request-location-accuracy.RequestLocationAccuracy",
+      "file": "plugins/cordova-plugin-request-location-accuracy/www/android/RequestLocationAccuracy.js",
+      "pluginId": "cordova-plugin-request-location-accuracy",
+      "clobbers": [
+        "cordova.plugins.locationAccuracy"
+      ]
+    },
+    {
       "id": "cordova-plugin-vibration.notification",
       "file": "plugins/cordova-plugin-vibration/www/vibration.js",
       "pluginId": "cordova-plugin-vibration",
@@ -660,6 +676,7 @@
     "cordova-plugin-inappbrowser": "1.7.2",
     "cordova-plugin-media-capture": "1.4.3",
     "cordova-plugin-network-information": "1.3.4",
+    "cordova-plugin-request-location-accuracy": "2.3.0",
     "cordova-plugin-vibration": "2.1.6",
     "cordova.plugins.diagnostic": "5.0.1"
   }

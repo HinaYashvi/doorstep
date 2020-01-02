@@ -24,7 +24,10 @@
       "cordova-plugin-network-information": {},
       "cordova-plugin-vibration": {},
       "cordova-plugin-geolocation": {},
-      "cordova.plugins.diagnostic": {}
+      "cordova.plugins.diagnostic": {},
+      "cordova-plugin-request-location-accuracy": {
+        "PLAY_SERVICES_LOCATION_VERSION": "15.0.0"
+      }
     },
     "platforms": [
       "android"
@@ -34,6 +37,7 @@
     "cordova-android": "^8.1.0",
     "cordova-plugin-compat": "~1.2.0",
     "cordova-plugin-geolocation": "^2.1.0",
+    "cordova-plugin-request-location-accuracy": "^2.3.0",
     "cordova.plugins.diagnostic": "^5.0.1"
   }
 }

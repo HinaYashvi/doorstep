@@ -1,0 +1,26 @@
+<div data-name="partner_otpverify" class="page navbar-fixed toolbar-fixed">	
+  <div class="page-content preg-screen-content">    
+    <div class="login-content">
+      <div class="signup-txt">
+        <a href="#"><span class="text-white text-uppercase" id="app_ID"><!--i class="f7-icons text-white">smiley_fill</i><i class="f7-icons text-white">smiley_fill</i-->otp verification</span></a>
+      </div> 
+      <div class="block text-white otp_txt"></div> 
+      <form name="partner_otpverify" id="partner_otpverify" class="partner_otpverify"> 
+        <input type="hidden" name="hidd_mob" id="hidd_mob" />
+        <input type="hidden" name="hidd_pid" id="hidd_pid" />
+        <div id="reg_formDiv">       
+          <div class="preg_inputbox">
+            <span id="eyeicon"><i class="f7-icons text-white" onclick="showletter('show')">eye</i></span>   
+            <input type="password" placeholder="Enter OTP" name="otp" id='otp' class="pholder" >           
+          </div>
+
+          <div class="">
+            <div class="col"><a class="button form-btn text-white no-radius text-uppercase" href="#" 
+            onclick="verify_otp()">verify</a></div>
+            <div class="col"><a class="button back-btn text-white no-radius" onclick="resendOTP_partner()">Resend OTP</a></div>      
+          </div>
+        </div>
+      </form>
+    </div>    
+  </div>
+</div>
