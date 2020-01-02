@@ -34,13 +34,13 @@
     "cordova-plugin-network-information": {
       "PACKAGE_NAME": "com.phonegap.doorstep"
     },
-    "cordova-plugin-request-location-accuracy": {
-      "PACKAGE_NAME": "com.phonegap.doorstep"
-    },
     "cordova-plugin-vibration": {
       "PACKAGE_NAME": "com.phonegap.doorstep"
     },
-    "cordova.plugins.diagnostic": {
+    "cordova-plugin-request-location-accuracy": {
+      "PACKAGE_NAME": "com.phonegap.doorstep"
+    },
+    "cordova-android-play-services-gradle-release": {
       "PACKAGE_NAME": "com.phonegap.doorstep"
     }
   },

@@ -420,9 +420,9 @@ module.exports.metadata =
     "cordova-plugin-inappbrowser": "1.7.2",
     "cordova-plugin-media-capture": "1.4.3",
     "cordova-plugin-network-information": "1.3.4",
-    "cordova-plugin-request-location-accuracy": "2.3.0",
     "cordova-plugin-vibration": "2.1.6",
-    "cordova.plugins.diagnostic": "5.0.1"
+    "cordova-plugin-request-location-accuracy": "2.3.0",
+    "cordova-android-play-services-gradle-release": "4.0.0"
 }
 // BOTTOM OF METADATA
 });
