@@ -608,8 +608,9 @@ function onSuccess(position){
     alert(LatLong);
     var geocoder = new google.maps.Geocoder();
     geocoder.geocode({ 'latLng': LatLong }, function (results, status) {
+      alert("results "+results);
       alert("status ="+status);
-        /*if (status == google.maps.GeocoderStatus.OK) {
+        /*if (status == google.maps.GeocoderStatus.OK) { 
             if (results[1]) {
                 alert("Location: " + results[1].formatted_address);
             }
