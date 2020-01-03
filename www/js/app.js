@@ -782,8 +782,8 @@ function logincheck(){
     $("#passerror").html("Password is required.");
     return false;
   }else{
-    $("#umoberror").html("");
-    $("#passerror").html("");
+    //$("#umoberror").html("");
+    //$("#passerror").html("");
     app.preloader.show();
     $.ajax({
       type:'POST', 
