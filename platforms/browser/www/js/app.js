@@ -431,9 +431,51 @@ function customer_exists(mobile_no){
 // -------------------------------------- DATA NAME : CUSTOMER DASHBOARD --------------------------------- //
 function onDeviceReady(){
   alert("onDeviceReady");
-  //openLOC();
-  cordova.plugins.locationAccuracy.isRequesting(successCallback);
+  openLOC();
+  
+  //navigator.geolocation.getCurrentPosition(onSuccess, onError);
+  
 }
+function openLOC(){
+  alert("openLOC");
+    cordova.plugins.diagnostic.isLocationEnabled(function(enabled){ //isLocationEnabled
+  console.log("GPS location is " + (enabled ? "enabled" : "disabled"));
+      if(!enabled){
+        alert("Enabled GPS manually");
+        cordova.plugins.diagnostic.switchToLocationSettings(onRequestSuccess,onRequestFailure);
+         //mainView.loadPage("current-location.html");
+      }else{
+        alert("Location service is ON");
+        app.router.navigate("/current-location/");
+      }
+  }, function(error){
+    console.error("The following error occurred: "+error);
+  });   
+}
+function onRequestSuccess(success){
+    if(success){
+      app.router.navigate("/current-location/");
+    }
+}  
+function onRequestFailure(error){
+   if(error){
+     alert(error.message);
+   }
+}
+/*function onSuccess(pos){
+    if(pos){
+      var lat = pos.coords.latitude;
+            var lng = pos.coords.longitude;
+            alert("lat : " + lat + " lng : " + lng);
+      mainView.router.navigate("/current-location/");
+    }
+}  
+function onError(error){
+   if(error){
+     alert('code: ' + error.code + '\n' + 'message: ' + error.message + '\n');
+   }
+}*/
+
 function successCallback(success){
     if(success){
       mainView.router.navigate("/current-location/");

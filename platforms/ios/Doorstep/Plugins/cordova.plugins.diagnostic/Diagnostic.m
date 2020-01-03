@@ -1,212 +1,854 @@
 /*
- *  Diagnostic.m
- *  Diagnostic Plugin - Core Module
+ *  Diagnostic.h
+ *  Plugin diagnostic
  *
  *  Copyright (c) 2015 Working Edge Ltd.
  *  Copyright (c) 2012 AVANTIC ESTUDIO DE INGENIEROS
  */
 
 #import "Diagnostic.h"
+#import <AVFoundation/AVFoundation.h>
+#import <Photos/Photos.h>
+#import <AddressBook/AddressBook.h>
+
+#import <arpa/inet.h> // For AF_INET, etc.
+#import <ifaddrs.h> // For getifaddrs()
+#import <net/if.h> // For IFF_LOOPBACK
+
+
 
 @implementation Diagnostic
 
-// Public constants
-NSString*const UNKNOWN = @"unknown";
+ABAddressBookRef _addressBook;
 
-NSString*const AUTHORIZATION_NOT_DETERMINED = @"not_determined";
-NSString*const AUTHORIZATION_DENIED = @"denied_always";
-NSString*const AUTHORIZATION_GRANTED = @"authorized";
+- (void)pluginInitialize {
+    
+    [super pluginInitialize];
 
-// Internal constants
-static NSString*const LOG_TAG = @"Diagnostic[native]";
-
-static NSString*const CPU_ARCH_ARMv6 = @"ARMv6";
-static NSString*const CPU_ARCH_ARMv7 = @"ARMv7";
-static NSString*const CPU_ARCH_ARMv8 = @"ARMv8";
-static NSString*const CPU_ARCH_X86 = @"X86";
-static NSString*const CPU_ARCH_X86_64 = @"X86_64";
-
-static Diagnostic* diagnostic = nil;
-
-/********************************/
-#pragma mark - Public static functions
-/********************************/
-+ (id) getInstance{
-    return diagnostic;
+    self.locationRequestCallbackId = nil;
+    self.locationManager = [[CLLocationManager alloc] init];
+    self.locationManager.delegate = self;
+    
+    self.bluetoothManager = [[CBCentralManager alloc]
+                             initWithDelegate:self
+                             queue:dispatch_get_main_queue()
+                             options:@{CBCentralManagerOptionShowPowerAlertKey: @(NO)}];
+    [self centralManagerDidUpdateState:self.bluetoothManager]; // Show initial state
 }
 
+/*************
+ * Plugin API
+ *************/
 
-/********************************/
-#pragma mark - Plugin API
-/********************************/
-
--(void)enableDebug:(CDVInvokedUrlCommand*)command{
-    self.debugEnabled = true;
-    [self logDebug:@"Debug enabled"];
-}
-
-#pragma mark -  Settings
-- (void) switchToSettings: (CDVInvokedUrlCommand*)command
+// Location
+- (void) isLocationEnabled: (CDVInvokedUrlCommand*)command
 {
+    CDVPluginResult* pluginResult;
     @try {
-        if (UIApplicationOpenSettingsURLString != nil ){
-            if ([[UIApplication sharedApplication] respondsToSelector:@selector(openURL:options:completionHandler:)]) {
-#if defined(__IPHONE_10_0) && __IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_10_0
-                [[UIApplication sharedApplication] openURL:[NSURL URLWithString: UIApplicationOpenSettingsURLString] options:@{} completionHandler:^(BOOL success) {
-                    if (success) {
-                        [self sendPluginResult:[CDVPluginResult resultWithStatus:CDVCommandStatus_OK] :command];
-                    }else{
-                        [self sendPluginResult:[CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR] :command];
-                    }
-                }];
-#endif
-            }else{
-                [[UIApplication sharedApplication] openURL: [NSURL URLWithString: UIApplicationOpenSettingsURLString]];
-                [self sendPluginResult:[CDVPluginResult resultWithStatus:CDVCommandStatus_OK] :command];
-            }
-        }else{
-            [self sendPluginError:@"Not supported below iOS 8":command];
+        if([CLLocationManager locationServicesEnabled] && [self isLocationAuthorized]) {
+            NSLog(@"Location is enabled.");
+            pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsInt:1];
+        }
+        else {
+            NSLog(@"Location is disabled.");
+            pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsInt:0];
         }
     }
     @catch (NSException *exception) {
-        [self handlePluginException:exception :command];
+        pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:exception.reason];
     }
+    [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
 }
 
-#pragma mark - Background refresh
-- (void) getBackgroundRefreshStatus: (CDVInvokedUrlCommand*)command
-{
-    UIBackgroundRefreshStatus _status;
-    @try {
-        // Must run on UI thread
-        _status = [[UIApplication sharedApplication] backgroundRefreshStatus];
-    }@catch (NSException *exception) {
-        [self handlePluginException:exception :command];
-    }
-    [self.commandDelegate runInBackground:^{
-        @try {
-            NSString* status;
-            
-            if (_status == UIBackgroundRefreshStatusAvailable) {
-                status = AUTHORIZATION_GRANTED;
-                [self logDebug:@"Background updates are available for the app."];
-            }else if(_status == UIBackgroundRefreshStatusDenied){
-                status = AUTHORIZATION_DENIED;
-                [self logDebug:@"The user explicitly disabled background behavior for this app or for the whole system."];
-            }else if(_status == UIBackgroundRefreshStatusRestricted){
-                status = @"restricted";
-                [self logDebug:@"Background updates are unavailable and the user cannot enable them again. For example, this status can occur when parental controls are in effect for the current user."];
-            }
-            [self sendPluginResultString:status:command];
-        }
-        @catch (NSException *exception) {
-            [self handlePluginException:exception :command];
-        }
-    }];
-}
-
-
-/********************************/
-#pragma mark - Internal functions
-/********************************/
-
-- (void)pluginInitialize {
-
-    [super pluginInitialize];
-
-    diagnostic = self;
-
-    self.debugEnabled = false;
-    self.osVersion = [[[UIDevice currentDevice] systemVersion] floatValue];
-}
-
-// https://stackoverflow.com/a/38441011/777265
-- (void) getArchitecture: (CDVInvokedUrlCommand*)command {
-    [self.commandDelegate runInBackground:^{
-        @try {
-            NSString* cpuArch = UNKNOWN;
-            
-            size_t size;
-            cpu_type_t type;
-            cpu_subtype_t subtype;
-            size = sizeof(type);
-            sysctlbyname("hw.cputype", &type, &size, NULL, 0);
-            
-            size = sizeof(subtype);
-            sysctlbyname("hw.cpusubtype", &subtype, &size, NULL, 0);
-            
-            // values for cputype and cpusubtype defined in mach/machine.h
-            if (type == CPU_TYPE_X86_64) {
-                cpuArch = CPU_ARCH_X86_64;
-            } else if (type == CPU_TYPE_X86) {
-                cpuArch = CPU_ARCH_X86;
-            } else if (type == CPU_TYPE_ARM64) {
-                cpuArch = CPU_ARCH_ARMv8;
-            } else if (type == CPU_TYPE_ARM) {
-                switch(subtype){
-                    case CPU_SUBTYPE_ARM_V6:
-                        cpuArch = CPU_ARCH_ARMv6;
-                        break;
-                    case CPU_SUBTYPE_ARM_V7:
-                        cpuArch = CPU_ARCH_ARMv7;
-                        break;
-                    case CPU_SUBTYPE_ARM_V8:
-                        cpuArch = CPU_ARCH_ARMv8;
-                        break;
-                }
-            }
-            [self logDebug:[NSString stringWithFormat:@"Current CPU architecture: %@", cpuArch]];
-            [self sendPluginResultString:cpuArch:command];
-        }@catch (NSException *exception) {
-            [self handlePluginException:exception :command];
-        }
-    }];
-}
-
-
-/********************************/
-#pragma mark - Send results
-/********************************/
-
-- (void) sendPluginResult: (CDVPluginResult*)result :(CDVInvokedUrlCommand*)command
-{
-    [self.commandDelegate sendPluginResult:result callbackId:command.callbackId];
-}
-
-- (void) sendPluginResultBool: (BOOL)result :(CDVInvokedUrlCommand*)command
+- (void) isLocationEnabledSetting: (CDVInvokedUrlCommand*)command
 {
     CDVPluginResult* pluginResult;
-    if(result) {
-        pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsInt:1];
-    } else {
-        pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsInt:0];
+    @try {
+        if([CLLocationManager locationServicesEnabled]) {
+            NSLog(@"Location Services is enabled");
+            pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsInt:1];
+        }
+        else {
+            NSLog(@"Location Services is disabled");
+            pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsInt:0];
+        }
+    }
+    @catch (NSException *exception) {
+        pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:exception.reason];
+    }
+    [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
+    
+}
+
+
+- (void) isLocationAuthorized: (CDVInvokedUrlCommand*)command
+{
+    CDVPluginResult* pluginResult;
+    @try {
+        if([self isLocationAuthorized]) {
+            NSLog(@"This app is authorized to use location.");
+            pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsInt:1];
+        } else {
+            NSLog(@"This app is not authorized to use location.");
+            pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsInt:0];
+        }
+    }
+    @catch (NSException *exception) {
+        pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:exception.reason];
+    }
+    [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
+    
+}
+
+- (void) getLocationAuthorizationStatus: (CDVInvokedUrlCommand*)command
+{
+    CDVPluginResult* pluginResult;
+    @try {
+        NSString* status = [self getLocationAuthorizationStatusAsString:[CLLocationManager authorizationStatus]];
+        NSLog([NSString stringWithFormat:@"Location authorization status is: %@", status]);
+        pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:status];
+    }
+    @catch (NSException *exception) {
+        pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:exception.reason];
+    }
+    [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
+    
+}
+
+- (void) requestLocationAuthorization: (CDVInvokedUrlCommand*)command
+{
+    CDVPluginResult* pluginResult;
+    @try {
+        if ([CLLocationManager instancesRespondToSelector:@selector(requestWhenInUseAuthorization)])
+        {
+            BOOL always = [[command argumentAtIndex:0] boolValue];
+            if(always){
+                NSAssert([[[NSBundle mainBundle] infoDictionary] valueForKey:@"NSLocationAlwaysUsageDescription"], @"For iOS 8 and above, your app must have a value for NSLocationAlwaysUsageDescription in its Info.plist");
+                [self.locationManager requestAlwaysAuthorization];
+                NSLog(@"Requesting location authorization: always");
+            }else{
+                NSAssert([[[NSBundle mainBundle] infoDictionary] valueForKey:@"NSLocationWhenInUseUsageDescription"], @"For iOS 8 and above, your app must have a value for NSLocationWhenInUseUsageDescription in its Info.plist");
+                [self.locationManager requestWhenInUseAuthorization];
+                NSLog(@"Requesting location authorization: when in use");
+            }
+        }
+        pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK];
+    }
+    @catch (NSException *exception) {
+        pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:exception.reason];
+    }
+    self.locationRequestCallbackId = command.callbackId;
+    pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_NO_RESULT];
+    [pluginResult setKeepCallback:[NSNumber numberWithBool:YES]];
+    [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
+}
+
+// Camera
+- (void) isCameraEnabled: (CDVInvokedUrlCommand*)command
+{
+    CDVPluginResult* pluginResult;
+    @try {
+        if([self isCameraPresent] && [self isCameraAuthorized]) {
+            pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsInt:1];
+        }
+        else {
+            pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsInt:0];
+        }
+    }
+    @catch (NSException *exception) {
+        pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:exception.reason];
     }
     [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
 }
 
-- (void) sendPluginResultString: (NSString*)result :(CDVInvokedUrlCommand*)command
+- (void) isCameraPresent: (CDVInvokedUrlCommand*)command
 {
-    CDVPluginResult* pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:result];
+    CDVPluginResult* pluginResult;
+    @try {
+        if([self isCameraPresent]) {
+            pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsInt:1];
+        }
+        else {
+            pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsInt:0];
+        }
+    }
+    @catch (NSException *exception) {
+        pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:exception.reason];
+    }
     [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
 }
 
-- (void) sendPluginError: (NSString*) errorMessage :(CDVInvokedUrlCommand*)command
+- (void) isCameraAuthorized: (CDVInvokedUrlCommand*)command
 {
-    CDVPluginResult* pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:errorMessage];
-    [self logError:errorMessage];
+    CDVPluginResult* pluginResult;
+    @try {
+        if([self isCameraAuthorized]) {
+            pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsInt:1];
+        }
+        else {
+            pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsInt:0];
+        }
+    }
+    @catch (NSException *exception) {
+        pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:exception.reason];
+    }
     [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
 }
 
-- (void) handlePluginException: (NSException*) exception :(CDVInvokedUrlCommand*)command
+- (void) getCameraAuthorizationStatus: (CDVInvokedUrlCommand*)command
 {
-    CDVPluginResult* pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:exception.reason];
-    [self logError:[NSString stringWithFormat:@"EXCEPTION: %@", exception.reason]];
+    CDVPluginResult* pluginResult;
+    @try {
+        NSString* status;
+        AVAuthorizationStatus authStatus = [AVCaptureDevice authorizationStatusForMediaType:AVMediaTypeVideo];
+        
+        if(authStatus == AVAuthorizationStatusDenied || authStatus == AVAuthorizationStatusRestricted){
+            status = @"denied";
+        }else if(authStatus == AVAuthorizationStatusNotDetermined){
+            status = @"not_determined";
+        }else if(authStatus == AVAuthorizationStatusAuthorized){
+            status = @"authorized";
+        }
+        NSLog([NSString stringWithFormat:@"Camera authorization status is: %@", status]);
+        pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:status];
+    }
+    @catch (NSException *exception) {
+        pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:exception.reason];
+    }
     [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
 }
 
-- (void)executeGlobalJavascript: (NSString*)jsString
+- (void) requestCameraAuthorization: (CDVInvokedUrlCommand*)command
+{
+    @try {
+        [AVCaptureDevice requestAccessForMediaType:AVMediaTypeVideo completionHandler:^(BOOL granted) {
+            CDVPluginResult* pluginResult;
+            if(granted){
+                NSLog(@"Granted access to camera");
+                pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsInt:1];
+            } else {
+                NSLog(@"Not granted access to camera");
+                pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsInt:0];
+            }
+            [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
+        }];
+    }
+    @catch (NSException *exception) {
+        CDVPluginResult* pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:exception.reason];
+        [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
+    }
+}
+
+- (void) isCameraRollAuthorized: (CDVInvokedUrlCommand*)command
+{
+    CDVPluginResult* pluginResult;
+    @try {
+        if([[self getCameraRollAuthorizationStatus]  isEqual: @"authorized"]) {
+            pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsInt:1];
+        }
+        else {
+            pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsInt:0];
+        }
+    }
+    @catch (NSException *exception) {
+        pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:exception.reason];
+    }
+    [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
+}
+
+- (void) getCameraRollAuthorizationStatus: (CDVInvokedUrlCommand*)command
+{
+    CDVPluginResult* pluginResult;
+    @try {
+        NSString* status = [self getCameraRollAuthorizationStatus];
+        
+        NSLog([NSString stringWithFormat:@"Camera Roll authorization status is: %@", status]);
+        pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:status];
+    }
+    @catch (NSException *exception) {
+        pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:exception.reason];
+    }
+    [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
+}
+
+- (void) requestCameraRollAuthorization: (CDVInvokedUrlCommand*)command
+{
+    @try {
+        [PHPhotoLibrary requestAuthorization:^(PHAuthorizationStatus authStatus) {
+            NSString* status = [self getCameraRollAuthorizationStatusAsString:authStatus];
+            CDVPluginResult* pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:status];
+            [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
+        }];
+    }
+    @catch (NSException *exception) {
+        CDVPluginResult* pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:exception.reason];
+        [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
+    }
+}
+
+// Wifi
+- (void) isWifiEnabled: (CDVInvokedUrlCommand*)command
+{
+    CDVPluginResult* pluginResult;
+    @try {
+        if([self connectedToWifi]) {
+            pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsInt:1];
+        } else {
+            pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsInt:0];
+        }
+    }
+    @catch (NSException *exception) {
+        pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:exception.reason];
+    }
+    [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
+}
+
+// Bluetooth
+- (void) isBluetoothEnabled: (CDVInvokedUrlCommand*)command
+{
+    CDVPluginResult* pluginResult;
+    @try {
+        if(self.bluetoothEnabled) {
+            pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsInt:1];
+            
+        } else {
+            pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsInt:0];
+            
+        }
+    }
+    @catch (NSException *exception) {
+        pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:exception.reason];
+    }
+    [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
+}
+
+- (void) getBluetoothState: (CDVInvokedUrlCommand*)command
+{
+    CDVPluginResult* pluginResult;
+    @try {
+        NSString* state = self.bluetoothState;
+        NSLog([NSString stringWithFormat:@"Bluetooth state is: %@", state]);
+        pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:state];
+    }
+    @catch (NSException *exception) {
+        pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:exception.reason];
+    }
+    [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
+    
+}
+
+// Settings
+- (void) switchToSettings: (CDVInvokedUrlCommand*)command
+{
+    CDVPluginResult* pluginResult;
+    @try {
+        if (UIApplicationOpenSettingsURLString != nil && &UIApplicationOpenSettingsURLString != NULL){
+            [[UIApplication sharedApplication] openURL: [NSURL URLWithString: UIApplicationOpenSettingsURLString]];
+            pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK];
+        }else{
+            pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:@"Not supported below iOS 8"];
+        }
+    }
+    @catch (NSException *exception) {
+        pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:exception.reason];
+    }
+    [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
+}
+
+// Audio
+- (void) isMicrophoneAuthorized: (CDVInvokedUrlCommand*)command
+{
+    CDVPluginResult* pluginResult;
+    @try {
+#ifdef __IPHONE_8_0
+        AVAudioSessionRecordPermission recordPermission = [AVAudioSession sharedInstance].recordPermission;
+        
+        if(recordPermission == AVAudioSessionRecordPermissionGranted) {
+            pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsInt:1];
+        }
+        else {
+            pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsInt:0];
+        }
+#else
+        pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:@"Only supported on iOS 8 and higher"];
+#endif
+    }
+    @catch (NSException *exception) {
+        pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:exception.reason];
+    }
+    [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
+}
+
+- (void) getMicrophoneAuthorizationStatus: (CDVInvokedUrlCommand*)command
+{
+    CDVPluginResult* pluginResult;
+    @try {
+#ifdef __IPHONE_8_0
+        NSString* status;
+        AVAudioSessionRecordPermission recordPermission = [AVAudioSession sharedInstance].recordPermission;
+        switch(recordPermission){
+            case AVAudioSessionRecordPermissionDenied:
+                status = @"denied";
+                break;
+            case AVAudioSessionRecordPermissionGranted:
+                status = @"granted";
+                break;
+            case AVAudioSessionRecordPermissionUndetermined:
+                status = @"not_determined";
+                break;
+        }
+        
+        NSLog([NSString stringWithFormat:@"Microphone authorization status is: %@", status]);
+        pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:status];
+#else
+        pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:@"Only supported on iOS 8 and higher"];
+#endif
+    }
+    @catch (NSException *exception) {
+        pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:exception.reason];
+    }
+    [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
+}
+
+- (void) requestMicrophoneAuthorization: (CDVInvokedUrlCommand*)command
+{
+    @try {
+        [[AVAudioSession sharedInstance] requestRecordPermission:^(BOOL granted) {
+            NSLog(@"HAs access to microphone: %d", granted);
+            CDVPluginResult* pluginResult;
+            if(granted) {
+                pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsInt:1];
+            } else {
+                pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsInt:0];
+            }
+            [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
+        }];
+    }
+    @catch (NSException *exception) {
+        CDVPluginResult* pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:exception.reason];
+        [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
+    }
+}
+
+// Remote (Push) Notifications
+- (void) isRemoteNotificationsEnabled: (CDVInvokedUrlCommand*)command
+{
+    CDVPluginResult* pluginResult;
+    BOOL isEnabled;
+    @try {
+        if ([[UIApplication sharedApplication] respondsToSelector:@selector(registerUserNotificationSettings:)]) {
+            // iOS8+
+            BOOL remoteNotificationsEnabled = [UIApplication sharedApplication].isRegisteredForRemoteNotifications;
+            UIUserNotificationSettings *userNotificationSettings = [UIApplication sharedApplication].currentUserNotificationSettings;
+            isEnabled = remoteNotificationsEnabled && userNotificationSettings.types != UIUserNotificationTypeNone;
+        } else {
+            // iOS7 and below
+            UIRemoteNotificationType enabledRemoteNotificationTypes = [UIApplication sharedApplication].enabledRemoteNotificationTypes;
+            isEnabled = enabledRemoteNotificationTypes != UIRemoteNotificationTypeNone;
+        }
+        
+        if(isEnabled) {
+            pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsInt:1];
+        } else {
+            pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsInt:0];
+        }
+    }
+    @catch (NSException *exception) {
+        pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:exception.reason];
+    }
+    [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
+}
+
+- (void) getRemoteNotificationTypes: (CDVInvokedUrlCommand*)command
+{
+    CDVPluginResult* pluginResult;
+    BOOL noneEnabled,alertsEnabled, badgesEnabled, soundsEnabled;
+    @try {
+        if ([[UIApplication sharedApplication] respondsToSelector:@selector(registerUserNotificationSettings:)]) {
+            // iOS8+
+            UIUserNotificationSettings *userNotificationSettings = [UIApplication sharedApplication].currentUserNotificationSettings;
+            noneEnabled = userNotificationSettings.types == UIUserNotificationTypeNone;
+            alertsEnabled = userNotificationSettings.types & UIUserNotificationTypeAlert;
+            badgesEnabled = userNotificationSettings.types & UIUserNotificationTypeBadge;
+            soundsEnabled = userNotificationSettings.types & UIUserNotificationTypeSound;
+        } else {
+            // iOS7 and below
+            UIRemoteNotificationType enabledRemoteNotificationTypes = [UIApplication sharedApplication].enabledRemoteNotificationTypes;
+            noneEnabled = enabledRemoteNotificationTypes == UIRemoteNotificationTypeNone;
+            alertsEnabled = enabledRemoteNotificationTypes & UIRemoteNotificationTypeAlert;
+            badgesEnabled = enabledRemoteNotificationTypes & UIRemoteNotificationTypeBadge;
+            soundsEnabled = enabledRemoteNotificationTypes & UIRemoteNotificationTypeSound;
+        }
+        
+        NSMutableDictionary* types = [[NSMutableDictionary alloc]init];
+        if(alertsEnabled) {
+            [types setValue:@"1" forKey:@"alert"];
+        } else {
+            [types setValue:@"0" forKey:@"alert"];
+        }
+        if(badgesEnabled) {
+            [types setValue:@"1" forKey:@"badge"];
+        } else {
+            [types setValue:@"0" forKey:@"badge"];
+        }
+        if(soundsEnabled) {
+            [types setValue:@"1" forKey:@"sound"];
+        } else {;
+            [types setValue:@"0" forKey:@"sound"];
+        }
+        pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:[self objectToJsonString:types]];
+    }
+    @catch (NSException *exception) {
+        pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:exception.reason];
+    }
+    [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
+}
+
+- (void) isRegisteredForRemoteNotifications: (CDVInvokedUrlCommand*)command
+{
+    CDVPluginResult* pluginResult;
+    BOOL registered;
+    @try {
+        if ([[UIApplication sharedApplication] respondsToSelector:@selector(registerUserNotificationSettings:)]) {
+            // iOS8+
+            registered = [UIApplication sharedApplication].isRegisteredForRemoteNotifications;
+        } else {
+            // iOS7 and below
+            UIRemoteNotificationType enabledRemoteNotificationTypes = [UIApplication sharedApplication].enabledRemoteNotificationTypes;
+            registered = enabledRemoteNotificationTypes != UIRemoteNotificationTypeNone;
+        }
+        if(registered) {
+            pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsInt:1];
+        } else {
+            pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsInt:0];
+        }
+    }
+    @catch (NSException *exception) {
+        pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:exception.reason];
+    }
+    [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
+}
+
+// Address Book (Contacts)
+
+- (void) getAddressBookAuthorizationStatus: (CDVInvokedUrlCommand*)command
+{
+    CDVPluginResult* pluginResult;
+    @try {
+        NSString* status;
+        ABAuthorizationStatus authStatus = ABAddressBookGetAuthorizationStatus();
+        
+        if(authStatus == kABAuthorizationStatusDenied || authStatus == kABAuthorizationStatusRestricted){
+            status = @"denied";
+        }else if(authStatus == kABAuthorizationStatusNotDetermined){
+            status = @"not_determined";
+        }else if(authStatus == kABAuthorizationStatusAuthorized){
+            status = @"authorized";
+        }
+        NSLog([NSString stringWithFormat:@"Address book authorization status is: %@", status]);
+        pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:status];
+    }
+    @catch (NSException *exception) {
+        pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:exception.reason];
+    }
+    [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
+}
+
+- (void) isAddressBookAuthorized: (CDVInvokedUrlCommand*)command
+{
+    CDVPluginResult* pluginResult;
+    @try {
+        ABAuthorizationStatus authStatus = ABAddressBookGetAuthorizationStatus();
+        if(authStatus == kABAuthorizationStatusAuthorized) {
+            pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsInt:1];
+        }
+        else {
+            pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsInt:0];
+        }
+    }
+    @catch (NSException *exception) {
+        pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:exception.reason];
+    }
+    [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
+}
+
+- (void) requestAddressBookAuthorization: (CDVInvokedUrlCommand*)command
+{
+    @try {
+        ABAddressBookRequestAccessWithCompletion(self.addressBook, ^(bool granted, CFErrorRef error) {
+            NSLog(@"Access request to address book: %d", granted);
+            CDVPluginResult* pluginResult;
+            if(granted) {
+                pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsInt:1];
+            } else {
+                pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsInt:0];
+            }
+            [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
+            
+        });
+    }
+    @catch (NSException *exception) {
+        CDVPluginResult* pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:exception.reason];
+        [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
+    }
+}
+
+// Calendar Events
+
+- (void) getCalendarAuthorizationStatus: (CDVInvokedUrlCommand*)command
+{
+    CDVPluginResult* pluginResult;
+    @try {
+        NSString* status;
+        
+        EKAuthorizationStatus authStatus = [EKEventStore authorizationStatusForEntityType:EKEntityTypeEvent];
+        
+        if(authStatus == EKAuthorizationStatusDenied || authStatus == EKAuthorizationStatusRestricted){
+            status = @"denied";
+        }else if(authStatus == EKAuthorizationStatusNotDetermined){
+            status = @"not_determined";
+        }else if(authStatus == EKAuthorizationStatusAuthorized){
+            status = @"authorized";
+        }
+        NSLog([NSString stringWithFormat:@"Calendar event authorization status is: %@", status]);
+        pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:status];
+    }
+    @catch (NSException *exception) {
+        pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:exception.reason];
+    }
+    [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
+}
+
+- (void) isCalendarAuthorized: (CDVInvokedUrlCommand*)command
+{
+    CDVPluginResult* pluginResult;
+    @try {
+        EKAuthorizationStatus authStatus = [EKEventStore authorizationStatusForEntityType:EKEntityTypeEvent];
+        if(authStatus == EKAuthorizationStatusAuthorized) {
+            pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsInt:1];
+        }
+        else {
+            pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsInt:0];
+        }
+    }
+    @catch (NSException *exception) {
+        pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:exception.reason];
+    }
+    [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
+}
+
+- (void) requestCalendarAuthorization: (CDVInvokedUrlCommand*)command
+{
+    @try {
+        
+        if (!self.eventStore) {
+            self.eventStore = [EKEventStore new];
+        }
+        
+        [self.eventStore requestAccessToEntityType:EKEntityTypeEvent completion:^(BOOL granted, NSError *error) {
+            NSLog(@"Access request to calendar events: %d", granted);
+            CDVPluginResult* pluginResult;
+            if(granted) {
+                pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsInt:1];
+            } else {
+                pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsInt:0];
+            }
+            [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
+        }];
+    }
+    @catch (NSException *exception) {
+        CDVPluginResult* pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:exception.reason];
+        [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
+    }
+}
+
+// Reminder Events
+
+- (void) getRemindersAuthorizationStatus: (CDVInvokedUrlCommand*)command
+{
+    CDVPluginResult* pluginResult;
+    @try {
+        NSString* status;
+        
+        EKAuthorizationStatus authStatus = [EKEventStore authorizationStatusForEntityType:EKEntityTypeReminder];
+        
+        if(authStatus == EKAuthorizationStatusDenied || authStatus == EKAuthorizationStatusRestricted){
+            status = @"denied";
+        }else if(authStatus == EKAuthorizationStatusNotDetermined){
+            status = @"not_determined";
+        }else if(authStatus == EKAuthorizationStatusAuthorized){
+            status = @"authorized";
+        }
+        NSLog([NSString stringWithFormat:@"Reminders authorization status is: %@", status]);
+        pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:status];
+    }
+    @catch (NSException *exception) {
+        pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:exception.reason];
+    }
+    [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
+}
+
+- (void) isRemindersAuthorized: (CDVInvokedUrlCommand*)command
+{
+    CDVPluginResult* pluginResult;
+    @try {
+        EKAuthorizationStatus authStatus = [EKEventStore authorizationStatusForEntityType:EKEntityTypeReminder];
+        if(authStatus == EKAuthorizationStatusAuthorized) {
+            pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsInt:1];
+        }
+        else {
+            pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsInt:0];
+        }
+    }
+    @catch (NSException *exception) {
+        pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:exception.reason];
+    }
+    [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
+}
+
+- (void) requestRemindersAuthorization: (CDVInvokedUrlCommand*)command
+{
+    @try {
+        
+        if (!self.eventStore) {
+            self.eventStore = [EKEventStore new];
+        }
+        
+        [self.eventStore requestAccessToEntityType:EKEntityTypeReminder completion:^(BOOL granted, NSError *error) {
+            NSLog(@"Access request to reminders: %d", granted);
+            CDVPluginResult* pluginResult;
+            if(granted) {
+                pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsInt:1];
+            } else {
+                pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsInt:0];
+            }
+            [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
+        }];
+    }
+    @catch (NSException *exception) {
+        CDVPluginResult* pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:exception.reason];
+        [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
+    }
+}
+
+/*********************
+ * Internal functions
+ *********************/
+- (void)jsCallback: (NSString*)jsString
 {
     [self.commandDelegate evalJs:jsString];
+}
+
+- (NSString*) getLocationAuthorizationStatusAsString: (CLAuthorizationStatus)authStatus
+{
+    NSString* status;
+    if(authStatus == kCLAuthorizationStatusDenied || authStatus == kCLAuthorizationStatusRestricted){
+        status = @"denied";
+    }else if(authStatus == kCLAuthorizationStatusNotDetermined){
+        status = @"not_determined";
+    }else if(authStatus == kCLAuthorizationStatusAuthorizedAlways){
+        status = @"authorized";
+    }else if(authStatus == kCLAuthorizationStatusAuthorizedWhenInUse){
+        status = @"authorized_when_in_use";
+    }
+    return status;
+}
+
+- (BOOL) isLocationAuthorized
+{
+    CLAuthorizationStatus authStatus = [CLLocationManager authorizationStatus];
+    NSString* status = [self getLocationAuthorizationStatusAsString:authStatus];
+    if([status  isEqual: @"authorized"] || [status  isEqual: @"authorized_when_in_use"]) {
+        return true;
+    } else {
+        return false;
+    }
+}
+
+- (void)locationManager:(CLLocationManager *)manager didChangeAuthorizationStatus:(CLAuthorizationStatus)authStatus {
+    NSString* status = [self getLocationAuthorizationStatusAsString:authStatus];
+    NSLog([NSString stringWithFormat:@"Location authorization status changed to: %@", status]);
+
+    if(self.locationRequestCallbackId != nil){
+        CDVPluginResult* pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:status];
+        [self.commandDelegate sendPluginResult:pluginResult callbackId:self.locationRequestCallbackId];
+        self.locationRequestCallbackId = nil;
+    }
+
+    [self jsCallback:[NSString stringWithFormat:@"cordova.plugins.diagnostic._onLocationStateChange(\"%@\");", status]];
+}
+
+- (BOOL) isCameraPresent
+{
+    BOOL cameraAvailable =
+    [UIImagePickerController
+     isSourceTypeAvailable:UIImagePickerControllerSourceTypeCamera];
+    if(cameraAvailable) {
+        NSLog(@"Camera available");
+        return true;
+    }
+    else {
+        NSLog(@"Camera unavailable");
+        return false;
+    }
+}
+
+- (BOOL) isCameraAuthorized
+{
+    AVAuthorizationStatus authStatus = [AVCaptureDevice authorizationStatusForMediaType:AVMediaTypeVideo];
+    if(authStatus == AVAuthorizationStatusAuthorized) {
+        return true;
+    } else {
+        return false;
+    }
+}
+
+- (NSString*) getCameraRollAuthorizationStatus
+{
+    PHAuthorizationStatus authStatus = [PHPhotoLibrary authorizationStatus];
+    return [self getCameraRollAuthorizationStatusAsString:authStatus];
+    
+}
+
+- (NSString*) getCameraRollAuthorizationStatusAsString: (PHAuthorizationStatus)authStatus
+{
+    NSString* status;
+    if(authStatus == PHAuthorizationStatusDenied || authStatus == PHAuthorizationStatusRestricted){
+        status = @"denied";
+    }else if(authStatus == PHAuthorizationStatusNotDetermined ){
+        status = @"not_determined";
+    }else if(authStatus == PHAuthorizationStatusAuthorized){
+        status = @"authorized";
+    }
+    return status;
+}
+
+- (BOOL) connectedToWifi  // Don't work on iOS Simulator, only in the device
+{
+    struct ifaddrs *addresses;
+    struct ifaddrs *cursor;
+    BOOL wiFiAvailable = NO;
+    
+    if (getifaddrs(&addresses) != 0) {
+        return NO;
+    }
+    
+    cursor = addresses;
+    while (cursor != NULL)  {
+        if (cursor -> ifa_addr -> sa_family == AF_INET && !(cursor -> ifa_flags & IFF_LOOPBACK)) // Ignore the loopback address
+        {
+            // Check for WiFi adapter
+            if (strcmp(cursor -> ifa_name, "en0") == 0) {
+                
+                NSLog(@"Wifi ON");
+                wiFiAvailable = YES;
+                break;
+            }
+        }
+        cursor = cursor -> ifa_next;
+    }
+    freeifaddrs(addresses);
+    return wiFiAvailable;
 }
 
 - (NSString*) arrayToJsonString:(NSArray*)inputArray
@@ -225,66 +867,85 @@ static Diagnostic* diagnostic = nil;
     return jsonString;
 }
 
-- (NSArray*) jsonStringToArray:(NSString*)jsonStr
-{
-    NSError* error = nil;
-    NSArray* array = [NSJSONSerialization JSONObjectWithData:[jsonStr dataUsingEncoding:NSUTF8StringEncoding] options:kNilOptions error:&error];
-    if (error != nil){
-        array = nil;
+- (ABAddressBookRef)addressBook {
+    if (!_addressBook) {
+        ABAddressBookRef addressBook = ABAddressBookCreateWithOptions(NULL, NULL);
+        
+        if (addressBook) {
+            [self setAddressBook:CFAutorelease(addressBook)];
+        }
     }
-    return array;
+    
+    return _addressBook;
 }
 
-- (NSDictionary*) jsonStringToDictionary:(NSString*)jsonStr
-{
-    return (NSDictionary*) [self jsonStringToArray:jsonStr];
-}
-
-- (bool)isNull: (NSString*)str
-{
-    return str == nil || str == (id)[NSNull null] || str.length == 0 || [str isEqual: @"<null>"];
-}
-
-
-/********************************/
-#pragma mark - utility functions
-/********************************/
-
-- (void)logDebug: (NSString*)msg
-{
-    if(self.debugEnabled){
-        NSLog(@"%@: %@", LOG_TAG, msg);
-        NSString* jsString = [NSString stringWithFormat:@"console.log(\"%@: %@\")", LOG_TAG, [self escapeDoubleQuotes:msg]];
-        [self executeGlobalJavascript:jsString];
+- (void)setAddressBook:(ABAddressBookRef)newAddressBook {
+    if (_addressBook != newAddressBook) {
+        if (_addressBook) {
+            CFRelease(_addressBook);
+        }
+        
+        if (newAddressBook) {
+            CFRetain(newAddressBook);
+        }
+        
+        _addressBook = newAddressBook;
     }
 }
 
-- (void)logError: (NSString*)msg
-{
-    NSLog(@"%@ ERROR: %@", LOG_TAG, msg);
-    if(self.debugEnabled){
-        NSString* jsString = [NSString stringWithFormat:@"console.error(\"%@: %@\")", LOG_TAG, [self escapeDoubleQuotes:msg]];
-        [self executeGlobalJavascript:jsString];
+- (void)dealloc {
+    if (_addressBook) {
+        CFRelease(_addressBook);
+        _addressBook = NULL;
     }
 }
 
-- (NSString*)escapeDoubleQuotes: (NSString*)str
-{
-    NSString *result =[str stringByReplacingOccurrencesOfString: @"\"" withString: @"\\\""];
-    return result;
-}
+#pragma mark - CBCentralManagerDelegate
 
-- (void) setSetting: (NSString*)key forValue:(id)value
-{
-    [[NSUserDefaults standardUserDefaults] setObject:value forKey:key];
-    [[NSUserDefaults standardUserDefaults] synchronize];
-}
-
-- (id) getSetting: (NSString*) key
-{
-    return [[NSUserDefaults standardUserDefaults] objectForKey:key];
+- (void) centralManagerDidUpdateState:(CBCentralManager *)central {
+    NSString* state;
+    NSString* description;
+    
+    switch(self.bluetoothManager.state)
+    {
+        case CBCentralManagerStateResetting:
+            state = @"resetting";
+            description =@"The connection with the system service was momentarily lost, update imminent.";
+            break;
+            
+        case CBCentralManagerStateUnsupported:
+            state = @"unsupported";
+            description = @"The platform doesn't support Bluetooth Low Energy.";
+            break;
+            
+        case CBCentralManagerStateUnauthorized:
+            state = @"unauthorized";
+            description = @"The app is not authorized to use Bluetooth Low Energy.";
+            break;
+        case CBCentralManagerStatePoweredOff:
+            state = @"powered_off";
+            description = @"Bluetooth is currently powered off.";
+            break;
+        case CBCentralManagerStatePoweredOn:
+            state = @"powered_on";
+            description = @"Bluetooth is currently powered on and available to use.";
+            break;
+        default:
+            state = @"unknown";
+            description = @"State unknown, update imminent.";
+            break;
+    }
+    NSLog(@"Bluetooth state changed: %@",description);
+    
+    self.bluetoothState = state;
+    if([state  isEqual: @"powered_on"]){
+        self.bluetoothEnabled = true;
+    }else{
+        self.bluetoothEnabled = false;
+    }
+    
+    NSString* jsString = [NSString stringWithFormat:@"cordova.plugins.diagnostic._onBluetoothStateChange(\"%@\");", state];
+    [self jsCallback:jsString];
 }
 
 @end
-
-

@@ -37,10 +37,13 @@
     "cordova-plugin-vibration": {
       "PACKAGE_NAME": "com.phonegap.doorstep"
     },
-    "cordova.plugins.diagnostic": {
+    "cordova-plugin-whitelist": {
       "PACKAGE_NAME": "com.phonegap.doorstep"
     },
     "cordova-plugin-request-location-accuracy": {
+      "PACKAGE_NAME": "com.phonegap.doorstep"
+    },
+    "cordova.plugins.diagnostic": {
       "PACKAGE_NAME": "com.phonegap.doorstep"
     }
   },

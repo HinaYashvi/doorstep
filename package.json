@@ -24,8 +24,9 @@
       "cordova-plugin-network-information": {},
       "cordova-plugin-vibration": {},
       "cordova-plugin-geolocation": {},
-      "cordova.plugins.diagnostic": {},
-      "cordova-plugin-request-location-accuracy": {}
+      "cordova-plugin-whitelist": {},
+      "cordova-plugin-request-location-accuracy": {},
+      "cordova.plugins.diagnostic": {}
     },
     "platforms": [
       "browser",
@@ -34,12 +35,13 @@
     ]
   },
   "dependencies": {
-    "cordova-android": "^8.1.0",
+    "cordova-android": "^7.0.0",
     "cordova-browser": "^6.0.0",
     "cordova-ios": "^5.1.1",
     "cordova-plugin-compat": "~1.2.0",
     "cordova-plugin-geolocation": "^2.1.0",
     "cordova-plugin-request-location-accuracy": "^2.1.0",
-    "cordova.plugins.diagnostic": "^5.0.1"
+    "cordova-plugin-whitelist": "^1.3.4",
+    "cordova.plugins.diagnostic": "^3.0.0"
   }
 }
