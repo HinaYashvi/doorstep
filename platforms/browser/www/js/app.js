@@ -446,37 +446,21 @@ function openLOC(){
          //mainView.loadPage("current-location.html");
       }else{
         alert("Location service is ON");
-        app.router.navigate("/current-location/");
+        mainView.router.navigate("/customer_dash/");
       }
   }, function(error){
     console.error("The following error occurred: "+error);
   });   
 }
 function onRequestSuccess(success){
-    if(success){
-      //cordova.plugins.locationAccuracy.request(successCallback, errorCallback, accuracy);
-      cordova.plugins.locationAccuracy.canRequest(function(canRequest){
-        if(canRequest){
-            cordova.plugins.locationAccuracy.request(function (success){
-                console.log("Successfully requested accuracy: "+success.message);
-            }, function (error){
-               console.error("Accuracy request failed: error code="+error.code+"; error message="+error.message);
-               if(error.code !== cordova.plugins.locationAccuracy.ERROR_USER_DISAGREED){
-                   if(window.confirm("Failed to automatically set Location Mode to 'High Accuracy'. Would you like to switch to the Location Settings page and do this manually?")){
-                       cordova.plugins.diagnostic.switchToLocationSettings();
-                   }
-               }
-            }, cordova.plugins.locationAccuracy.REQUEST_PRIORITY_HIGH_ACCURACY);
-        }else{
-            // request location permission and try again
-        }
-    });
-  }
+  //if(success){
+    cordova.plugins.locationAccuracy.request(successCallback, errorCallback, accuracy);      
+  //}
 }  
 function onRequestFailure(error){
-   if(error){
+   //if(error){
      alert(error.message);
-   }
+   //}
 }
 /*function onSuccess(pos){
     if(pos){
@@ -493,10 +477,17 @@ function onError(error){
 }*/
 
 function successCallback(success){
-    if(success){
-      mainView.router.navigate("/current-location/");
-    }
+  alert("in successCallback *******");
+    //if(success){
+      mainView.router.navigate("/customer_dash/");
+    //}
 } 
+function errorCallback(error){
+  alert("in errorCallback ############");
+   //if(error){
+     alert(error.message);
+   //}
+}
 /*function openLOC(){
   alert("openLOC");
     cordova.plugins.diagnostic.isLocationEnabled(function(enabled){ //isLocationEnabled
@@ -777,7 +768,7 @@ function verifycust_otp(){
 function logincheck(){
   checkConnection();    
   var login_form = $(".login_form").serialize();
-  //console.log(login_form);
+  alert(login_form);
   var mobile_num = $("#mob_login").val();
   var u_pass = $(".l_pass").val();
   if(mobile_num==''){
@@ -803,6 +794,8 @@ function logincheck(){
         //console.log(result);
         var parse_authmsg = result.auth_msg;
         var user_session = result.user_session[0];
+        alert(parse_authmsg);
+        alert("user_session "+user_session);
         //console.log(user_session);        
         if(parse_authmsg=="p_success"){
           // partner dashboard //

@@ -446,21 +446,21 @@ function openLOC(){
          //mainView.loadPage("current-location.html");
       }else{
         alert("Location service is ON");
-        app.router.navigate("/customer_dash/");
+        mainView.router.navigate("/customer_dash/");
       }
   }, function(error){
     console.error("The following error occurred: "+error);
   });   
 }
 function onRequestSuccess(success){
-  if(success){
+  //if(success){
     cordova.plugins.locationAccuracy.request(successCallback, errorCallback, accuracy);      
-  }
+  //}
 }  
 function onRequestFailure(error){
-   if(error){
+   //if(error){
      alert(error.message);
-   }
+   //}
 }
 /*function onSuccess(pos){
     if(pos){
@@ -477,14 +477,16 @@ function onError(error){
 }*/
 
 function successCallback(success){
-    if(success){
+  alert("in successCallback *******");
+    //if(success){
       mainView.router.navigate("/customer_dash/");
-    }
+    //}
 } 
 function errorCallback(error){
-   if(error){
+  alert("in errorCallback ############");
+   //if(error){
      alert(error.message);
-   }
+   //}
 }
 /*function openLOC(){
   alert("openLOC");
@@ -766,7 +768,7 @@ function verifycust_otp(){
 function logincheck(){
   checkConnection();    
   var login_form = $(".login_form").serialize();
-  //console.log(login_form);
+  alert(login_form);
   var mobile_num = $("#mob_login").val();
   var u_pass = $(".l_pass").val();
   if(mobile_num==''){
@@ -792,6 +794,8 @@ function logincheck(){
         //console.log(result);
         var parse_authmsg = result.auth_msg;
         var user_session = result.user_session[0];
+        alert(parse_authmsg);
+        alert("user_session "+user_session);
         //console.log(user_session);        
         if(parse_authmsg=="p_success"){
           // partner dashboard //

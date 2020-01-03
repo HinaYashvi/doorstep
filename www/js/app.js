@@ -768,7 +768,7 @@ function verifycust_otp(){
 function logincheck(){
   checkConnection();    
   var login_form = $(".login_form").serialize();
-  //console.log(login_form);
+  alert(login_form);
   var mobile_num = $("#mob_login").val();
   var u_pass = $(".l_pass").val();
   if(mobile_num==''){
@@ -794,6 +794,8 @@ function logincheck(){
         //console.log(result);
         var parse_authmsg = result.auth_msg;
         var user_session = result.user_session[0];
+        alert(parse_authmsg);
+        alert("user_session "+user_session);
         //console.log(user_session);        
         if(parse_authmsg=="p_success"){
           // partner dashboard //
