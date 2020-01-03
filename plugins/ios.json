@@ -39,9 +39,6 @@
     "cordova-plugin-network-information": {
       "PACKAGE_NAME": "$(PRODUCT_BUNDLE_IDENTIFIER)"
     },
-    "cordova-plugin-request-location-accuracy": {
-      "PACKAGE_NAME": "$(PRODUCT_BUNDLE_IDENTIFIER)"
-    },
     "cordova-plugin-vibration": {
       "PACKAGE_NAME": "$(PRODUCT_BUNDLE_IDENTIFIER)"
     },

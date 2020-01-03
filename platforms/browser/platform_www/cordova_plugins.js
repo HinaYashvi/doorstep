@@ -422,7 +422,6 @@ module.exports.metadata =
     "cordova-plugin-network-information": "1.3.4",
     "cordova-plugin-vibration": "2.1.6",
     "cordova-plugin-whitelist": "1.3.4",
-    "cordova-plugin-request-location-accuracy": "2.1.0",
     "cordova.plugins.diagnostic": "3.0.0"
 }
 // BOTTOM OF METADATA

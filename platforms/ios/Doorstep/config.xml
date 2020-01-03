@@ -50,9 +50,6 @@
     <feature name="NetworkStatus">
         <param name="ios-package" value="CDVConnection" />
     </feature>
-    <feature name="RequestLocationAccuracy">
-        <param name="ios-package" value="RequestLocationAccuracy" />
-    </feature>
     <feature name="Vibration">
         <param name="ios-package" value="CDVVibration" />
     </feature>

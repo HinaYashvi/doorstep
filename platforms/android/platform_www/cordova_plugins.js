@@ -362,14 +362,6 @@ cordova.define('cordova/plugin_list', function(require, exports, module) {
       ]
     },
     {
-      "id": "cordova-plugin-request-location-accuracy.RequestLocationAccuracy",
-      "file": "plugins/cordova-plugin-request-location-accuracy/www/android/RequestLocationAccuracy.js",
-      "pluginId": "cordova-plugin-request-location-accuracy",
-      "clobbers": [
-        "cordova.plugins.locationAccuracy"
-      ]
-    },
-    {
       "id": "cordova-plugin-vibration.notification",
       "file": "plugins/cordova-plugin-vibration/www/vibration.js",
       "pluginId": "cordova-plugin-vibration",
@@ -398,7 +390,6 @@ cordova.define('cordova/plugin_list', function(require, exports, module) {
     "cordova-plugin-inappbrowser": "1.7.2",
     "cordova-plugin-media-capture": "1.4.3",
     "cordova-plugin-network-information": "1.3.4",
-    "cordova-plugin-request-location-accuracy": "2.1.0",
     "cordova-plugin-vibration": "2.1.6",
     "cordova-plugin-whitelist": "1.3.4",
     "cordova.plugins.diagnostic": "3.0.0"
