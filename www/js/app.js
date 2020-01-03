@@ -431,8 +431,8 @@ function customer_exists(mobile_no){
 // -------------------------------------- DATA NAME : CUSTOMER DASHBOARD --------------------------------- //
 function onDeviceReady(){
   alert("onDeviceReady");
-  openLOC();
-  
+  //openLOC();
+  //logOut();
   //navigator.geolocation.getCurrentPosition(onSuccess, onError);
   
 }
@@ -771,12 +771,15 @@ function logincheck(){
   alert(login_form);
   var mobile_num = $("#mob_login").val();
   var u_pass = $(".l_pass").val();
+  alert(mobile_num+"------"+u_pass);
   if(mobile_num==''){
+     alert("mobile_num is empty");
     $("#passerror").html("");
     //app.dialog.alert("Mobile number is required.");
     $("#umoberror").html("Mobile number is required.");    
     return false;
   }else if(u_pass==''){
+    alert("password is empty");
     $("#umoberror").html("");
     //app.dialog.alert("Password is required");
     $("#passerror").html("Password is required.");
@@ -784,12 +787,17 @@ function logincheck(){
   }else{
     //$("#umoberror").html("");
     //$("#passerror").html("");
-    app.preloader.show();
+    alert("ELSE");
+    //$("#umoberror").html("");
+    //$("#passerror").html("");
+    alert(base_url+'APP/Appcontroller/authenticateUser');
+    //app.preloader.show();
     $.ajax({
       type:'POST', 
       url:base_url+'APP/Appcontroller/authenticateUser',
       data:login_form,  
       success:function(authRes){
+        alert("succ "+authRes);
         var result = $.parseJSON(authRes);
         //console.log(result);
         var parse_authmsg = result.auth_msg;
@@ -799,13 +807,15 @@ function logincheck(){
         //console.log(user_session);        
         if(parse_authmsg=="p_success"){
           // partner dashboard //
+          alert("partner dashboard");
           mainView.router.navigate("/partner_dash/");
           window.localStorage.setItem("session_pid",result.user_session[0].p_id);
           window.localStorage.setItem("session_pname",result.user_session[0].p_name);
           window.localStorage.setItem("session_pphone",result.user_session[0].p_phone);
           window.localStorage.setItem("session_pemail",result.user_session[0].p_email);
-          window.localStorage.setItem("session_pcreated",result.user_session[0].p_created_on);          
-        }else if(parse_authmsg=="c_success"){           
+          window.localStorage.setItem("session_pcreated",result.user_session[0].p_created_on);      
+        }else if(parse_authmsg=="c_success"){  
+          alert("customer_dash");
           mainView.router.navigate("/customer_dash/");
           window.localStorage.setItem("session_cid",result.user_session[0].c_id);
           window.localStorage.setItem("session_cname",result.user_session[0].c_name);
@@ -813,13 +823,15 @@ function logincheck(){
           window.localStorage.setItem("session_cemail",result.user_session[0].c_email);
           window.localStorage.setItem("session_ccreated",result.user_session[0].c_created_on); 
         }else if(parse_authmsg=="Inc_pass"){
+          alert("Incorrect Password!");
           app.dialog.alert("Incorrect Password!");
         }else if(parse_authmsg=="Inc_mobpass"){
+          alert("Mobile no or password Incorrect");
           app.dialog.alert("Mobile no or password Incorrect");
         }
       }
     });
-    app.preloader.hide();
+    //app.preloader.hide();
   }
 }
 
@@ -950,4 +962,15 @@ function showletter(show){
 
 // --------------------------------------------- L O G O U T ------------------------------------------ //
 function logOut(){
+  checkConnection();
+  window.localStorage.removeItem("session_pid"); 
+  window.localStorage.removeItem("session_pname"); 
+  window.localStorage.removeItem("session_pphone"); 
+  window.localStorage.removeItem("session_pemail"); 
+  window.localStorage.removeItem("session_pcreated"); 
+  window.localStorage.removeItem("session_cid"); 
+  window.localStorage.removeItem("session_cname"); 
+  window.localStorage.removeItem("session_cphone"); 
+  window.localStorage.removeItem("session_cemail"); 
+  window.localStorage.removeItem("session_ccreated"); 
 }

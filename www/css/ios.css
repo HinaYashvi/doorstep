@@ -6,9 +6,11 @@ body{
 .login-screen-content{
 	/*background:rgba(0, 0, 0, 0) url("../img/bg-login.jpg") no-repeat fixed center center / cover;*/
     background:rgba(0, 0, 0, 0) url("../img/registration/6.jpg") no-repeat fixed center center / cover;
+    background-size: cover;
 }
 .preg-screen-content{
     background:rgba(0, 0, 0, 0) url("../img/registration/6.jpg") no-repeat fixed center center / cover;
+    background-size: cover;
     /*background-color: #4a3998;*/
 }
 .login-content{
