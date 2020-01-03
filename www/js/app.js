@@ -430,14 +430,14 @@ function customer_exists(mobile_no){
 }
 // -------------------------------------- DATA NAME : CUSTOMER DASHBOARD --------------------------------- //
 function onDeviceReady(){
-  alert("onDeviceReady");
+  //alert("onDeviceReady");
   //openLOC();
   //logOut();
   //navigator.geolocation.getCurrentPosition(onSuccess, onError);
   
 }
 function openLOC(){
-  alert("openLOC");
+  //alert("openLOC");
     cordova.plugins.diagnostic.isLocationEnabled(function(enabled){ //isLocationEnabled
   console.log("GPS location is " + (enabled ? "enabled" : "disabled"));
       if(!enabled){
@@ -565,8 +565,8 @@ function onError(error){
 }*/
 $$(document).on('page:init', '.page[data-name="customer_dash"]', function (page) {  
   checkConnection();  
-
-swiper = new Swiper('.swiper-container_dash', {
+  openLOC();  
+  swiper = new Swiper('.swiper-container_dash', {
     parallax: true,
     //autoHeight: true,
     setWrapperSize: true,
@@ -589,9 +589,33 @@ swiper = new Swiper('.swiper-container_dash', {
     observer: true,
     observeParents: true, 
   });  
-
+  navigator.geolocation.getCurrentPosition(onSuccess, onError,{ maximumAge: 3000, timeout: 5000, enableHighAccuracy: true });
   //navigator.geolocation.getCurrentPosition(onSuccess, onError);
 });
+function onSuccess(position){
+    alert("in function");
+    alert('Latitude: '          + position.coords.latitude          + '\n' +
+          'Longitude: '         + position.coords.longitude         + '\n' +
+          'Altitude: '          + position.coords.altitude          + '\n' +
+          'Accuracy: '          + position.coords.accuracy          + '\n' +
+          'Altitude Accuracy: ' + position.coords.altitudeAccuracy  + '\n' +
+          'Heading: '           + position.coords.heading           + '\n' +
+          'Speed: '             + position.coords.speed             + '\n' +
+          'Timestamp: '         + position.timestamp                + '\n');
+    var longitude = position.coords.longitude;
+    var latitude = position.coords.latitude;
+    var LatLong = new google.maps.LatLng(latitude,longitude);
+    alert(LatLong);
+    var mapOptions = {
+        center : LatLong,
+        zoom : 17,
+        mapTypeId : google.maps.MapTypeId.ROADMAP
+    };
+    var map = new google.maps.Map(document.getElementById("map-canvas"), mapOptions);
+}
+function onError(error){
+  alert('code: '    + error.code    + '\n' + 'message: ' + error.message + '\n');
+}
 /*function openLOC(){
   alert("openLOC"); 
 //alert(cordova.plugins.diagnostic.enableDebug());
@@ -768,18 +792,18 @@ function verifycust_otp(){
 function logincheck(){
   checkConnection();    
   var login_form = $(".login_form").serialize();
-  alert(login_form);
+  //alert(login_form);
   var mobile_num = $("#mob_login").val();
   var u_pass = $(".l_pass").val();
-  alert(mobile_num+"------"+u_pass);
+  //alert(mobile_num+"------"+u_pass);
   if(mobile_num==''){
-     alert("mobile_num is empty");
+    //alert("mobile_num is empty");
     $("#passerror").html("");
     //app.dialog.alert("Mobile number is required.");
     $("#umoberror").html("Mobile number is required.");    
     return false;
   }else if(u_pass==''){
-    alert("password is empty");
+    //alert("password is empty");
     $("#umoberror").html("");
     //app.dialog.alert("Password is required");
     $("#passerror").html("Password is required.");
@@ -787,17 +811,17 @@ function logincheck(){
   }else{
     //$("#umoberror").html("");
     //$("#passerror").html("");
-    alert("ELSE");
+    //alert("ELSE");
     //$("#umoberror").html("");
     //$("#passerror").html("");
-    alert(base_url+'APP/Appcontroller/authenticateUser');
+    //alert(base_url+'APP/Appcontroller/authenticateUser');
     //app.preloader.show();
     $.ajax({
       type:'POST', 
       url:base_url+'APP/Appcontroller/authenticateUser',
       data:login_form,  
       success:function(authRes){
-        alert("succ "+authRes);
+        //alert("succ "+authRes);
         var result = $.parseJSON(authRes);
         //console.log(result);
         var parse_authmsg = result.auth_msg;
@@ -807,7 +831,7 @@ function logincheck(){
         //console.log(user_session);        
         if(parse_authmsg=="p_success"){
           // partner dashboard //
-          alert("partner dashboard");
+          //alert("partner dashboard");
           mainView.router.navigate("/partner_dash/");
           window.localStorage.setItem("session_pid",result.user_session[0].p_id);
           window.localStorage.setItem("session_pname",result.user_session[0].p_name);
@@ -815,7 +839,7 @@ function logincheck(){
           window.localStorage.setItem("session_pemail",result.user_session[0].p_email);
           window.localStorage.setItem("session_pcreated",result.user_session[0].p_created_on);      
         }else if(parse_authmsg=="c_success"){  
-          alert("customer_dash");
+          //alert("customer_dash");
           mainView.router.navigate("/customer_dash/");
           window.localStorage.setItem("session_cid",result.user_session[0].c_id);
           window.localStorage.setItem("session_cname",result.user_session[0].c_name);
@@ -823,10 +847,10 @@ function logincheck(){
           window.localStorage.setItem("session_cemail",result.user_session[0].c_email);
           window.localStorage.setItem("session_ccreated",result.user_session[0].c_created_on); 
         }else if(parse_authmsg=="Inc_pass"){
-          alert("Incorrect Password!");
+          //alert("Incorrect Password!");
           app.dialog.alert("Incorrect Password!");
         }else if(parse_authmsg=="Inc_mobpass"){
-          alert("Mobile no or password Incorrect");
+          //alert("Mobile no or password Incorrect");
           app.dialog.alert("Mobile no or password Incorrect");
         }
       }
