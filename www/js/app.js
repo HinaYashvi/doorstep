@@ -607,6 +607,8 @@ function onSuccess(position){
     var LatLong = new google.maps.LatLng(latitude,longitude);
     alert(LatLong);
     var geocoder = new google.maps.Geocoder();
+    $("#map-canvas").html("*************"+geocoder);
+    alert("geocoder.geocode "+geocoder.geocode);
     geocoder.geocode({ 'latLng': LatLong }, function (results, status) {
       alert("results "+results);
       alert("status ="+status);
