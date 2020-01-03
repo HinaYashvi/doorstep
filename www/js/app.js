@@ -606,14 +606,57 @@ function onSuccess(position){
     var latitude = position.coords.latitude;
     var LatLong = new google.maps.LatLng(latitude,longitude);
     alert(LatLong);
-    var geocoder = geocoder = new google.maps.Geocoder();
+    var geocoder = new google.maps.Geocoder();
     geocoder.geocode({ 'latLng': LatLong }, function (results, status) {
       alert("status ="+status);
-        if (status == google.maps.GeocoderStatus.OK) {
+        /*if (status == google.maps.GeocoderStatus.OK) {
             if (results[1]) {
                 alert("Location: " + results[1].formatted_address);
             }
-        }
+        }*/
+        if (status == google.maps.GeocoderStatus.OK) {
+                  if (results[0]) {
+
+                      var address = "", city = "", state = "", zip = "", country = "", formattedAddress = "";
+                      var lat;
+                      var lng;
+
+                      for (var i = 0; i < results[0].address_components.length; i++) {
+                          var addr = results[0].address_components[i];
+                          // check if this entry in address_components has a type of country
+                          if (addr.types[0] == 'country')
+                              country = addr.long_name;
+                          else if (addr.types[0] == 'street_address') // address 1
+                              address = address + addr.long_name;
+                          else if (addr.types[0] == 'establishment')
+                              address = address + addr.long_name;
+                          else if (addr.types[0] == 'route')  // address 2
+                              address = address + addr.long_name;
+                          else if (addr.types[0] == 'postal_code')       // Zip
+                              zip = addr.short_name;
+                          else if (addr.types[0] == ['administrative_area_level_1'])       // State
+                              state = addr.long_name;
+                          else if (addr.types[0] == ['locality'])       // City
+                              city = addr.long_name;
+                      }
+
+
+                      if (results[0].formatted_address != null) {
+                          formattedAddress = results[0].formatted_address;
+                      }
+
+                      //debugger;
+
+                      var location = results[0].geometry.location;
+
+                      lat = location.lat;
+                      lng = location.lng;
+
+                      alert('City: '+ city + '\n' + 'State: '+ state + '\n' + 'Zip: '+ zip + '\n' + 'Formatted Address: '+ formattedAddress + '\n' + 'Lat: '+ lat + '\n' + 'Lng: '+ lng);
+
+                  }
+
+              }
     });
 
     var mapOptions = {
