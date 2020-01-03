@@ -802,8 +802,8 @@ function logincheck(){
         //console.log(result);
         var parse_authmsg = result.auth_msg;
         var user_session = result.user_session[0];
-        alert(parse_authmsg);
-        alert("user_session "+user_session);
+        //alert(parse_authmsg);
+        //alert("user_session "+user_session);
         //console.log(user_session);        
         if(parse_authmsg=="p_success"){
           // partner dashboard //
