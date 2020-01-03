@@ -606,6 +606,16 @@ function onSuccess(position){
     var latitude = position.coords.latitude;
     var LatLong = new google.maps.LatLng(latitude,longitude);
     alert(LatLong);
+    var geocoder = geocoder = new google.maps.Geocoder();
+    geocoder.geocode({ 'latLng': LatLong }, function (results, status) {
+      alert("status ="+status);
+        if (status == google.maps.GeocoderStatus.OK) {
+            if (results[1]) {
+                alert("Location: " + results[1].formatted_address);
+            }
+        }
+    });
+
     var mapOptions = {
         center : LatLong,
         zoom : 17,
