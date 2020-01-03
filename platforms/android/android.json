@@ -89,6 +89,10 @@
             {
               "xml": "<uses-permission android:name=\"android.permission.ACCESS_NETWORK_STATE\" />",
               "count": 1
+            },
+            {
+              "xml": "<uses-permission android:name=\"android.permission.BLUETOOTH\" />",
+              "count": 1
             }
           ],
           "application": [
@@ -111,6 +115,38 @@
             {
               "xml": "<feature name=\"RequestLocationAccuracy\"><param name=\"android-package\" value=\"cordova.plugin.RequestLocationAccuracy\" /></feature>",
               "count": 1
+            },
+            {
+              "xml": "<feature name=\"Diagnostic\"><param name=\"android-package\" value=\"cordova.plugins.Diagnostic\" /><param name=\"onload\" value=\"true\" /></feature>",
+              "count": 1
+            },
+            {
+              "xml": "<feature name=\"Diagnostic_Location\"><param name=\"android-package\" value=\"cordova.plugins.Diagnostic_Location\" /><param name=\"onload\" value=\"true\" /></feature>",
+              "count": 1
+            },
+            {
+              "xml": "<feature name=\"Diagnostic_Bluetooth\"><param name=\"android-package\" value=\"cordova.plugins.Diagnostic_Bluetooth\" /><param name=\"onload\" value=\"true\" /></feature>",
+              "count": 1
+            },
+            {
+              "xml": "<feature name=\"Diagnostic_Wifi\"><param name=\"android-package\" value=\"cordova.plugins.Diagnostic_Wifi\" /><param name=\"onload\" value=\"true\" /></feature>",
+              "count": 1
+            },
+            {
+              "xml": "<feature name=\"Diagnostic_Camera\"><param name=\"android-package\" value=\"cordova.plugins.Diagnostic_Camera\" /><param name=\"onload\" value=\"true\" /></feature>",
+              "count": 1
+            },
+            {
+              "xml": "<feature name=\"Diagnostic_Notifications\"><param name=\"android-package\" value=\"cordova.plugins.Diagnostic_Notifications\" /><param name=\"onload\" value=\"true\" /></feature>",
+              "count": 1
+            },
+            {
+              "xml": "<feature name=\"Diagnostic_NFC\"><param name=\"android-package\" value=\"cordova.plugins.Diagnostic_NFC\" /><param name=\"onload\" value=\"true\" /></feature>",
+              "count": 1
+            },
+            {
+              "xml": "<feature name=\"Diagnostic_External_Storage\"><param name=\"android-package\" value=\"cordova.plugins.Diagnostic_External_Storage\" /><param name=\"onload\" value=\"true\" /></feature>",
+              "count": 1
             }
           ]
         }
@@ -118,61 +154,6 @@
     }
   },
   "installed_plugins": {
-    "cordova-android-play-services-gradle-release": {
-      "PLAY-SERVICES-ADS": "18.0.0",
-      "PLAY-SERVICES-ADS-IDENTIFIER": "17.0.0",
-      "PLAY-SERVICES-ADS-LITE": "18.0.0",
-      "PLAY-SERVICES-AFS-NATIVE": "17.0.0",
-      "PLAY-SERVICES-ANALYTICS": "17.0.0",
-      "PLAY-SERVICES-ANALYTICS-IMPL": "17.0.0",
-      "PLAY-SERVICES-APPINVITE": "18.0.0",
-      "PLAY-SERVICES-AUDIENCE": "17.0.0",
-      "PLAY-SERVICES-AUTH": "17.0.0",
-      "PLAY-SERVICES-AUTH-API-PHONE": "17.0.0",
-      "PLAY-SERVICES-AWARENESS": "17.0.0",
-      "PLAY-SERVICES-BASE": "17.0.0",
-      "PLAY-SERVICES-BASEMENT": "17.0.0",
-      "PLAY-SERVICES-CAST": "17.0.0",
-      "PLAY-SERVICES-CAST-FRAMEWORK": "17.0.0",
-      "PLAY-SERVICES-CLEARCUT": "17.0.0",
-      "PLAY-SERVICES-CRONET": "17.0.0",
-      "PLAY-SERVICES-DRIVE": "17.0.0",
-      "PLAY-SERVICES-FIDO": "18.0.0",
-      "PLAY-SERVICES-FITNESS": "17.0.0",
-      "PLAY-SERVICES-FLAGS": "17.0.0",
-      "PLAY-SERVICES-GAMES": "18.0.0",
-      "PLAY-SERVICES-GASS": "18.0.0",
-      "PLAY-SERVICES-GCM": "17.0.0",
-      "PLAY-SERVICES-IDENTITY": "17.0.0",
-      "PLAY-SERVICES-IID": "17.0.0",
-      "PLAY-SERVICES-INSTANTAPPS": "17.0.0",
-      "PLAY-SERVICES-LOCATION": "17.0.0",
-      "PLAY-SERVICES-MAPS": "17.0.0",
-      "PLAY-SERVICES-MEASUREMENT": "17.0.0",
-      "PLAY-SERVICES-MEASUREMENT-API": "17.0.0",
-      "PLAY-SERVICES-MEASUREMENT-IMPL": "17.0.0",
-      "PLAY-SERVICES-MEASUREMENT-SDK": "17.0.0",
-      "PLAY-SERVICES-MEASUREMENT-SDK-API": "17.0.0",
-      "PLAY-SERVICES-NEARBY": "17.0.0",
-      "PLAY-SERVICES-OSS-LICENSES": "17.0.0",
-      "PLAY-SERVICES-PANORAMA": "17.0.0",
-      "PLAY-SERVICES-PHENOTYPE": "17.0.0",
-      "PLAY-SERVICES-PLACES": "17.0.0",
-      "PLAY-SERVICES-PLACES-PLACEREPORT": "17.0.0",
-      "PLAY-SERVICES-PLUS": "17.0.0",
-      "PLAY-SERVICES-SAFETYNET": "17.0.0",
-      "PLAY-SERVICES-STATS": "17.0.0",
-      "PLAY-SERVICES-TAGMANAGER": "17.0.0",
-      "PLAY-SERVICES-TAGMANAGER-API": "17.0.0",
-      "PLAY-SERVICES-TAGMANAGER-V4-IMPL": "17.0.0",
-      "PLAY-SERVICES-TASKS": "17.0.0",
-      "PLAY-SERVICES-VISION": "18.0.0",
-      "PLAY-SERVICES-VISION-COMMON": "18.0.0",
-      "PLAY-SERVICES-VISION-IMAGE-LABEL": "18.0.0",
-      "PLAY-SERVICES-WALLET": "17.0.0",
-      "PLAY-SERVICES-WEARABLE": "17.0.0",
-      "PACKAGE_NAME": "com.phonegap.doorstep"
-    },
     "cordova-plugin-battery-status": {
       "PACKAGE_NAME": "com.phonegap.doorstep"
     },
@@ -204,10 +185,13 @@
       "PACKAGE_NAME": "com.phonegap.doorstep"
     },
     "cordova-plugin-request-location-accuracy": {
-      "PLAY_SERVICES_LOCATION_VERSION": "15.0.0",
       "PACKAGE_NAME": "com.phonegap.doorstep"
     },
     "cordova-plugin-vibration": {
+      "PACKAGE_NAME": "com.phonegap.doorstep"
+    },
+    "cordova.plugins.diagnostic": {
+      "ANDROID_SUPPORT_VERSION": "28.+",
       "PACKAGE_NAME": "com.phonegap.doorstep"
     }
   },
@@ -590,10 +574,97 @@
         "navigator.notification",
         "navigator"
       ]
+    },
+    {
+      "id": "cordova.plugins.diagnostic.Diagnostic",
+      "file": "plugins/cordova.plugins.diagnostic/www/android/diagnostic.js",
+      "pluginId": "cordova.plugins.diagnostic",
+      "merges": [
+        "cordova.plugins.diagnostic"
+      ]
+    },
+    {
+      "id": "cordova.plugins.diagnostic.Diagnostic_Location",
+      "file": "plugins/cordova.plugins.diagnostic/www/android/diagnostic.location.js",
+      "pluginId": "cordova.plugins.diagnostic",
+      "merges": [
+        "cordova.plugins.diagnostic.location"
+      ]
+    },
+    {
+      "id": "cordova.plugins.diagnostic.Diagnostic_Bluetooth",
+      "file": "plugins/cordova.plugins.diagnostic/www/android/diagnostic.bluetooth.js",
+      "pluginId": "cordova.plugins.diagnostic",
+      "merges": [
+        "cordova.plugins.diagnostic.bluetooth"
+      ]
+    },
+    {
+      "id": "cordova.plugins.diagnostic.Diagnostic_Wifi",
+      "file": "plugins/cordova.plugins.diagnostic/www/android/diagnostic.wifi.js",
+      "pluginId": "cordova.plugins.diagnostic",
+      "merges": [
+        "cordova.plugins.diagnostic.wifi"
+      ]
+    },
+    {
+      "id": "cordova.plugins.diagnostic.Diagnostic_Camera",
+      "file": "plugins/cordova.plugins.diagnostic/www/android/diagnostic.camera.js",
+      "pluginId": "cordova.plugins.diagnostic",
+      "merges": [
+        "cordova.plugins.diagnostic.camera"
+      ]
+    },
+    {
+      "id": "cordova.plugins.diagnostic.Diagnostic_Notifications",
+      "file": "plugins/cordova.plugins.diagnostic/www/android/diagnostic.notifications.js",
+      "pluginId": "cordova.plugins.diagnostic",
+      "merges": [
+        "cordova.plugins.diagnostic.notifications"
+      ]
+    },
+    {
+      "id": "cordova.plugins.diagnostic.Diagnostic_Microphone",
+      "file": "plugins/cordova.plugins.diagnostic/www/android/diagnostic.microphone.js",
+      "pluginId": "cordova.plugins.diagnostic",
+      "merges": [
+        "cordova.plugins.diagnostic.microphone"
+      ]
+    },
+    {
+      "id": "cordova.plugins.diagnostic.Diagnostic_Contacts",
+      "file": "plugins/cordova.plugins.diagnostic/www/android/diagnostic.contacts.js",
+      "pluginId": "cordova.plugins.diagnostic",
+      "merges": [
+        "cordova.plugins.diagnostic.contacts"
+      ]
+    },
+    {
+      "id": "cordova.plugins.diagnostic.Diagnostic_Calendar",
+      "file": "plugins/cordova.plugins.diagnostic/www/android/diagnostic.calendar.js",
+      "pluginId": "cordova.plugins.diagnostic",
+      "merges": [
+        "cordova.plugins.diagnostic.calendar"
+      ]
+    },
+    {
+      "id": "cordova.plugins.diagnostic.Diagnostic_NFC",
+      "file": "plugins/cordova.plugins.diagnostic/www/android/diagnostic.nfc.js",
+      "pluginId": "cordova.plugins.diagnostic",
+      "merges": [
+        "cordova.plugins.diagnostic.nfc"
+      ]
+    },
+    {
+      "id": "cordova.plugins.diagnostic.Diagnostic_External_Storage",
+      "file": "plugins/cordova.plugins.diagnostic/www/android/diagnostic.external_storage.js",
+      "pluginId": "cordova.plugins.diagnostic",
+      "merges": [
+        "cordova.plugins.diagnostic.external_storage"
+      ]
     }
   ],
   "plugin_metadata": {
-    "cordova-android-play-services-gradle-release": "4.0.0",
     "cordova-plugin-battery-status": "1.2.4",
     "cordova-plugin-camera": "2.4.1",
     "cordova-plugin-device": "1.1.7",
@@ -604,7 +675,8 @@
     "cordova-plugin-inappbrowser": "1.7.2",
     "cordova-plugin-media-capture": "1.4.3",
     "cordova-plugin-network-information": "1.3.4",
-    "cordova-plugin-request-location-accuracy": "2.3.0",
-    "cordova-plugin-vibration": "2.1.6"
+    "cordova-plugin-request-location-accuracy": "2.1.0",
+    "cordova-plugin-vibration": "2.1.6",
+    "cordova.plugins.diagnostic": "5.0.1"
   }
 }

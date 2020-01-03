@@ -1,0 +1,194 @@
+<div data-name="partner_register" class="page navbar-fixed toolbar-fixed">
+	<!--div class="navbar inner-header nav-bg">
+	  <div class="navbar-inner sliding">
+	    <div class="left ">
+       
+        <a href="#" class="link back "><i class="f7-icons size-22 text-white">arrow_left</i></a>
+	    </div>
+	    <div class="title text-uppercase text-white">Partner Registration</div>
+	    <div class="right">
+        
+        <a href="#" class="link panel-open" data-panel="left" onclick="openPanel()"><i class="f7-icons size-22 leftbars text-white" >bars</i></a>
+      </div>
+	  </div>
+	</div--> 
+
+  <!--div class="toolbar toolbar-bottom toolbar-fixed footer-bg">
+    <div class="toolbar-inner">
+      <a class="link"></a>
+      <div class="link text-white text-capitalize ">powered by<a class="link external text-white text-uppercase linkspace poweredby" href="http://staroneweb.co.in" target="_system"> star one web</a></div>
+      <a class="link"></a> 
+    </div>
+  </div-->
+
+  <!--div class="page-content">
+    <form class="list no-hairlines register_partner" id="register_partner" >
+      <ul>
+
+      </ul>
+      <div class="block block-strong row">
+      <div class="col"><a class="button convert-form-to-data no-radius link-white form-btn create_btn" href="#" onclick="candidate_register()">Create</a></div>
+      
+    </div>
+  </form>
+  </div-->
+  <div class="page-content preg-screen-content">
+    <form name="partner_register" id="partner_register" class="partner_register">    
+      <div class="list links-list">
+        <ul>
+          <li class="item-content item-input">
+            <!--div class="item-media">... icon/image here ...</div-->
+            <div class="item-inner">
+              <!-- "item-floating-label" class on item title -->
+              <div class="item-title item-floating-label">Full Name</div>
+              <div class="item-input-wrap">
+                <input type="text" name="name" id="name" placeholder="Full Name" required validate data-error-message="Enter full name">
+                <span class="input-clear-button"></span>
+              </div>
+            </div>
+          </li> 
+
+          <li class="item-content item-input">
+            <!--div class="item-media">... icon/image here ...</div-->
+            <div class="item-inner">
+              <!-- "item-floating-label" class on item title -->
+              <div class="item-title item-floating-label">Phone Number</div>
+              <div class="item-input-wrap">
+                <input type="number" name="phone_number" id="phone_number" placeholder="Phone Number" required validate data-error-message="Enter phone number" >
+                <span class="input-clear-button"></span>
+              </div>
+            </div>
+          </li>
+
+          <li class="item-content item-input">
+            <!--div class="item-media">... icon/image here ...</div-->
+            <div class="item-inner">
+              <!-- "item-floating-label" class on item title -->
+              <div class="item-title item-floating-label">Email</div>
+              <div class="item-input-wrap">
+                <input type="email" name="email" id="email" placeholder="Email Address" required validate data-error-message="Enter email address" >
+                <span class="input-clear-button"></span>
+              </div>
+            </div>
+          </li> 
+
+          <li class="item-content item-input">
+            <!--div class="item-media">... icon/image here ...</div-->
+            <div class="item-inner">
+              <!-- "item-floating-label" class on item title -->
+              <div class="item-title item-floating-label">Password</div>
+              <div class="item-input-wrap">
+                <input type="password" name="password" id="password" placeholder="Password" required validate data-error-message="Enter password" >
+                <span class="input-clear-button"></span>
+              </div>
+            </div>
+          </li>
+
+          <li class="item-content item-input">
+            <!--div class="item-media">... icon/image here ...</div-->
+            <div class="item-inner">
+              <!-- "item-floating-label" class on item title -->
+              <div class="item-title item-floating-label">Confirm Password</div>
+              <div class="item-input-wrap">
+                <input type="password" name="confirm_password" id="confirm_password" placeholder="Re-enter password" required validate data-error-message="Re-enter password" >
+                <span class="input-clear-button"></span>
+              </div>
+            </div>
+          </li>
+
+          <li class="item-content item-input">
+            <!--div class="item-media">... icon/image here ...</div-->
+            <div class="item-inner">
+              <!-- "item-floating-label" class on item title -->
+              <div class="item-title item-floating-label">Address line 1</div>
+              <div class="item-input-wrap">
+                <textarea class="resizable" name="add_line1" id="add_line1" placeholder="Address line 1" required validate data-error-message="Enter address line 1" ></textarea>
+                <span class="input-clear-button"></span>
+              </div>
+            </div>
+          </li>
+
+          <li class="item-content item-input">
+            <!--div class="item-media">... icon/image here ...</div-->
+            <div class="item-inner">
+              <!-- "item-floating-label" class on item title -->
+              <div class="item-title item-floating-label">Address line 2</div>
+              <div class="item-input-wrap">
+                <textarea class="resizable" name="add_line2" id="add_line2" placeholder="Address line 2" required validate data-error-message="Enter address line 2" ></textarea>
+                <span class="input-clear-button"></span>
+              </div>
+            </div>
+          </li>
+
+          <li class="item-content item-input">
+            <!--div class="item-media">... icon/image here ...</div-->
+            <div class="item-inner">
+              <!-- "item-floating-label" class on item title -->
+              <div class="item-title item-floating-label item-input-with-value">Serving Area</div>
+              <div class="item-input-wrap input-dropdown-wrap">
+                <select name="serving_area" id="serving_area" required validate data-error-message="Please select serving area."></select>
+                <span class="input-clear-button"></span>
+              </div>
+            </div>
+          </li>
+
+          <li class="item-content item-input">
+            <!--div class="item-media">... icon/image here ...</div-->
+            <div class="item-inner">
+              <!-- "item-floating-label" class on item title -->
+              <div class="item-title item-floating-label item-input-with-value">Serving Category</div>
+              <div class="item-input-wrap input-dropdown-wrap">
+                <select name="serving_category" id="serving_category" required validate data-error-message="Please select serving category." onchange="getServices(this.value)"></select>
+                <span class="input-clear-button"></span>
+              </div>
+            </div>
+          </li>
+
+          <!--li class="item-content item-input">
+            
+            <div class="item-inner">
+              
+              <div class="item-title item-floating-label item-input-with-value">Service</div>
+              <div class="item-input-wrap input-dropdown-wrap">
+                <select name="service" id="service" required validate data-error-message="Please select service." onchnage="getJob(this.value)"></select>
+                <span class="input-clear-button"></span>
+              </div>
+            </div>
+          </li-->
+
+
+
+          <li>         
+            <a href="#" class="item-link smart-select smart-select-init" data-searchbar="true" data-searchbar-placeholder="Search Job">
+              <select name="service[]" id="service" multiple required validate data-error-message="Please select service." onchange="getJob(this.value)"></select>
+              <div class="item-content">
+                <!--div class="item-inner"-->
+                  <div class="item-title">Service</div>
+                <!--/div-->
+              </div>
+            </a>
+          </li>
+
+          <li>         
+            <a href="#" class="item-link smart-select smart-select-init" data-searchbar="true" data-searchbar-placeholder="Search Job">
+              <select name="job[]" id="job" multiple required validate data-error-message="Please select job."></select>
+              <div class="item-content">
+                <!--div class="item-inner"-->
+                  <div class="item-title">Job</div>
+                <!--/div-->
+              </div>
+            </a>
+          </li>
+
+
+        </ul>
+      </div> 
+
+      <div class="block block-strong row">
+        <div class="col"><a class="button btn-teal text-white no-radius" href="#" 
+          onclick="register_part()">Create</a></div>      
+      </div>
+
+    </form>
+  </div>
+</div>

@@ -37,10 +37,10 @@
     "cordova-plugin-vibration": {
       "PACKAGE_NAME": "com.phonegap.doorstep"
     },
-    "cordova-plugin-request-location-accuracy": {
+    "cordova.plugins.diagnostic": {
       "PACKAGE_NAME": "com.phonegap.doorstep"
     },
-    "cordova-android-play-services-gradle-release": {
+    "cordova-plugin-request-location-accuracy": {
       "PACKAGE_NAME": "com.phonegap.doorstep"
     }
   },
