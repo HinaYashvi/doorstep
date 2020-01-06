@@ -565,8 +565,8 @@ function onError(error){
 }*/
 $$(document).on('page:init', '.page[data-name="customer_dash"]', function (page) {  
   checkConnection();  
-  //openLOC();
-    
+  initMap();
+  //openLOC();  
   swiper = new Swiper('.swiper-container_dash', {
     parallax: true,
     //autoHeight: true,
@@ -590,10 +590,45 @@ $$(document).on('page:init', '.page[data-name="customer_dash"]', function (page)
     observer: true,
     observeParents: true, 
   });  
-  newLOCTest();
-  //navigator.geolocation.getCurrentPosition(onSuccess, onError,{ maximumAge: 3000, timeout: 5000, enableHighAccuracy: true });
+
+ // navigator.geolocation.getCurrentPosition(onSuccess, onError,{ maximumAge: 3000, timeout: 5000, enableHighAccuracy: true });
   //navigator.geolocation.getCurrentPosition(onSuccess, onError);
 });
+function initMap() {
+  var map = new google.maps.Map(document.getElementById('map'), {
+    zoom: 8,
+    center: {lat: 40.731, lng: -73.997}
+  });
+  var geocoder = new google.maps.Geocoder;
+  var infowindow = new google.maps.InfoWindow;
+
+  document.getElementById('submit').addEventListener('click', function() {
+    geocodeLatLng(geocoder, map, infowindow);
+  });
+}
+
+function geocodeLatLng(geocoder, map, infowindow) {
+  var input = document.getElementById('latlng').value;
+  var latlngStr = input.split(',', 2);
+  var latlng = {lat: parseFloat(latlngStr[0]), lng: parseFloat(latlngStr[1])};
+  geocoder.geocode({'location': latlng}, function(results, status) {
+    if (status === 'OK') {
+      if (results[0]) {
+        map.setZoom(11);
+        var marker = new google.maps.Marker({
+          position: latlng,
+          map: map
+        });
+        infowindow.setContent(results[0].formatted_address);
+        infowindow.open(map, marker);
+      } else {
+        alert('No results found');
+      }
+    } else {
+      alert('Geocoder failed due to: ' + status);
+    }
+  });
+}
 function onSuccess(position){
     alert("in function");
     alert('Latitude: '          + position.coords.latitude          + '\n' +
@@ -673,54 +708,6 @@ function onSuccess(position){
 }
 function onError(error){
   alert('code: '    + error.code    + '\n' + 'message: ' + error.message + '\n');
-}
-
-function newLOCTest(){
-  alert("called");
-  cordova.plugins.diagnostic.isLocationEnabled(function(enabled){ //isLocationEnabled
-  console.log("GPS location is " + (enabled ? "enabled" : "disabled"));
-      if(!enabled){
-        alert("Enabled GPS manually");
-        cordova.plugins.diagnostic.switchToLocationSettings(onReqSuccess,onReqFailure);
-         //mainView.loadPage("current-location.html");
-      }else{
-        alert("Location service is ON");        
-        mainView.router.navigate("/customer_dash/");
-      }
-  }, function(error){
-    console.error("The following error occurred: "+error);
-  });  
-
-  
-}
-function onReqSuccess(success){
-  navigator.geolocation.getCurrentPosition(function (position) {
-    var latitude = position.coords.latitude;
-    var longitude = position.coords.longitude;
-    //alert(position.coords.latitude);
-    //alert(position.coords.longitude);
-    getUserAddressBy(latitude, longitude);
-  });
-}
-function onReqFailure(error){
-  if(error){
-     alert(error.message);
-   } 
-}
-function getUserAddressBy(lat, long) {
-    alert("lat = "+lat+" long "+long);
-    var xhttp = new XMLHttpRequest();
-    xhttp.onreadystatechange = function () { 
-      alert(this.readyState+"*****"+this.status);
-        if (this.readyState == 4 && this.status == 200) {
-            alert("hiiii");
-            var address = JSON.parse(this.responseText); 
-            alert(address.results[0]);
-            alert(address.results[0].formatted_address);
-        }
-    };
-    xhttp.open("GET", "https://maps.googleapis.com/maps/api/geocode/json?latlng="+lat+","+long+"&key=AIzaSyCfIHJQnEnmC-s6OO9qaymRe6dKG4l0T1s", true);
-    xhttp.send();
 }
 /*function openLOC(){
   alert("openLOC"); 
