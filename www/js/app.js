@@ -443,9 +443,23 @@ function openLOC(){
       if(!enabled){
         alert("Enabled GPS manually");
         cordova.plugins.diagnostic.switchToLocationSettings(onRequestSuccess,onRequestFailure);
+        navigator.geolocation.getCurrentPosition(function (position) {
+    var latitude = position.coords.latitude;
+    var longitude = position.coords.longitude;
+    alert(position.coords.latitude);
+    alert(position.coords.longitude);
+    getUserAddressBy(latitude, longitude);
+  });
          //mainView.loadPage("current-location.html");
       }else{
-        alert("Location service is ON");        
+        alert("Location service is ON");     
+        navigator.geolocation.getCurrentPosition(function (position) {
+    var latitude = position.coords.latitude;
+    var longitude = position.coords.longitude;
+    alert(position.coords.latitude);
+    alert(position.coords.longitude);
+    getUserAddressBy(latitude, longitude);
+  });   
         mainView.router.navigate("/customer_dash/");
       }
   }, function(error){
@@ -453,8 +467,9 @@ function openLOC(){
   });   
 }
 function onRequestSuccess(success){
+  alert("SUCCESS");
   //if(success){
-    cordova.plugins.locationAccuracy.request(successCallback, errorCallback, accuracy);      
+    //cordova.plugins.locationAccuracy.request(successCallback, errorCallback, accuracy);      
   //}
 }  
 function onRequestFailure(error){
@@ -565,7 +580,7 @@ function onError(error){
 }*/
 $$(document).on('page:init', '.page[data-name="customer_dash"]', function (page) {  
   checkConnection();  
-  //openLOC();
+  openLOC();
     
   swiper = new Swiper('.swiper-container_dash', {
     parallax: true,
@@ -590,7 +605,7 @@ $$(document).on('page:init', '.page[data-name="customer_dash"]', function (page)
     observer: true,
     observeParents: true, 
   });  
-  newLOCTest();
+  //newLOCTest();
   //navigator.geolocation.getCurrentPosition(onSuccess, onError,{ maximumAge: 3000, timeout: 5000, enableHighAccuracy: true });
   //navigator.geolocation.getCurrentPosition(onSuccess, onError);
 });
