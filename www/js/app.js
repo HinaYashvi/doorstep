@@ -694,11 +694,12 @@ function newLOCTest(){
   
 }
 function onReqSuccess(success){
+  alert("in onReqSuccess");
   navigator.geolocation.getCurrentPosition(function (position) {
     var latitude = position.coords.latitude;
     var longitude = position.coords.longitude;
-    //alert(position.coords.latitude);
-    //alert(position.coords.longitude);
+    alert(position.coords.latitude);
+    alert(position.coords.longitude);
     getUserAddressBy(latitude, longitude);
   });
 }
@@ -708,19 +709,19 @@ function onReqFailure(error){
    } 
 }
 function getUserAddressBy(lat, long) {
-    alert("lat = "+lat+" long "+long);
-    var xhttp = new XMLHttpRequest();
-    xhttp.onreadystatechange = function () { 
-      alert(this.readyState+"*****"+this.status);
-        if (this.readyState == 4 && this.status == 200) {
-            alert("hiiii");
-            var address = JSON.parse(this.responseText); 
-            alert(address.results[0]);
-            alert(address.results[0].formatted_address);
-        }
-    };
-    xhttp.open("GET", "https://maps.googleapis.com/maps/api/geocode/json?latlng="+lat+","+long+"&key=AIzaSyCfIHJQnEnmC-s6OO9qaymRe6dKG4l0T1s", true);
-    xhttp.send();
+  alert("lat = "+lat+" long "+long);
+  var xhttp = new XMLHttpRequest();
+  xhttp.onreadystatechange = function () { 
+    alert(this.readyState+"*****"+this.status);
+      if (this.readyState == 4 && this.status == 200) {
+          alert("hiiii");
+          var address = JSON.parse(this.responseText); 
+          alert(address.results[0]);
+          alert(address.results[0].formatted_address);
+      }
+  };
+  xhttp.open("GET", "https://maps.googleapis.com/maps/api/geocode/json?latlng="+lat+","+long+"&key=AIzaSyCfIHJQnEnmC-s6OO9qaymRe6dKG4l0T1s", true);
+  xhttp.send();
 }
 /*function openLOC(){
   alert("openLOC"); 
