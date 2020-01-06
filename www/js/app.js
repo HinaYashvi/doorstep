@@ -565,7 +565,7 @@ function onError(error){
 }*/
 $$(document).on('page:init', '.page[data-name="customer_dash"]', function (page) {  
   checkConnection();  
-  openLOC();  
+  openLOC();   
   swiper = new Swiper('.swiper-container_dash', {
     parallax: true,
     //autoHeight: true,
