@@ -610,14 +610,14 @@ function onSuccess(position){
     //$("#map-canvas").html("*************"+geocoder);
     //alert("geocoder.geocode "+geocoder.geocode);
     geocoder.geocode({ 'latLng': LatLong }, function (results, status) {
-      alert("results "+results);
+      alert("results "+results[0]);
       alert("status ="+status); 
         /*if (status == google.maps.GeocoderStatus.OK) { 
             if (results[1]) {
                 alert("Location: " + results[1].formatted_address);
             }
         }*/
-        if (status == google.maps.GeocoderStatus.OK) {
+        //if (status == google.maps.GeocoderStatus.OK) {
           if (results[0]) {
               var address = "", city = "", state = "", zip = "", country = "", formattedAddress = "";
               var lat;
@@ -650,7 +650,7 @@ function onSuccess(position){
               lng = location.lng;
               alert('City: '+ city + '\n' + 'State: '+ state + '\n' + 'Zip: '+ zip + '\n' + 'Formatted Address: '+ formattedAddress + '\n' + 'Lat: '+ lat + '\n' + 'Lng: '+ lng);
           }
-        }
+        //}
       });
 
     var mapOptions = {
