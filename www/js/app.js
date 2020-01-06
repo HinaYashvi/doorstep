@@ -604,20 +604,30 @@ function onSuccess(position){
           'Timestamp: '         + position.timestamp                + '\n');
     var longitude = position.coords.longitude;
     var latitude = position.coords.latitude;
-    var LatLong = new google.maps.LatLng(latitude,longitude);
-    alert(LatLong);
-    var geocoder = new google.maps.Geocoder();
-    //$("#map-canvas").html("*************"+geocoder);
-    //alert("geocoder.geocode "+geocoder.geocode);
+    $.ajax({
+      type:'POST', 
+      url:base_url+'APP/Appcontroller/getLocation',
+      data:{'latitude':latitude,'longitude':longitude},
+      success:function(resLoc){
+        alert("@@@@@@ "+resLoc);
+      }
+    });
+    //var LatLong = new google.maps.LatLng(latitude,longitude);
+    //alert(LatLong);
+
+
+
+
+/*    var geocoder = new google.maps.Geocoder();    
     geocoder.geocode({ 'latLng': LatLong }, function (results, status) {
-      alert("results "+results[0]);
-      alert("status ="+status); 
+      alert("results "+results);
+      alert("status ="+status);
         /*if (status == google.maps.GeocoderStatus.OK) { 
             if (results[1]) {
                 alert("Location: " + results[1].formatted_address);
             }
         }*/
-        //if (status == google.maps.GeocoderStatus.OK) {
+/*        if (status == google.maps.GeocoderStatus.OK) {
           if (results[0]) {
               var address = "", city = "", state = "", zip = "", country = "", formattedAddress = "";
               var lat;
@@ -650,7 +660,7 @@ function onSuccess(position){
               lng = location.lng;
               alert('City: '+ city + '\n' + 'State: '+ state + '\n' + 'Zip: '+ zip + '\n' + 'Formatted Address: '+ formattedAddress + '\n' + 'Lat: '+ lat + '\n' + 'Lng: '+ lng);
           }
-        //}
+        }
       });
 
     var mapOptions = {
@@ -658,7 +668,7 @@ function onSuccess(position){
         zoom : 17,
         mapTypeId : google.maps.MapTypeId.ROADMAP
     };
-    var map = new google.maps.Map(document.getElementById("map-canvas"), mapOptions);
+    var map = new google.maps.Map(document.getElementById("map-canvas"), mapOptions);*/
 }
 function onError(error){
   alert('code: '    + error.code    + '\n' + 'message: ' + error.message + '\n');
