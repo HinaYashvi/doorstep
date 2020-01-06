@@ -449,6 +449,8 @@ function openLOC(){
     alert(position.coords.latitude);
     alert(position.coords.longitude);
     getUserAddressBy(latitude, longitude);
+    $("#hidd_latlong").val(latitude+","+longitude);
+
   });
          //mainView.loadPage("current-location.html");
       }else{
@@ -459,6 +461,7 @@ function openLOC(){
     alert(position.coords.latitude);
     alert(position.coords.longitude);
     getUserAddressBy(latitude, longitude);
+    $("#hidd_latlong").val(latitude+","+longitude);
   });   
         mainView.router.navigate("/customer_dash/");
       }
@@ -724,9 +727,36 @@ function onReqFailure(error){
    } 
 }
 function getUserAddressBy(lat, long) {
+ var hidd_latlong = $("#hidd_latlong").val();
+ var latlngStr = hidd_latlong.split(',', 2);
+  var latlng = {lat: parseFloat(latlngStr[0]), lng: parseFloat(latlngStr[1])};
+
   alert("lat = "+lat+" long "+long);
+  alert("hidd_latlong******************"+hidd_latlong);
   var xhttp = new XMLHttpRequest();
-  xhttp.onreadystatechange = function () { 
+  var geocoder = new google.maps.Geocoder;
+  var infowindow = new google.maps.InfoWindow;
+  geocodeLatLng(geocoder, infowindow);
+  geocoder.geocode({'location': latlng}, function(results, status) {
+    alert("status "+status);
+    if (status === 'OK') {
+      if (results[0]) {
+        /*map.setZoom(11);
+        var marker = new google.maps.Marker({
+          position: latlng,
+          map: map
+        });*/
+        alert("address " +results[0].formatted_address);
+        //infowindow.setContent(results[0].formatted_address);
+        //infowindow.open(map, marker);
+      } else {
+        alert('No results found');
+      }
+    } else {
+      alert('Geocoder failed due to: ' + status);
+    }
+  });
+  /*xhttp.onreadystatechange = function () { 
     alert(this.readyState+"*****"+this.status);
       if (this.readyState == 4 && this.status == 200) {
           alert("hiiii");
@@ -734,7 +764,8 @@ function getUserAddressBy(lat, long) {
           alert(address.results[0]);
           alert(address.results[0].formatted_address);
       }
-  };
+  };*/
+
   xhttp.open("GET", "https://maps.googleapis.com/maps/api/geocode/json?latlng="+lat+","+long+"&key=AIzaSyCfIHJQnEnmC-s6OO9qaymRe6dKG4l0T1s", true);
   xhttp.send();
 }
