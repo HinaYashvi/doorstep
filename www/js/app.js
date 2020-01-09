@@ -443,15 +443,7 @@ function openLOC(){
       if(!enabled){
         //alert("Enabled GPS manually");
         var isRequesting = cordova.plugins.diagnostic.isRequestingPermission();
-        alert("isRequesting "+isRequesting);
-        if(!isRequesting){
-    requestSomePermissions();
-}else{
-    cordova.plugins.diagnostic.registerPermissionRequestCompleteHandler(function(statuses){
-        cordova.plugins.diagnostic.registerPermissionRequestCompleteHandler(null); // de-register handler after single call
-        requestSomePermissions();
-    });
-}
+        
         cordova.plugins.diagnostic.switchToLocationSettings(onRequestSuccess,onRequestFailure);
          //mainView.loadPage("current-location.html");
       }else{
@@ -462,9 +454,7 @@ function openLOC(){
       console.error("The following error occurred: "+error);
     });   
 }
-function requestSomePermissions(){
-  alert("in requestSomePermissions");
-}
+
 function onRequestSuccess(success){
   //if(success){
     cordova.plugins.locationAccuracy.request(successCallback, errorCallback, accuracy);      
