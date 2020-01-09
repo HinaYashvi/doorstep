@@ -137,3 +137,33 @@
 .slide-height{
   height: 200px;
 }
+div.container4 {
+  height: 10em;
+  position: relative; 
+}
+div.container4 img {
+  margin: 0;    
+  position: absolute;
+  top: 120%;
+  left: 50%;
+  margin-right: -50%;
+  transform: translate(-50%, -50%) 
+}
+.loc-button{    
+  margin: 0 38px 0 38px;
+  position: relative;
+  text-align: center;
+  padding: 6px 0 6px 0;
+  background-color: #FAAE3E;
+  color: #fff;  
+  width: 79%;
+}
+.othloc-button{
+  margin: 0 38px 0 38px;
+  position: relative;
+  text-align: center;
+  padding: 6px 0 6px 0;
+  background-color: #036B6E;
+  color: #fff;   
+  width: 79%;
+}

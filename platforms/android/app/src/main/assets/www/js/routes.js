@@ -23,6 +23,11 @@ var routes = [
     name: 'internet',
   },
   {
+    path: '/location_on/',
+    url: './location_on.html',
+    name: 'location_on',
+  },
+  {
     path: '/partner_register/',
     url: './partner/partner_register.html',
     name: 'partner_register',
@@ -56,7 +61,6 @@ var routes = [
       animate: true,
     },
   },
-
   {
     path: '/customer_register/',
     url: './customer/customer_register.html',
@@ -74,6 +78,5 @@ var routes = [
     options: {
       animate: true,
     },
-  },
-  
+  },  
 ];

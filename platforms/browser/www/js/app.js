@@ -79,14 +79,15 @@ function checkStorage(){
   }});*/
   var session_pid = window.localStorage.getItem("session_pid");
   var session_cid = window.localStorage.getItem("session_cid");
-  console.log(session_pid+"-----"+session_cid);
+  //console.log(session_pid+"-----"+session_cid);
   if(session_pid!=null && session_cid==null){  
     mainView.router.navigate("/partner_dash/");
   }else if(session_cid!=null && session_pid==null){
-    mainView.router.navigate("/customer_dash/");
-  }else{
+    //mainView.router.navigate("/customer_dash/");
+    mainView.router.navigate("/location_on/");
+  }else{ 
     mainView.router.navigate("/");
-  }
+  } 
 }
 function onBackKeyDown() {
   checkConnection(); 
@@ -438,10 +439,12 @@ function onDeviceReady(){
 }
 function openLOC(){
   //alert("openLOC");
+
     cordova.plugins.diagnostic.isLocationEnabled(function(enabled){ //isLocationEnabled
-  console.log("GPS location is " + (enabled ? "enabled" : "disabled"));
+    console.log("GPS location is " + (enabled ? "enabled" : "disabled"));
       if(!enabled){
         alert("Enabled GPS manually");
+        cordova.plugins.diagnostic.isLocationAuthorized(successCallback, errorCallback);
         cordova.plugins.diagnostic.switchToLocationSettings(onRequestSuccess,onRequestFailure);
          //mainView.loadPage("current-location.html");
       }else{
@@ -565,7 +568,7 @@ function onError(error){
 }*/
 $$(document).on('page:init', '.page[data-name="customer_dash"]', function (page) {  
   checkConnection();  
-  openLOC();   
+  
   swiper = new Swiper('.swiper-container_dash', {
     parallax: true,
     //autoHeight: true,
@@ -588,10 +591,13 @@ $$(document).on('page:init', '.page[data-name="customer_dash"]', function (page)
     },
     observer: true,
     observeParents: true, 
-  });  
-  navigator.geolocation.getCurrentPosition(onSuccess, onError,{ maximumAge: 3000, timeout: 5000, enableHighAccuracy: true });
+  });    
   //navigator.geolocation.getCurrentPosition(onSuccess, onError);
 });
+function curr_loc(){
+  openLOC();   
+  navigator.geolocation.getCurrentPosition(onSuccess, onError,{ maximumAge: 3000, timeout: 5000, enableHighAccuracy: true });
+}
 function onSuccess(position){
     alert("in function");
     alert('Latitude: '          + position.coords.latitude          + '\n' +
@@ -604,20 +610,30 @@ function onSuccess(position){
           'Timestamp: '         + position.timestamp                + '\n');
     var longitude = position.coords.longitude;
     var latitude = position.coords.latitude;
-    var LatLong = new google.maps.LatLng(latitude,longitude);
-    alert(LatLong);
-    var geocoder = new google.maps.Geocoder();
-    //$("#map-canvas").html("*************"+geocoder);
-    //alert("geocoder.geocode "+geocoder.geocode);
+    $.ajax({
+      type:'POST', 
+      url:base_url+'APP/Appcontroller/getLocation',
+      data:{'latitude':latitude,'longitude':longitude},
+      success:function(resLoc){
+        alert("@@@@@@ "+resLoc);
+      }
+    });
+    //var LatLong = new google.maps.LatLng(latitude,longitude);
+    //alert(LatLong);
+
+
+
+
+/*    var geocoder = new google.maps.Geocoder();    
     geocoder.geocode({ 'latLng': LatLong }, function (results, status) {
       alert("results "+results);
-      alert("status ="+status); 
+      alert("status ="+status);
         /*if (status == google.maps.GeocoderStatus.OK) { 
             if (results[1]) {
                 alert("Location: " + results[1].formatted_address);
             }
         }*/
-        if (status == google.maps.GeocoderStatus.OK) {
+/*        if (status == google.maps.GeocoderStatus.OK) {
           if (results[0]) {
               var address = "", city = "", state = "", zip = "", country = "", formattedAddress = "";
               var lat;
@@ -658,7 +674,7 @@ function onSuccess(position){
         zoom : 17,
         mapTypeId : google.maps.MapTypeId.ROADMAP
     };
-    var map = new google.maps.Map(document.getElementById("map-canvas"), mapOptions);
+    var map = new google.maps.Map(document.getElementById("map-canvas"), mapOptions);*/
 }
 function onError(error){
   alert('code: '    + error.code    + '\n' + 'message: ' + error.message + '\n');
@@ -887,7 +903,8 @@ function logincheck(){
           window.localStorage.setItem("session_pcreated",result.user_session[0].p_created_on);      
         }else if(parse_authmsg=="c_success"){  
           //alert("customer_dash");
-          mainView.router.navigate("/customer_dash/");
+          mainView.router.navigate("/location_on/");
+          //mainView.router.navigate("/customer_dash/");
           window.localStorage.setItem("session_cid",result.user_session[0].c_id);
           window.localStorage.setItem("session_cname",result.user_session[0].c_name);
           window.localStorage.setItem("session_cphone",result.user_session[0].c_phone);
