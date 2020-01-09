@@ -444,7 +444,11 @@ function openLOC(){
     console.log("GPS location is " + (enabled ? "enabled" : "disabled"));
       if(!enabled){
         alert("Enabled GPS manually");
-        cordova.plugins.diagnostic.isLocationAuthorized(successCallback, errorCallback);
+        cordova.plugins.diagnostic.isLocationAuthorized(function(authorized){
+    alert("Location is " + (authorized ? "authorized" : "unauthorized"));
+}, function(error){
+    alert("The following error occurred: "+error);
+});
         cordova.plugins.diagnostic.switchToLocationSettings(onRequestSuccess,onRequestFailure);
          //mainView.loadPage("current-location.html");
       }else{
