@@ -434,27 +434,25 @@ function onDeviceReady(){
   //alert("onDeviceReady");
   //openLOC();
   //logOut();
-  //navigator.geolocation.getCurrentPosition(onSuccess, onError);
-  
+  //navigator.geolocation.getCurrentPosition(onSuccess, onError);  
 }
-function openLOC(){
+function openLOC(){  
   //alert("openLOC");
-
     cordova.plugins.diagnostic.isLocationEnabled(function(enabled){ //isLocationEnabled
-    console.log("GPS location is " + (enabled ? "enabled" : "disabled"));
+    //console.log("GPS location is " + (enabled ? "enabled" : "disabled"));
       if(!enabled){
-        alert("Enabled GPS manually");
-        cordova.plugins.diagnostic.isLocationAuthorized(successCallback, errorCallback);
+        //alert("Enabled GPS manually");
         cordova.plugins.diagnostic.switchToLocationSettings(onRequestSuccess,onRequestFailure);
          //mainView.loadPage("current-location.html");
       }else{
-        alert("Location service is ON");        
+        //alert("Location service is ON");        
         mainView.router.navigate("/customer_dash/");
       }
-  }, function(error){
-    console.error("The following error occurred: "+error);
-  });   
+    }, function(error){
+      console.error("The following error occurred: "+error);
+    });   
 }
+
 function onRequestSuccess(success){
   //if(success){
     cordova.plugins.locationAccuracy.request(successCallback, errorCallback, accuracy);      
