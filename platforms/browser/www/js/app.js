@@ -615,8 +615,18 @@ function onSuccess(position){
       url:"https://maps.googleapis.com/maps/api/place/textsearch/json?query="+latitude+longitude+"&key=AIzaSyCfIHJQnEnmC-s6OO9qaymRe6dKG4l0T1s",
       //data:{'latitude':latitude,'longitude':longitude},
       success:function(resLoc){
-        alert(resLoc);
-        $("#map-canvas").html(resLoc+" ^^^^^^^^^^^^");
+        alert(resLoc.status+"@@@@");
+        alert(status+"status");
+        //var resjson = $.parseJSON(resLoc);
+        var add_res = resLoc.html_attributions;
+        $("#map-canvas").html(resLoc+" ^^^^^^^^^^^^<br/>");
+        //var add_array = add_res[0]; 
+
+        //var formatted_address = add_res.formatted_address;
+
+        
+        //alert("formatted_address "+formatted_address);
+        //$("#map-canvas").html(formatted_address+" ^^^^^^^^^^^^");
       }
     });
 

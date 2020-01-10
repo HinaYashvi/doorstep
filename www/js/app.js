@@ -615,7 +615,8 @@ function onSuccess(position){
       url:"https://maps.googleapis.com/maps/api/place/textsearch/json?query="+latitude+longitude+"&key=AIzaSyCfIHJQnEnmC-s6OO9qaymRe6dKG4l0T1s",
       //data:{'latitude':latitude,'longitude':longitude},
       success:function(resLoc){
-        alert(resLoc.status"@@@@");
+        alert(resLoc.status+"@@@@");
+        alert(status+"status");
         //var resjson = $.parseJSON(resLoc);
         var add_res = resLoc.html_attributions;
         $("#map-canvas").html(resLoc+" ^^^^^^^^^^^^<br/>");
