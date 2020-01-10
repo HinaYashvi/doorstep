@@ -609,12 +609,28 @@ function onSuccess(position){
           'Timestamp: '         + position.timestamp                + '\n');
     var longitude = position.coords.longitude;
     var latitude = position.coords.latitude;
+
+     var service = new google.maps.places.PlacesService();
+
     $.ajax({
       type:'POST', 
       url:base_url+'APP/Appcontroller/getLocation',
       data:{'latitude':latitude,'longitude':longitude},
       success:function(resLoc){
-        alert("@@@@@@ "+resLoc);
+        alert(resLoc);
+        service.getDetails(request, function(place, status) {
+          alert("status "+status);
+          alert("place "+place);
+          if (status === google.maps.places.PlacesServiceStatus.OK) {
+              
+            
+              alert('<div><strong>' + place.name + '</strong><br>' +
+                'Place ID: ' + place.place_id + '<br>' +
+                place.formatted_address + '</div>');
+              //infowindow.open(map, this);
+            
+          }
+        });
       }
     });
     //var LatLong = new google.maps.LatLng(latitude,longitude);
