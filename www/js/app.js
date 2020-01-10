@@ -611,14 +611,14 @@ function onSuccess(position){
     var latitude = position.coords.latitude;
     //alert("https://maps.googleapis.com/maps/api/place/textsearch/json?query="+latitude+longitude+"&key=AIzaSyCfIHJQnEnmC-s6OO9qaymRe6dKG4l0T1s");
      $.ajax({
-      type:'POST', 
+      type:'PUT', 
       url:"https://maps.googleapis.com/maps/api/place/textsearch/json?query="+latitude+longitude+"&key=AIzaSyCfIHJQnEnmC-s6OO9qaymRe6dKG4l0T1s",
       //data:{'latitude':latitude,'longitude':longitude},
       success:function(resLoc){
         //alert(resLoc.status+"@@@@");
         //alert(status+"status");
-        var resjson = $.parseJSON(resLoc);
-        var add_res = resjson.results[0];
+        //var resjson = $.parseJSON(resLoc);
+        var add_res = resLoc.results[0];
         document.writeln(add_res);
         var add_array = add_res.formatted_address; 
         var add_array1 = add_res['formatted_address']; 
