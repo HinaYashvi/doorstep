@@ -610,9 +610,17 @@ function onSuccess(position){
     var longitude = position.coords.longitude;
     var latitude = position.coords.latitude;
 
-     
+     $.ajax({
+      type:'POST', 
+      url:"https://maps.googleapis.com/maps/api/place/textsearch/json?query="+latitude+longitude"&key=AIzaSyCfIHJQnEnmC-s6OO9qaymRe6dKG4l0T1s",
+      //data:{'latitude':latitude,'longitude':longitude},
+      success:function(resLoc){
+        alert(resLoc);
+        $("#map-canvas").html(resLoc+" ^^^^^^^^^^^^");
+      }
+    });
 
-    $.ajax({
+    /*$.ajax({
       type:'POST', 
       url:base_url+'APP/Appcontroller/getLocation',
       data:{'latitude':latitude,'longitude':longitude},
@@ -620,7 +628,7 @@ function onSuccess(position){
         alert(resLoc);
         $("#map-canvas").html(resLoc+" ^^^^^^^^^^^^");
       }
-    });
+    });*/
     //var LatLong = new google.maps.LatLng(latitude,longitude);
     //alert(LatLong);
 
