@@ -618,7 +618,7 @@ function onSuccess(position){
         //alert(resLoc.status+"@@@@");
         //alert(status+"status");
         //var resjson = $.parseJSON(resLoc);
-        var add_res = resLoc.results[0];
+        var add_res = resLoc.results;
         document.writeln(add_res);
         var add_array = add_res.formatted_address; 
         var add_array1 = add_res['formatted_address']; 
