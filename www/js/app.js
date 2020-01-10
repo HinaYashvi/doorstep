@@ -616,8 +616,8 @@ function onSuccess(position){
       //data:{'latitude':latitude,'longitude':longitude},
       success:function(resLoc){
         alert(resLoc);
-        var resjson = $.parseJSON(resLoc);
-        var add_res = resjson.results;
+        //var resjson = $.parseJSON(resLoc);
+        var add_res = resLoc.results;
         $("#map-canvas").html(add_res+" ^^^^^^^^^^^^<br/>");
         //var add_array = add_res[0]; 
 
