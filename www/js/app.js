@@ -615,12 +615,15 @@ function onSuccess(position){
       url:"https://maps.googleapis.com/maps/api/place/textsearch/json?query="+latitude+longitude+"&key=AIzaSyCfIHJQnEnmC-s6OO9qaymRe6dKG4l0T1s",
       //data:{'latitude':latitude,'longitude':longitude},
       success:function(resLoc){
+        alert(resLoc);
         var resjson = $.parseJSON(resLoc);
         var add_res = resjson.results;
-        var add_array = add_res[0]; 
-        var formatted_address = add_array.formatted_address;
+        $("#map-canvas").html(add_res+" ^^^^^^^^^^^^<br/>");
+        //var add_array = add_res[0]; 
 
-        alert(resLoc);
+        var formatted_address = add_res.formatted_address;
+
+        
         alert("formatted_address "+formatted_address);
         $("#map-canvas").html(formatted_address+" ^^^^^^^^^^^^");
       }
