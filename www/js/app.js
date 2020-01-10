@@ -619,6 +619,8 @@ function onSuccess(position){
         alert(resLoc);
         //alert(status+"status");
         var resjson = $.parseJSON(resLoc);
+        alert("success "+resLoc);
+        alert("resjson "+resjson);
         /*var add_res = resLoc.results;
         document.writeln(add_res);
         var add_array = add_res.formatted_address; 
@@ -629,8 +631,7 @@ function onSuccess(position){
         alert("add_array "+add_array);
         alert("add_array1 "+add_array1);*/
         $("#map-canvas").html(resLoc+" ^^^^^^^^^^^^");
-        document.write("success "+resLoc);
-        document.write("resjson "+resjson);
+        
       }
     });
 
