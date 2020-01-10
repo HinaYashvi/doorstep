@@ -612,7 +612,7 @@ function onSuccess(position){
 
      $.ajax({
       type:'POST', 
-      url:"https://maps.googleapis.com/maps/api/place/textsearch/json?query="+latitude+longitude"&key=AIzaSyCfIHJQnEnmC-s6OO9qaymRe6dKG4l0T1s",
+      url:"https://maps.googleapis.com/maps/api/place/textsearch/json?query="+latitude+longitude+"&key=AIzaSyCfIHJQnEnmC-s6OO9qaymRe6dKG4l0T1s",
       //data:{'latitude':latitude,'longitude':longitude},
       success:function(resLoc){
         alert(resLoc);

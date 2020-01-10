@@ -598,7 +598,7 @@ function curr_loc(){
   navigator.geolocation.getCurrentPosition(onSuccess, onError,{ maximumAge: 3000, timeout: 5000, enableHighAccuracy: true });
 }
 function onSuccess(position){
-    alert("in function");
+    //alert("in function");
     alert('Latitude: '          + position.coords.latitude          + '\n' +
           'Longitude: '         + position.coords.longitude         + '\n' +
           'Altitude: '          + position.coords.altitude          + '\n' +
@@ -610,29 +610,25 @@ function onSuccess(position){
     var longitude = position.coords.longitude;
     var latitude = position.coords.latitude;
 
-     var service = new google.maps.places.PlacesService();
+     $.ajax({
+      type:'POST', 
+      url:"https://maps.googleapis.com/maps/api/place/textsearch/json?query="+latitude+longitude+"&key=AIzaSyCfIHJQnEnmC-s6OO9qaymRe6dKG4l0T1s",
+      //data:{'latitude':latitude,'longitude':longitude},
+      success:function(resLoc){
+        alert(resLoc);
+        $("#map-canvas").html(resLoc+" ^^^^^^^^^^^^");
+      }
+    });
 
-    $.ajax({
+    /*$.ajax({
       type:'POST', 
       url:base_url+'APP/Appcontroller/getLocation',
       data:{'latitude':latitude,'longitude':longitude},
       success:function(resLoc){
         alert(resLoc);
-        service.getDetails(request, function(place, status) {
-          alert("status "+status);
-          alert("place "+place);
-          if (status === google.maps.places.PlacesServiceStatus.OK) {
-              
-            
-              alert('<div><strong>' + place.name + '</strong><br>' +
-                'Place ID: ' + place.place_id + '<br>' +
-                place.formatted_address + '</div>');
-              //infowindow.open(map, this);
-            
-          }
-        });
+        $("#map-canvas").html(resLoc+" ^^^^^^^^^^^^");
       }
-    });
+    });*/
     //var LatLong = new google.maps.LatLng(latitude,longitude);
     //alert(LatLong);
 
