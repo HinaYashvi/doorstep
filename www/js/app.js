@@ -611,14 +611,15 @@ function onSuccess(position){
     var latitude = position.coords.latitude;
     //alert("https://maps.googleapis.com/maps/api/place/textsearch/json?query="+latitude+longitude+"&key=AIzaSyCfIHJQnEnmC-s6OO9qaymRe6dKG4l0T1s");
      $.ajax({
-      type:'PUT', 
+      type:'GET',
+      dataType: "json", 
       url:"https://maps.googleapis.com/maps/api/place/textsearch/json?query="+latitude+longitude+"&key=AIzaSyCfIHJQnEnmC-s6OO9qaymRe6dKG4l0T1s",
       //data:{'latitude':latitude,'longitude':longitude},
       success:function(resLoc){
-        //alert(resLoc.status+"@@@@");
+        alert(resLoc);
         //alert(status+"status");
-        //var resjson = $.parseJSON(resLoc);
-        var add_res = resLoc.results;
+        var resjson = $.parseJSON(resLoc);
+        /*var add_res = resLoc.results;
         document.writeln(add_res);
         var add_array = add_res.formatted_address; 
         var add_array1 = add_res['formatted_address']; 
@@ -626,8 +627,10 @@ function onSuccess(position){
 
         
         alert("add_array "+add_array);
-        alert("add_array1 "+add_array1);
-        //$("#map-canvas").html(formatted_address+" ^^^^^^^^^^^^");
+        alert("add_array1 "+add_array1);*/
+        $("#map-canvas").html(resLoc+" ^^^^^^^^^^^^");
+        document.write("success "+resLoc);
+        document.write("resjson "+resjson);
       }
     });
 
