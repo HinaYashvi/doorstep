@@ -598,7 +598,7 @@ function curr_loc(){
   navigator.geolocation.getCurrentPosition(onSuccess, onError,{ maximumAge: 3000, timeout: 5000, enableHighAccuracy: true });
 }
 function onSuccess(position){
-    alert("in function");
+    //alert("in function");
     alert('Latitude: '          + position.coords.latitude          + '\n' +
           'Longitude: '         + position.coords.longitude         + '\n' +
           'Altitude: '          + position.coords.altitude          + '\n' +
@@ -618,6 +618,7 @@ function onSuccess(position){
       data:{'latitude':latitude,'longitude':longitude},
       success:function(resLoc){
         alert(resLoc);
+        $("#map-canvas").html(resLoc+" ^^^^^^^^^^^^");
       }
     });
     //var LatLong = new google.maps.LatLng(latitude,longitude);
