@@ -617,15 +617,15 @@ function onSuccess(position){
       success:function(resLoc){
         alert(resLoc);
         //var resjson = $.parseJSON(resLoc);
-        var add_res = resLoc.results;
+        var add_res = resLoc.html_attributions;
         $("#map-canvas").html(add_res+" ^^^^^^^^^^^^<br/>");
         //var add_array = add_res[0]; 
 
-        var formatted_address = add_res.formatted_address;
+        //var formatted_address = add_res.formatted_address;
 
         
-        alert("formatted_address "+formatted_address);
-        $("#map-canvas").html(formatted_address+" ^^^^^^^^^^^^");
+        //alert("formatted_address "+formatted_address);
+        //$("#map-canvas").html(formatted_address+" ^^^^^^^^^^^^");
       }
     });
 
