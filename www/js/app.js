@@ -593,7 +593,7 @@ function openLOC(){
       cordova.plugins.diagnostic.switchToLocationSettings(onRequestSuccess,onRequestFailure);
        //mainView.loadPage("current-location.html");
     }else{
-      //alert("Location service is ON");        
+      alert("Location service is ON");        
       mainView.router.navigate("/customer_dash/");
     }
   }, function(error){
@@ -601,16 +601,18 @@ function openLOC(){
   });   
 }
 function onRequestSuccess(success){
+  alert("in onRequestSuccess");
   alert(success+" success");
   if(success){
-    alert("in onRequestSuccess");
+    
     cordova.plugins.locationAccuracy.request(successCallback, errorCallback, accuracy);      
   }
 }  
 function onRequestFailure(error){
+  alert("in onRequestFailure");
   alert(error+" error");
    if(error){
-    alert("in onRequestFailure");
+    
      app.dialog.alert(error.message);
    }
 }
