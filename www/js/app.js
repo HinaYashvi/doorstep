@@ -433,32 +433,7 @@ function customer_exists(mobile_no){
   } 
 }
 // ---------------------------------- DATA NAME : CUSTOMER DASHBOARD --------------------------------- //
-function openLOC(){ 
-    cordova.plugins.diagnostic.isLocationEnabled(function(enabled){ //isLocationEnabled    
-      if(!enabled){
-        cordova.plugins.diagnostic.switchToLocationSettings(onRequestSuccess,onRequestFailure);
-         //mainView.loadPage("current-location.html");
-      }else{
-        //alert("Location service is ON");        
-        mainView.router.navigate("/customer_dash/");
-      }
-    }, function(error){
-      app.dialog.alert("The following error occurred: "+error);
-    });   
-}
 
-function onRequestSuccess(success){
-  if(success){
-    alert("in onRequestSuccess");
-    cordova.plugins.locationAccuracy.request(successCallback, errorCallback, accuracy);      
-  }
-}  
-function onRequestFailure(error){
-   if(error){
-    alert("in onRequestFailure");
-     app.dialog.alert(error.message);
-   }
-}
 /*function onSuccess(pos){
     if(pos){
       var lat = pos.coords.latitude;
@@ -472,19 +447,6 @@ function onError(error){
      alert('code: ' + error.code + '\n' + 'message: ' + error.message + '\n');
    }
 }*/
-
-function successCallback(success){
-  alert("in successCallback *******");
-    //if(success){
-      mainView.router.navigate("/customer_dash/");
-    //}
-} 
-function errorCallback(error){
-  alert("in errorCallback ############");
-   //if(error){
-     alert(error.message);
-   //} 
-}
 /*function openLOC(){
   alert("openLOC");
     cordova.plugins.diagnostic.isLocationEnabled(function(enabled){ //isLocationEnabled
@@ -588,67 +550,83 @@ $$(document).on('page:init', '.page[data-name="customer_dash"]', function (page)
   //navigator.geolocation.getCurrentPosition(onSuccess, onError);
 });
 function curr_loc(){
-  openLOC();   
-  alert("hina");
+  openLOC();
   navigator.geolocation.getCurrentPosition(onSuccess, onError,{ maximumAge: 3000, timeout: 5000, enableHighAccuracy: true });
 }
 function onSuccess(position){
   app.preloader.show();
-    //alert("in function");
-    /*alert('Latitude: '          + position.coords.latitude          + '\n' +
-          'Longitude: '         + position.coords.longitude         + '\n' +
-          'Altitude: '          + position.coords.altitude          + '\n' +
-          'Accuracy: '          + position.coords.accuracy          + '\n' +
-          'Altitude Accuracy: ' + position.coords.altitudeAccuracy  + '\n' +
-          'Heading: '           + position.coords.heading           + '\n' +
-          'Speed: '             + position.coords.speed             + '\n' +
-          'Timestamp: '         + position.timestamp                + '\n');*/
-    var longitude = position.coords.longitude;
-    var latitude = position.coords.latitude;
-    var geocoder = new google.maps.Geocoder();
-    var LatLong = new google.maps.LatLng(latitude,longitude);
-    geocoder.geocode({'latLng': LatLong}, function(results, status) {
-      if (status === 'OK') {
-        //$("#map-canvas").html(results+" ^^^^^^^^^^^^");
-        if (results[0]) {
-          //alert(results[0].formatted_address);
-          $("#formatted_address").val(results[0].formatted_address);
-          app.preloader.hide();
-          /*var address = "", city = "", state = "", zip = "", country = "", formattedAddress = "";
-              var lat;
-              var lng;
-              for (var i = 0; i < results[0].address_components.length; i++) {
-                  var addr = results[0].address_components[i];
-                  // check if this entry in address_components has a type of country
-                  if (addr.types[0] == 'country')
-                      country = addr.long_name;
-                  else if (addr.types[0] == 'street_address') // address 1
-                      address = address + addr.long_name;
-                  else if (addr.types[0] == 'establishment')
-                      address = address + addr.long_name;
-                  else if (addr.types[0] == 'route')  // address 2
-                      address = address + addr.long_name;
-                  else if (addr.types[0] == 'postal_code')       // Zip
-                      zip = addr.short_name;
-                  else if (addr.types[0] == ['administrative_area_level_1'])       // State
-                      state = addr.long_name;
-                  else if (addr.types[0] == ['locality'])       // City
-                      city = addr.long_name;
-              }
-              //alert("results[0].formatted_address "+results[0].formatted_address);
-              if (results[0].formatted_address != null) {
-                  formattedAddress = results[0].formatted_address;
-              }*/
-              
-        } else {
-          app.dialog.alert('No results found');
-        }
+  //alert("in function");
+  /*alert('Latitude: '          + position.coords.latitude          + '\n' +
+        'Longitude: '         + position.coords.longitude         + '\n' +
+        'Altitude: '          + position.coords.altitude          + '\n' +
+        'Accuracy: '          + position.coords.accuracy          + '\n' +
+        'Altitude Accuracy: ' + position.coords.altitudeAccuracy  + '\n' +
+        'Heading: '           + position.coords.heading           + '\n' +
+        'Speed: '             + position.coords.speed             + '\n' +
+        'Timestamp: '         + position.timestamp                + '\n');*/
+  var longitude = position.coords.longitude;
+  var latitude = position.coords.latitude;
+  var geocoder = new google.maps.Geocoder();
+  var LatLong = new google.maps.LatLng(latitude,longitude);
+  geocoder.geocode({'latLng': LatLong}, function(results, status) {
+    if (status === 'OK') {
+      //$("#map-canvas").html(results+" ^^^^^^^^^^^^");
+      if (results[0]) {
+        //alert(results[0].formatted_address);
+        $("#formatted_address").val(results[0].formatted_address);
+        app.preloader.hide();             
       } else {
-        app.dialog.alert('Geocoder failed due to: ' + status);
+        app.dialog.alert('No results found');
       }
-    });
-app.preloader.hide();
+    } else {
+      app.dialog.alert('Geocoder failed due to: ' + status);
+    }
+  });
+  app.preloader.hide();
 }
+function onError(error){
+  alert('code: '    + error.code    + '\n' + 'message: ' + error.message + '\n');
+}
+function openLOC(){ 
+  cordova.plugins.diagnostic.isLocationEnabled(function(enabled){ //isLocationEnabled    
+    if(!enabled){
+      cordova.plugins.diagnostic.switchToLocationSettings(onRequestSuccess,onRequestFailure);
+       //mainView.loadPage("current-location.html");
+    }else{
+      //alert("Location service is ON");        
+      mainView.router.navigate("/customer_dash/");
+    }
+  }, function(error){
+    app.dialog.alert("The following error occurred: "+error);
+  });   
+}
+function onRequestSuccess(success){
+  alert(success+" success");
+  if(success){
+    alert("in onRequestSuccess");
+    cordova.plugins.locationAccuracy.request(successCallback, errorCallback, accuracy);      
+  }
+}  
+function onRequestFailure(error){
+  alert(error+" error");
+   if(error){
+    alert("in onRequestFailure");
+     app.dialog.alert(error.message);
+   }
+}
+function successCallback(success){
+  alert("in successCallback *******");
+  //if(success){
+    mainView.router.navigate("/customer_dash/");
+  //}
+} 
+function errorCallback(error){
+  alert("in errorCallback ############");
+  //if(error){
+   alert(error.message);
+  //} 
+}
+
   
 //function geocodeLatLng(geocoder,latlng){
 /*function geocodeLatLng(latitude,longitude){
@@ -673,9 +651,7 @@ app.preloader.hide();
           }
         });
 }*/
-function onError(error){
-  alert('code: '    + error.code    + '\n' + 'message: ' + error.message + '\n');
-}
+
 /*function openLOC(){
   alert("openLOC"); 
 //alert(cordova.plugins.diagnostic.enableDebug());
@@ -747,7 +723,7 @@ function onError(error){
         alert('code: '    + error.code    + '\n' +
               'message: ' + error.message + '\n');
     }*/
-// -------------------------------------- DATA NAME : PARTNER DASHBOARD --------------------------------- //
+// -------------------------------------- DATA NAME : PARTNER DASHBOARD ------------------------------- //
 $$(document).on('page:init', '.page[data-name="partner_dash"]', function (page) {  
   checkConnection();
 });
