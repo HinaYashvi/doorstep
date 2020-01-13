@@ -769,11 +769,13 @@ function onSuccess(position){
     var map = new google.maps.Map(document.getElementById("map-canvas"), mapOptions);*/
 }
 function geocodeLatLng(geocoder,latlng){
-  alert("in geocodeLatLng function ");
+  alert("in geocodeLatLng function "+latlng);
   var latlngStr = latlng.split(',');
-  alert(latlngStr[0]+"**************"+latlngStr[1]);
-  $("#map-canvas").html(latlngStr);
+  //alert(latlngStr[0]+"**************"+latlngStr[1]);
+  $("#map-canvas").html(latlngStr[0]+"*************"+latlngStr[1]);
   var latlng = {lat: parseFloat(latlngStr[0]), lng: parseFloat(latlngStr[1])};
+
+  alert(latlng+" @@@@@@@@@@@@@@@@@@@@@@@@@@@@");
   geocoder.geocode({'location': latlng}, function(results, status) {
           if (status === 'OK') {
             if (results[0]) {
