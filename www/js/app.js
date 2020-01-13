@@ -83,8 +83,8 @@ function checkStorage(){
   if(session_pid!=null && session_cid==null){  
     mainView.router.navigate("/partner_dash/");
   }else if(session_cid!=null && session_pid==null){
-    //mainView.router.navigate("/customer_dash/");
-    mainView.router.navigate("/location_on/");
+    mainView.router.navigate("/customer_dash/");
+    //mainView.router.navigate("/location_on/");
   }else{ 
     mainView.router.navigate("/");
   } 
@@ -599,14 +599,14 @@ function curr_loc(){
 }
 function onSuccess(position){
     //alert("in function");
-    alert('Latitude: '          + position.coords.latitude          + '\n' +
+    /*alert('Latitude: '          + position.coords.latitude          + '\n' +
           'Longitude: '         + position.coords.longitude         + '\n' +
           'Altitude: '          + position.coords.altitude          + '\n' +
           'Accuracy: '          + position.coords.accuracy          + '\n' +
           'Altitude Accuracy: ' + position.coords.altitudeAccuracy  + '\n' +
           'Heading: '           + position.coords.heading           + '\n' +
           'Speed: '             + position.coords.speed             + '\n' +
-          'Timestamp: '         + position.timestamp                + '\n');
+          'Timestamp: '         + position.timestamp                + '\n');*/
     var longitude = position.coords.longitude;
     var latitude = position.coords.latitude;
     var geocoder = new google.maps.Geocoder();
@@ -614,9 +614,9 @@ function onSuccess(position){
     //alert(LatLong+" @@@@@@@@@@@@@@@@@@@@@@@@@@@@");
     geocoder.geocode({'latLng': LatLong}, function(results, status) {
       if (status === 'OK') {
-        $("#map-canvas").html(results+" ^^^^^^^^^^^^");
+        //$("#map-canvas").html(results+" ^^^^^^^^^^^^");
         if (results[0]) {
-          alert(results[0].formatted_address);
+          //alert(results[0].formatted_address);
           var address = "", city = "", state = "", zip = "", country = "", formattedAddress = "";
               var lat;
               var lng;
@@ -638,7 +638,7 @@ function onSuccess(position){
                   else if (addr.types[0] == ['locality'])       // City
                       city = addr.long_name;
               }
-              alert("results[0].formatted_address "+results[0].formatted_address);
+              //alert("results[0].formatted_address "+results[0].formatted_address);
               if (results[0].formatted_address != null) {
                   formattedAddress = results[0].formatted_address;
               }
@@ -1059,8 +1059,8 @@ function logincheck(){
           window.localStorage.setItem("session_pcreated",result.user_session[0].p_created_on);      
         }else if(parse_authmsg=="c_success"){  
           //alert("customer_dash");
-          mainView.router.navigate("/location_on/");
-          //mainView.router.navigate("/customer_dash/");
+          //mainView.router.navigate("/location_on/");
+          mainView.router.navigate("/customer_dash/");
           window.localStorage.setItem("session_cid",result.user_session[0].c_id);
           window.localStorage.setItem("session_cname",result.user_session[0].c_name);
           window.localStorage.setItem("session_cphone",result.user_session[0].c_phone);
