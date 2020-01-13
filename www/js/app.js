@@ -770,7 +770,7 @@ function onSuccess(position){
 }
 function geocodeLatLng(geocoder,latlng){
   alert("in geocodeLatLng function "+latlng);
-  var latlngStr = latlng.split(',');
+  var latlngStr = latlng.split(', ');
   //alert(latlngStr[0]+"**************"+latlngStr[1]);
   $("#map-canvas").html(latlngStr[0]+"*************"+latlngStr[1]);
   var latlng = {lat: parseFloat(latlngStr[0]), lng: parseFloat(latlngStr[1])};
