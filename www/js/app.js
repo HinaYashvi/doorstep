@@ -590,7 +590,9 @@ function onError(error){
 function openLOC(){ 
   cordova.plugins.diagnostic.isLocationEnabled(function(enabled){ //isLocationEnabled    
     if(!enabled){
-      cordova.plugins.diagnostic.switchToLocationSettings(onRequestSuccess,onRequestFailure);
+      //cordova.plugins.diagnostic.switchToLocationSettings(onRequestSuccess,onRequestFailure);
+      cordova.plugins.diagnostic.switchToLocationSettings();
+      cordova.plugins.diagnostic.isLocationAuthorized(successCallback, errorCallback);
        //mainView.loadPage("current-location.html");
     }else{
       alert("Location service is ON");        
