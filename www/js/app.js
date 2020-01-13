@@ -54,13 +54,15 @@ document.addEventListener("deviceready", checkStorage, false);
 document.addEventListener("deviceready", onDeviceReady, false);
 document.addEventListener("backbutton", onBackKeyDown, false);
 
-// --------------------------- C H E C K  I N T E R N E T  C O N N E C T I O N --------------------------- //
+// ----------------------- C H E C K  I N T E R N E T  C O N N E C T I O N ------------------------ //
 function checkConnection(){  
   var networkState = navigator.connection.type;
   if(networkState=='none'){  
       mainView.router.navigate('/internet/');   
   }
 }
+// ----------------------- D E V I C E  R E A D Y ------------------------ //
+function onDeviceReady(){}
 // -------------------------------------- C H E C K  S T O R A G E --------------------------------- //
 function checkStorage(){
   checkConnection();  
@@ -93,7 +95,8 @@ function onBackKeyDown() {
   checkConnection(); 
   if(app.views.main.router.history.length==2 || app.views.main.router.url=='/'){
     app.dialog.confirm('Do you want to Exit ?', function () {
-      navigator.app.clearHistory(); navigator.app.exitApp();
+      navigator.app.clearHistory(); 
+      navigator.app.exitApp();
     });
   }else{ 
     $$(".back").click();
@@ -429,20 +432,10 @@ function customer_exists(mobile_no){
     }else{} 
   } 
 }
-// -------------------------------------- DATA NAME : CUSTOMER DASHBOARD --------------------------------- //
-function onDeviceReady(){
-  //alert("onDeviceReady");
-  //openLOC();
-  //logOut();
-  //navigator.geolocation.getCurrentPosition(onSuccess, onError);  
-}
-function openLOC(){  
-  //alert("openLOC");
-    cordova.plugins.diagnostic.isLocationEnabled(function(enabled){ //isLocationEnabled
-    //console.log("GPS location is " + (enabled ? "enabled" : "disabled"));
+// ---------------------------------- DATA NAME : CUSTOMER DASHBOARD --------------------------------- //
+function openLOC(){ 
+    cordova.plugins.diagnostic.isLocationEnabled(function(enabled){ //isLocationEnabled    
       if(!enabled){
-        //alert("Enabled GPS manually");
-        //var isRequesting = cordova.plugins.diagnostic.isRequestingPermission();
         cordova.plugins.diagnostic.switchToLocationSettings(onRequestSuccess,onRequestFailure);
          //mainView.loadPage("current-location.html");
       }else{
@@ -450,7 +443,7 @@ function openLOC(){
         mainView.router.navigate("/customer_dash/");
       }
     }, function(error){
-      console.error("The following error occurred: "+error);
+      app.dialog.alert("The following error occurred: "+error);
     });   
 }
 
@@ -461,7 +454,7 @@ function onRequestSuccess(success){
 }  
 function onRequestFailure(error){
    //if(error){
-     alert(error.message);
+     app.dialog.alert(error.message);
    //}
 }
 /*function onSuccess(pos){
@@ -566,8 +559,7 @@ function onError(error){
   alert('code: '    + error.code    + '\n' + 'message: ' + error.message + '\n');
 }*/
 $$(document).on('page:init', '.page[data-name="customer_dash"]', function (page) {  
-  checkConnection();  
-  
+  checkConnection();    
   swiper = new Swiper('.swiper-container_dash', {
     parallax: true,
     //autoHeight: true,
@@ -611,12 +603,12 @@ function onSuccess(position){
     var latitude = position.coords.latitude;
     var geocoder = new google.maps.Geocoder();
     var LatLong = new google.maps.LatLng(latitude,longitude);
-    //alert(LatLong+" @@@@@@@@@@@@@@@@@@@@@@@@@@@@");
     geocoder.geocode({'latLng': LatLong}, function(results, status) {
       if (status === 'OK') {
         //$("#map-canvas").html(results+" ^^^^^^^^^^^^");
         if (results[0]) {
           //alert(results[0].formatted_address);
+          $("#formatted_address").val(results[0].formatted_address);
           var address = "", city = "", state = "", zip = "", country = "", formattedAddress = "";
               var lat;
               var lng;
@@ -642,7 +634,7 @@ function onSuccess(position){
               if (results[0].formatted_address != null) {
                   formattedAddress = results[0].formatted_address;
               }
-              $("#formatted_address").val(formattedAddress);
+              
         } else {
           app.dialog.alert('No results found');
         }
@@ -1059,8 +1051,8 @@ function logincheck(){
           window.localStorage.setItem("session_pcreated",result.user_session[0].p_created_on);      
         }else if(parse_authmsg=="c_success"){  
           //alert("customer_dash");
-          //mainView.router.navigate("/location_on/");
-          mainView.router.navigate("/customer_dash/");
+          mainView.router.navigate("/location_on/");
+          //mainView.router.navigate("/customer_dash/");
           window.localStorage.setItem("session_cid",result.user_session[0].c_id);
           window.localStorage.setItem("session_cname",result.user_session[0].c_name);
           window.localStorage.setItem("session_cphone",result.user_session[0].c_phone);
