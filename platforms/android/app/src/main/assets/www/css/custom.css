@@ -169,7 +169,7 @@ div.container4 img {
 .locationDiv{
   height: 8px;
   background-color: black;
-  color: #fff;
+  color: #fff!important;
   padding: 5% 0 7% 5%;
 }
 /* DEMO-SPECIFIC STYLES */
