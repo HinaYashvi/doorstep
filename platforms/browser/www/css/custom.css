@@ -1,7 +1,6 @@
 .md .swiper-pagination-bullet-active, .ios .swiper-pagination-bullet-active {
     background: #fff!important;
 }
-
 .w-100{
 	width: 100%;
 }
@@ -166,6 +165,12 @@ div.container4 img {
   background-color: #036B6E;
   color: #fff;   
   width: 79%;
+}
+.locationDiv{
+  height: 8px;
+  background-color: black;
+  color: #fff;
+  padding: 5% 0 7% 5%;
 }
 /* DEMO-SPECIFIC STYLES */
 .typewriter h1 {

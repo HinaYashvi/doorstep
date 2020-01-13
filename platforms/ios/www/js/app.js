@@ -573,7 +573,7 @@ function onSuccess(position){
       //$("#map-canvas").html(results+" ^^^^^^^^^^^^");
       if (results[0]) {
         //alert(results[0].formatted_address);
-        $("#formatted_address").val(results[0].formatted_address);
+        $("#formatted_address").html(results[0].formatted_address);
         app.preloader.hide();             
       } else {
         app.dialog.alert('No results found');
@@ -590,7 +590,9 @@ function onError(error){
 function openLOC(){ 
   cordova.plugins.diagnostic.isLocationEnabled(function(enabled){ //isLocationEnabled    
     if(!enabled){
-      cordova.plugins.diagnostic.switchToLocationSettings(onRequestSuccess,onRequestFailure);
+      //cordova.plugins.diagnostic.switchToLocationSettings(onRequestSuccess,onRequestFailure);
+      cordova.plugins.diagnostic.switchToLocationSettings();
+      cordova.plugins.diagnostic.isLocationAuthorized(successCallback, errorCallback);
        //mainView.loadPage("current-location.html");
     }else{
       alert("Location service is ON");        
@@ -600,7 +602,17 @@ function openLOC(){
     app.dialog.alert("The following error occurred: "+error);
   });   
 }
-function onRequestSuccess(success){
+function successCallback(success){
+  //if(success){
+    mainView.router.navigate("/customer_dash/");
+  //}
+} 
+function errorCallback(error){  
+  //if(error){
+   alert(error.message);
+  //} 
+}
+/*function onRequestSuccess(success){
   alert("in onRequestSuccess");
   alert(success+" success");
   if(success){
@@ -615,19 +627,8 @@ function onRequestFailure(error){
     
      app.dialog.alert(error.message);
    }
-}
-function successCallback(success){
-  alert("in successCallback *******");
-  //if(success){
-    mainView.router.navigate("/customer_dash/");
-  //}
-} 
-function errorCallback(error){
-  alert("in errorCallback ############");
-  //if(error){
-   alert(error.message);
-  //} 
-}
+}*/
+
 
   
 //function geocodeLatLng(geocoder,latlng){

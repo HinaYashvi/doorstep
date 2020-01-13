@@ -210,6 +210,9 @@ a:hover {
 .ls-2{
     letter-spacing: 2px!important;
 }
+.mr-5{
+    margin-right: 5px;
+}
 /*.navbar-large-transparent .navbar-bg{
     
     opacity: 0.90!important;
