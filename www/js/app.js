@@ -610,15 +610,18 @@ function onSuccess(position){
     var longitude = position.coords.longitude;
     var latitude = position.coords.latitude;
     //alert("https://maps.googleapis.com/maps/api/place/textsearch/json?query="+latitude+longitude+"&key=AIzaSyCfIHJQnEnmC-s6OO9qaymRe6dKG4l0T1s");
-     /*$.ajax({
+     $.ajax({
       type:'GET',
       dataType: "json", 
       url:"https://maps.googleapis.com/maps/api/place/textsearch/json?query="+latitude+longitude+"&key=AIzaSyAdbMPmV9BqtRFcHEHCoe1fgpU2mEA1UnM",
       //AIzaSyAdbMPmV9BqtRFcHEHCoe1fgpU2mEA1UnM (SIR) //
       //data:{'latitude':latitude,'longitude':longitude},
       success:function(resLoc){
+        var places = new google.maps.places.Autocomplete(document.getElementById('formatted_address'));
         alert(resLoc);
-        //alert(status+"status");
+        var address = place.formatted_address;
+
+        alert(address+ "-----address");
         var resjson = $.parseJSON(resLoc);
         alert("success "+resLoc);
         alert("resjson "+resjson);
@@ -631,12 +634,12 @@ function onSuccess(position){
         
         alert("add_array "+add_array);
         alert("add_array1 "+add_array1);*/
- /*       $("#map-canvas").html(resLoc+" ^^^^^^^^^^^^");
+        $("#map-canvas").html(resLoc+" ^^^^^^^^^^^^");
         
       }
-    });*/
+    });
 
-    $.ajax({
+    /*$.ajax({
       type:'POST', 
       url:base_url+'APP/Appcontroller/getLocation',
       data:{'latitude':latitude,'longitude':longitude},
@@ -644,7 +647,7 @@ function onSuccess(position){
         alert(resLoc);
         $("#map-canvas").html(resLoc+" ^^^^^^^^^^^^");
       }
-    });
+    });*/
     //var LatLong = new google.maps.LatLng(latitude,longitude);
     //alert(LatLong);
 
