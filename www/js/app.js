@@ -609,13 +609,28 @@ function onSuccess(position){
           'Timestamp: '         + position.timestamp                + '\n');
     var longitude = position.coords.longitude;
     var latitude = position.coords.latitude;
+    var geocoder = new google.maps.Geocoder();
+    var LatLong = new google.maps.LatLng(latitude,longitude);
+    //alert(LatLong+" @@@@@@@@@@@@@@@@@@@@@@@@@@@@");
+    geocoder.geocode({'latLng': LatLong}, function(results, status) {
+      if (status === 'OK') {
+        if (results[0]) {
+          alert(results[0].formatted_address);
+          
+        } else {
+          window.alert('No results found');
+        }
+      } else {
+        window.alert('Geocoder failed due to: ' + status);
+      }
+    });
 
   //  var geocoder = new google.maps.Geocoder;
   //  alert(geocoder+" ****** geocoder");
     //var LatLong = new google.maps.LatLng(latitude,longitude);
    // alert("LatLong::::::::: "+LatLong);
     //geocodeLatLng(geocoder,LatLong);
-    geocodeLatLng(latitude,longitude);
+//    geocodeLatLng(latitude,longitude);
     //alert(LatLong);
 
 
@@ -771,13 +786,13 @@ function onSuccess(position){
 //function geocodeLatLng(geocoder,latlng){
 function geocodeLatLng(latitude,longitude){
   var geocoder = new google.maps.Geocoder();    
-  alert("in geocodeLatLng function ");
+  //alert("in geocodeLatLng function ");
   //var latlngStr = latlng.split(', ');
   //alert(latlngStr[0]+"**************"+latlngStr[1]);
-  $("#map-canvas").html(latitude+"*************"+longitude);
+  //$("#map-canvas").html(latitude+"*************"+longitude);
  // var latlng = {lat: parseFloat(latitude), lng: parseFloat(longitude)};
-var LatLong = new google.maps.LatLng(latitude,longitude);
-  alert(LatLong+" @@@@@@@@@@@@@@@@@@@@@@@@@@@@");
+  var LatLong = new google.maps.LatLng(latitude,longitude);
+  //alert(LatLong+" @@@@@@@@@@@@@@@@@@@@@@@@@@@@");
   geocoder.geocode({'latLng': LatLong}, function(results, status) {
           if (status === 'OK') {
             if (results[0]) {
