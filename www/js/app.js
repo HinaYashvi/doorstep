@@ -769,7 +769,7 @@ function onSuccess(position){
     var map = new google.maps.Map(document.getElementById("map-canvas"), mapOptions);*/
 }
 //function geocodeLatLng(geocoder,latlng){
-function geocodeLatLng(geocoder,latitude,longitude)
+function geocodeLatLng(geocoder,latitude,longitude){
   alert("in geocodeLatLng function "+latlng);
   //var latlngStr = latlng.split(', ');
   //alert(latlngStr[0]+"**************"+latlngStr[1]);
