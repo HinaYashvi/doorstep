@@ -610,13 +610,18 @@ function onSuccess(position){
     var longitude = position.coords.longitude;
     var latitude = position.coords.latitude;
 
+    var geocoder = new google.maps.Geocoder;
+    alert(geocoder+" ****** geocoder");
     var LatLong = new google.maps.LatLng(latitude,longitude);
-    alert(LatLong);
+    alert("LatLong::::::::: "+LatLong);
+    geocodeLatLng(geocoder,LatLong);
+    
+    //alert(LatLong);
 
 
 
 
-    var geocoder = new google.maps.Geocoder();    
+    /*var geocoder = new google.maps.Geocoder();    
     geocoder.geocode({ 'latLng': LatLong }, function (results, status) {
       alert("results "+results);
       alert("status ="+status);
@@ -625,7 +630,7 @@ function onSuccess(position){
               alert("Location: " + results[1].formatted_address);
           }
         }
-    });
+    });*/
 /*        if (status == google.maps.GeocoderStatus.OK) {
           if (results[0]) {
               var address = "", city = "", state = "", zip = "", country = "", formattedAddress = "";
@@ -661,7 +666,7 @@ function onSuccess(position){
           }
         }
       });
-
+ 
 
 
     //alert("https://maps.googleapis.com/maps/api/place/textsearch/json?query="+latitude+longitude+"&key=AIzaSyCfIHJQnEnmC-s6OO9qaymRe6dKG4l0T1s");
@@ -670,6 +675,10 @@ function onSuccess(position){
       //dataType: "json", 
       url:"https://maps.googleapis.com/maps/api/place/textsearch/json?query="+latitude+longitude+"&key=AIzaSyAdbMPmV9BqtRFcHEHCoe1fgpU2mEA1UnM",
       //AIzaSyAdbMPmV9BqtRFcHEHCoe1fgpU2mEA1UnM (SIR) //
+
+      
+
+
       //data:{'latitude':latitude,'longitude':longitude},
       success:function(resLoc){        
         alert(resLoc);
@@ -758,6 +767,24 @@ function onSuccess(position){
         mapTypeId : google.maps.MapTypeId.ROADMAP
     };
     var map = new google.maps.Map(document.getElementById("map-canvas"), mapOptions);*/
+}
+function geocodeLatLng(geocoder,LatLong){
+  alert("in geocodeLatLng function ");
+  var latlngStr = LatLong.split(',', 2);
+  alert(latlngStr[0]+"**************"+latlngStr[1]);
+  var latlng = {lat: parseFloat(latlngStr[0]), lng: parseFloat(latlngStr[1])};
+  geocoder.geocode({'location': latlng}, function(results, status) {
+          if (status === 'OK') {
+            if (results[0]) {
+              alert(results[0].formatted_address);
+              
+            } else {
+              window.alert('No results found');
+            }
+          } else {
+            window.alert('Geocoder failed due to: ' + status);
+          }
+        });
 }
 function onError(error){
   alert('code: '    + error.code    + '\n' + 'message: ' + error.message + '\n');
