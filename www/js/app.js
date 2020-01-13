@@ -612,7 +612,7 @@ function onSuccess(position){
 
     var geocoder = new google.maps.Geocoder;
   //  alert(geocoder+" ****** geocoder");
-    var LatLong = new google.maps.LatLng(latitude,longitude);
+    //var LatLong = new google.maps.LatLng(latitude,longitude);
    // alert("LatLong::::::::: "+LatLong);
     //geocodeLatLng(geocoder,LatLong);
     geocodeLatLng(geocoder,latitude,longitude);
@@ -774,10 +774,10 @@ function geocodeLatLng(geocoder,latitude,longitude){
   //var latlngStr = latlng.split(', ');
   //alert(latlngStr[0]+"**************"+latlngStr[1]);
   $("#map-canvas").html(latitude+"*************"+longitude);
-  //var latlng = {lat: parseFloat(latitude), lng: parseFloat(longitude)};
+ // var latlng = {lat: parseFloat(latitude), lng: parseFloat(longitude)};
 var LatLong = new google.maps.LatLng(latitude,longitude);
   alert(LatLong+" @@@@@@@@@@@@@@@@@@@@@@@@@@@@");
-  geocoder.geocode({'location': LatLong}, function(results, status) {
+  geocoder.geocode({'latLng': LatLong}, function(results, status) {
           if (status === 'OK') {
             if (results[0]) {
               alert(results[0].formatted_address);
