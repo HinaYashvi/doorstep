@@ -609,13 +609,54 @@ function onSuccess(position){
           'Timestamp: '         + position.timestamp                + '\n');
     var longitude = position.coords.longitude;
     var latitude = position.coords.latitude;
-
-    var geocoder = new google.maps.Geocoder;
-    alert(geocoder+" ****** geocoder");
+    var geocoder = new google.maps.Geocoder();
     var LatLong = new google.maps.LatLng(latitude,longitude);
-    alert("LatLong::::::::: "+LatLong);
+    //alert(LatLong+" @@@@@@@@@@@@@@@@@@@@@@@@@@@@");
+    geocoder.geocode({'latLng': LatLong}, function(results, status) {
+      if (status === 'OK') {
+        $("#map-canvas").html(results+" ^^^^^^^^^^^^");
+        if (results[0]) {
+          alert(results[0].formatted_address);
+          var address = "", city = "", state = "", zip = "", country = "", formattedAddress = "";
+              var lat;
+              var lng;
+              for (var i = 0; i < results[0].address_components.length; i++) {
+                  var addr = results[0].address_components[i];
+                  // check if this entry in address_components has a type of country
+                  if (addr.types[0] == 'country')
+                      country = addr.long_name;
+                  else if (addr.types[0] == 'street_address') // address 1
+                      address = address + addr.long_name;
+                  else if (addr.types[0] == 'establishment')
+                      address = address + addr.long_name;
+                  else if (addr.types[0] == 'route')  // address 2
+                      address = address + addr.long_name;
+                  else if (addr.types[0] == 'postal_code')       // Zip
+                      zip = addr.short_name;
+                  else if (addr.types[0] == ['administrative_area_level_1'])       // State
+                      state = addr.long_name;
+                  else if (addr.types[0] == ['locality'])       // City
+                      city = addr.long_name;
+              }
+              alert("results[0].formatted_address "+results[0].formatted_address);
+              if (results[0].formatted_address != null) {
+                  formattedAddress = results[0].formatted_address;
+              }
+              $("#formatted_address").val(formattedAddress);
+        } else {
+          app.dialog.alert('No results found');
+        }
+      } else {
+        app.dialog.alert('Geocoder failed due to: ' + status);
+      }
+    });
+
+  //  var geocoder = new google.maps.Geocoder;
+  //  alert(geocoder+" ****** geocoder");
+    //var LatLong = new google.maps.LatLng(latitude,longitude);
+   // alert("LatLong::::::::: "+LatLong);
     //geocodeLatLng(geocoder,LatLong);
-    geocodeLatLng(geocoder,latitude,longitude);
+//    geocodeLatLng(latitude,longitude);
     //alert(LatLong);
 
 
@@ -769,15 +810,16 @@ function onSuccess(position){
     var map = new google.maps.Map(document.getElementById("map-canvas"), mapOptions);*/
 }
 //function geocodeLatLng(geocoder,latlng){
-function geocodeLatLng(geocoder,latitude,longitude){
-  alert("in geocodeLatLng function "+latlng);
+function geocodeLatLng(latitude,longitude){
+  var geocoder = new google.maps.Geocoder();    
+  //alert("in geocodeLatLng function ");
   //var latlngStr = latlng.split(', ');
   //alert(latlngStr[0]+"**************"+latlngStr[1]);
-  $("#map-canvas").html(latitude+"*************"+longitude);
-  var latlng = {lat: parseFloat(latitude), lng: parseFloat(longitude)};
-
-  alert(latlng+" @@@@@@@@@@@@@@@@@@@@@@@@@@@@");
-  geocoder.geocode({'location': latlng}, function(results, status) {
+  //$("#map-canvas").html(latitude+"*************"+longitude);
+ // var latlng = {lat: parseFloat(latitude), lng: parseFloat(longitude)};
+  var LatLong = new google.maps.LatLng(latitude,longitude);
+  //alert(LatLong+" @@@@@@@@@@@@@@@@@@@@@@@@@@@@");
+  geocoder.geocode({'latLng': LatLong}, function(results, status) {
           if (status === 'OK') {
             if (results[0]) {
               alert(results[0].formatted_address);
