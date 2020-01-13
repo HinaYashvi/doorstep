@@ -611,9 +611,9 @@ function onSuccess(position){
     var latitude = position.coords.latitude;
 
     var geocoder = new google.maps.Geocoder;
-    alert(geocoder+" ****** geocoder");
+  //  alert(geocoder+" ****** geocoder");
     var LatLong = new google.maps.LatLng(latitude,longitude);
-    alert("LatLong::::::::: "+LatLong);
+   // alert("LatLong::::::::: "+LatLong);
     //geocodeLatLng(geocoder,LatLong);
     geocodeLatLng(geocoder,latitude,longitude);
     //alert(LatLong);
@@ -774,10 +774,10 @@ function geocodeLatLng(geocoder,latitude,longitude){
   //var latlngStr = latlng.split(', ');
   //alert(latlngStr[0]+"**************"+latlngStr[1]);
   $("#map-canvas").html(latitude+"*************"+longitude);
-  var latlng = {lat: parseFloat(latitude), lng: parseFloat(longitude)};
-
-  alert(latlng+" @@@@@@@@@@@@@@@@@@@@@@@@@@@@");
-  geocoder.geocode({'location': latlng}, function(results, status) {
+  //var latlng = {lat: parseFloat(latitude), lng: parseFloat(longitude)};
+var LatLong = new google.maps.LatLng(latitude,longitude);
+  alert(LatLong+" @@@@@@@@@@@@@@@@@@@@@@@@@@@@");
+  geocoder.geocode({'location': LatLong}, function(results, status) {
           if (status === 'OK') {
             if (results[0]) {
               alert(results[0].formatted_address);
