@@ -768,10 +768,11 @@ function onSuccess(position){
     };
     var map = new google.maps.Map(document.getElementById("map-canvas"), mapOptions);*/
 }
-function geocodeLatLng(geocoder,LatLong){
+function geocodeLatLng(geocoder,latlng){
   alert("in geocodeLatLng function ");
-  var latlngStr = LatLong.split(',', 2);
+  var latlngStr = latlng.split(',');
   alert(latlngStr[0]+"**************"+latlngStr[1]);
+  $("#map-canvas").html(latlngStr);
   var latlng = {lat: parseFloat(latlngStr[0]), lng: parseFloat(latlngStr[1])};
   geocoder.geocode({'location': latlng}, function(results, status) {
           if (status === 'OK') {
