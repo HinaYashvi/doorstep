@@ -610,12 +610,12 @@ function onSuccess(position){
     var longitude = position.coords.longitude;
     var latitude = position.coords.latitude;
 
-    var geocoder = new google.maps.Geocoder;
+  //  var geocoder = new google.maps.Geocoder;
   //  alert(geocoder+" ****** geocoder");
     //var LatLong = new google.maps.LatLng(latitude,longitude);
    // alert("LatLong::::::::: "+LatLong);
     //geocodeLatLng(geocoder,LatLong);
-    geocodeLatLng(geocoder,latitude,longitude);
+    geocodeLatLng(latitude,longitude);
     //alert(LatLong);
 
 
@@ -769,8 +769,9 @@ function onSuccess(position){
     var map = new google.maps.Map(document.getElementById("map-canvas"), mapOptions);*/
 }
 //function geocodeLatLng(geocoder,latlng){
-function geocodeLatLng(geocoder,latitude,longitude){
-  alert("in geocodeLatLng function "+latlng);
+function geocodeLatLng(latitude,longitude){
+  var geocoder = new google.maps.Geocoder();    
+  alert("in geocodeLatLng function ");
   //var latlngStr = latlng.split(', ');
   //alert(latlngStr[0]+"**************"+latlngStr[1]);
   $("#map-canvas").html(latitude+"*************"+longitude);
