@@ -168,9 +168,14 @@ div.container4 img {
 }
 .locationDiv{
   height: 8px;
-  background-color: black;
-  color: #fff!important;
-  padding: 5% 0 7% 5%;
+    background-color: black;
+    color: #fff!important;
+    padding: 5% 7% 7% 5%;    
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    width: 95%;
+    display: inline-block;
 }
 /* DEMO-SPECIFIC STYLES */
 .typewriter h1 {
