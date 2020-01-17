@@ -717,7 +717,7 @@ function chnagelocation(){
 
 function geolocate() {
 
-  var input = document.getElementById('searchInput');
+  var input = document.getElementById('autocomplete');
   var autocomplete = new google.maps.places.Autocomplete(input);
 
   autocomplete.addListener('place_changed', function() {
