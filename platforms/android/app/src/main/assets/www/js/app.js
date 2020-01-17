@@ -714,35 +714,29 @@ function errorCallback(error){
 function chnagelocation(){
   mainView.router.navigate("/customer_loc/");
 }
-var placeSearch, autocomplete;
+
 function geolocate() {
+
+  var input = document.getElementById('searchInput');
+  var autocomplete = new google.maps.places.Autocomplete(input);
+
+  autocomplete.addListener('place_changed', function() {
+    var place = autocomplete.getPlace();
+    alert("place :: "+place);
+    var address = '';
+    if (place.address_components) {
+        address = [
+          (place.address_components[0] && place.address_components[0].short_name || ''),
+          (place.address_components[1] && place.address_components[1].short_name || ''),
+          (place.address_components[2] && place.address_components[2].short_name || '')
+        ].join(' ');
+    }
+    alert("address :: "+address);    
+  });
   //alert("called");
-  if (navigator.geolocation) {
-    //alert("in");
-    navigator.geolocation.getCurrentPosition(onsucc,onerr,{ maximumAge: 3000, timeout: 5000, enableHighAccuracy: true });
-    /*navigator.geolocation.getCurrentPosition(function(position) {
-      var geolocation = {
-        lat: position.coords.latitude,
-        lng: position.coords.longitude
-      };
-      console.log(geolocation);      
-      autocomplete = new google.maps.places.Autocomplete(
-      document.getElementById('autocomplete'), {types: ['geocode']});  
-      autocomplete.setFields(['address_component']);
-    });*/
-  }
+  
 }
-function onsucc(pos){
-  var longitude = pos.coords.longitude;
-  var latitude = pos.coords.latitude;
-  alert(longitude+"-------"+latitude);
-  autocomplete = new google.maps.places.Autocomplete(
-      document.getElementById('autocomplete'), {types: ['geocode']}); 
-autocomplete.setFields(['address_component']);
-}
-function onerr(err){
-  alert('code: '    + err.code    + '\n' + 'message: ' + err.message + '\n');
-}
+
 /*function onRequestSuccess(success){
   alert("in onRequestSuccess");
   alert(success+" success");
