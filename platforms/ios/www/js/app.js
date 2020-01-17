@@ -720,9 +720,8 @@ function geolocate() {
   var input = $('#autocomplete').val();
   alert(input);
   var autocomplete = new google.maps.places.Autocomplete(input);  
-  //alert("called");  
-}
-autocomplete.addListener('place_changed', function() {
+  //alert("called"); 
+  autocomplete.addListener('place_changed', function() {
   var place = autocomplete.getPlace();
   alert("place :: "+place);
   var address = '';
@@ -734,7 +733,9 @@ autocomplete.addListener('place_changed', function() {
       ].join(' ');
   }
   alert("address :: "+address);    
-});
+  }); 
+}
+
 /*function onRequestSuccess(success){
   alert("in onRequestSuccess");
   alert(success+" success");
