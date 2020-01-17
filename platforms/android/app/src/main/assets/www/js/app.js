@@ -716,27 +716,25 @@ function chnagelocation(){
 }
 
 function geolocate() {
-
-  var input = document.getElementById('searchInput');
-  var autocomplete = new google.maps.places.Autocomplete(input);
-
-  autocomplete.addListener('place_changed', function() {
-    var place = autocomplete.getPlace();
-    alert("place :: "+place);
-    var address = '';
-    if (place.address_components) {
-        address = [
-          (place.address_components[0] && place.address_components[0].short_name || ''),
-          (place.address_components[1] && place.address_components[1].short_name || ''),
-          (place.address_components[2] && place.address_components[2].short_name || '')
-        ].join(' ');
-    }
-    alert("address :: "+address);    
-  });
-  //alert("called");
-  
+  //var input = document.getElementById('autocomplete');
+  var input = $('#autocomplete').val();
+  alert(input);
+  var autocomplete = new google.maps.places.Autocomplete(input);  
+  //alert("called");  
 }
-
+autocomplete.addListener('place_changed', function() {
+  var place = autocomplete.getPlace();
+  alert("place :: "+place);
+  var address = '';
+  if (place.address_components) {
+      address = [
+        (place.address_components[0] && place.address_components[0].short_name || ''),
+        (place.address_components[1] && place.address_components[1].short_name || ''),
+        (place.address_components[2] && place.address_components[2].short_name || '')
+      ].join(' ');
+  }
+  alert("address :: "+address);    
+});
 /*function onRequestSuccess(success){
   alert("in onRequestSuccess");
   alert(success+" success");
