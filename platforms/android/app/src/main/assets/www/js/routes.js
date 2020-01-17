@@ -43,6 +43,7 @@ var routes = [
       animate: true,
     },
   },
+
   {
     path: '/customer_dash/',
     url: './customer/customer_dash.html',
@@ -79,4 +80,37 @@ var routes = [
       animate: true,
     },
   },  
+  {
+    path: '/customer_servicelist/',
+    url: './customer/customer_servicelist.html',
+    name: 'customer_servicelist',
+    options: {
+      animate: true,
+    },
+  },
+  {
+    //path: '/partner_otpverify/',
+    //url: './partner/partner_otpverify.html',
+    path: '/customer_service_types/:sid/:sname/:cimg/',
+    url: './customer/customer_service_types.html?sid={{sid}}/sname={{sname}}/cimg={{cimg}}',
+    name: 'customer_service_types',
+    options: {
+      animate: true,
+    },
+  }, 
+  {
+    //path: '/partner_otpverify/',
+    //url: './partner/partner_otpverify.html',
+    path: '/customer_servicedet/:j_id/:j_name/:j_price/',
+    url: './customer/customer_servicedet.html?j_id={{j_id}}/j_name={{j_name}}/j_price={{j_price}}',
+    name: 'customer_servicedet',
+    options: {
+      animate: true,
+    },
+  }, 
+  {
+    path: '/customer_loc/',
+    url: './customer/customer_loc.html',
+    name: 'customer_loc',
+  }, 
 ];

@@ -548,6 +548,105 @@ $$(document).on('page:init', '.page[data-name="customer_dash"]', function (page)
     observeParents: true, 
   });    
   //navigator.geolocation.getCurrentPosition(onSuccess, onError);
+  app.preloader.show();
+  $.ajax({
+    type:'POST', 
+    url:base_url+'APP/Appcontroller/getServiceCategory',
+    success:function(cat_result){
+      var cat = $.parseJSON(cat_result);
+      var ser_cat = cat.ser_cat;
+      var cat_blocks='';
+      for(var i=0;i<ser_cat.length;i++){
+        var cat_id = ser_cat[i].c_id;
+        var c_name = ser_cat[i].c_name;
+        var c_img_path = ser_cat[i].c_img_path;
+        cat_blocks+='<div class="col-33 text-center elevation_blocks elevation-9" onclick="getcatServices('+cat_id+','+"'"+c_img_path+"'"+')"><img src="'+base_url+c_img_path+'" class="block_img lazy lazy-fade-in demo-lazy" height="50" width="50"/><div class="fs-12">'+c_name+'</div></div>';
+      }
+      $(".catblocks").html(cat_blocks);
+    }
+  });
+  app.preloader.hide();
+});
+function getcatServices(cat_id,c_img_path){
+  mainView.router.navigate("/customer_servicelist/");
+  app.preloader.show();
+  $.ajax({
+    type:'POST', 
+    data:{'cat_id':cat_id},
+    url:base_url+'APP/Appcontroller/getServicelist',
+    success:function(serv_res){
+      var parseServ = $.parseJSON(serv_res);
+      var serv_list = parseServ.serv_list;
+      var list='';
+      for(var j=0;j<serv_list.length;j++){
+        var s_id = serv_list[j].s_id;
+        var s_name = serv_list[j].s_name;  
+        var s_img_path = serv_list[j].s_img_path;
+        var cimg = c_img_path.replace(/\//g, "-"); 
+        //alert(cimg); 
+        list+='<li><a href="/customer_service_types/'+s_id+'/'+s_name+'/'+cimg+'/" class="item-link item-content"><div class="item-media"><img src="'+base_url+s_img_path+'" class="block_img lazy lazy-fade-in demo-lazy" height="60" width="60"/></div><div class="item-inner"><div class="item-title fs-12">'+s_name+'</div></div></a></li>';
+      }
+      $(".servList").html(list);
+      app.preloader.hide();
+    }
+  });
+}
+$$(document).on('page:init', '.page[data-name="customer_service_types"]', function (page) {  
+  checkConnection();
+  //console.log(page.detail.route.params);
+  var sid = page.detail.route.params.sid; 
+  var sname = page.detail.route.params.sname;
+  var c_img_path = page.detail.route.params.cimg;  
+  var c_img = c_img_path.replace(/-/g, '/');
+  //alert(sid+"-----"+sname);
+  $(".serv_title").html(sname);
+  app.preloader.show();
+  $.ajax({
+    type:'POST', 
+    data:{'sid':sid},
+    url:base_url+'APP/Appcontroller/getJoblist',
+    success:function(job_res){
+      var jobparse = $.parseJSON(job_res);
+      var job_list = jobparse.job_list;
+      var jimg = jobparse.j_img;
+      //console.log(jimg);
+      var jlist='';
+      var slides = '';        
+      for(var i=0;i<job_list.length;i++){
+        var j_id = job_list[i].j_id;
+        var j_name = job_list[i].j_name;
+        var j_desc = job_list[i].j_desc;
+        var j_duration = job_list[i].j_duration;
+        var j_price = job_list[i].j_price;
+        var time_slot = job_list[i].time_slot;
+        var ji_id = job_list[i].ji_id;
+        var j_img_path = jimg[0].j_img_path;
+        //alert(j_img_path);
+        //if(i==0){
+        //  var jimg = j_img_path.replace(/\//g, "-");
+        //  alert(jimg);
+        //}
+        ///slides+='<a class="slide" title="Image '+i+'" href="#"><span class="animate down" style="background-image: '+base_url+j_img_path+'"></span></a>';
+        slides='<div id="imageContainer"><img src="'+base_url+c_img+'" height="200" width="360"><div class="slider_txt">'+j_desc+'</div></div>'; 
+        jlist+='<li><a href="/customer_servicedet/'+j_id+'/'+j_name+'/'+j_price+'/" class="item-link item-content"><div class="item-inner"><div class="item-title fs-12">'+j_name+'</div></div></a></li>'; 
+      }
+      $("#slides").html(slides);
+      $(".jobList").html(jlist);
+      app.preloader.hide();
+    }
+  });
+  
+});
+$$(document).on('page:init', '.page[data-name="customer_servicedet"]', function (page) {  
+  checkConnection();
+  //console.log(page.detail.route.params);
+  var j_id = page.detail.route.params.j_id; 
+  var job_name = page.detail.route.params.j_name; 
+  var job_price = page.detail.route.params.j_price; 
+  $(".job_title").html(job_name);
+  app.preloader.show();
+
+  app.preloader.hide();
 });
 function curr_loc(){
   openLOC();
@@ -611,6 +710,38 @@ function errorCallback(error){
   //if(error){
    alert(error.message);
   //} 
+}
+function chnagelocation(){
+  mainView.router.navigate("/customer_loc/");
+}
+var placeSearch, autocomplete;
+function geolocate() {
+  //alert("called");
+  if (navigator.geolocation) {
+    //alert("in");
+    navigator.geolocation.getCurrentPosition(onsucc,onerr,{ maximumAge: 3000, timeout: 5000, enableHighAccuracy: true });
+    /*navigator.geolocation.getCurrentPosition(function(position) {
+      var geolocation = {
+        lat: position.coords.latitude,
+        lng: position.coords.longitude
+      };
+      console.log(geolocation);      
+      autocomplete = new google.maps.places.Autocomplete(
+      document.getElementById('autocomplete'), {types: ['geocode']});  
+      autocomplete.setFields(['address_component']);
+    });*/
+  }
+}
+function onsucc(pos){
+  var longitude = pos.coords.longitude;
+  var latitude = pos.coords.latitude;
+  alert(longitude+"-------"+latitude);
+  autocomplete = new google.maps.places.Autocomplete(
+      document.getElementById('autocomplete'), {types: ['geocode']}); 
+autocomplete.setFields(['address_component']);
+}
+function onerr(err){
+  alert('code: '    + err.code    + '\n' + 'message: ' + err.message + '\n');
 }
 /*function onRequestSuccess(success){
   alert("in onRequestSuccess");
