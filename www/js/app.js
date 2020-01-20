@@ -787,13 +787,13 @@ function geolocate() {
   });
 */
 var autocomplete;
-function initMap() {
+function geolocate() {
 var map = new google.maps.Map(document.getElementById('map'), {
       center: {lat: -33.8688, lng: 151.2195},
       zoom: 13
     });
 alert(map);
-var input = document.getElementById('search').value;
+var input = document.getElementById('search');
 map.controls[google.maps.ControlPosition.TOP_LEFT].push(input);
  alert(input);
 autocomplete = new google.maps.places.Autocomplete(input);
@@ -825,13 +825,13 @@ map.fitBounds(place.geometry.viewport);
 map.setCenter(place.geometry.location);
 map.setZoom(17);
         }
-//marker.setIcon(({
+/*marker.setIcon(({
             url: place.icon,
             size: new google.maps.Size(71, 71),
             origin: new google.maps.Point(0, 0),
             anchor: new google.maps.Point(17, 34),
 scaledSize: new google.maps.Size(35, 35)
-        }));
+        }));*/
 //marker.setPosition(place.geometry.location);
 //marker.setVisible(true);
  
