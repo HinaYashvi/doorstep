@@ -246,7 +246,9 @@ div.container4 img {
     typing 3.5s steps(30, end),
     blink-caret .5s step-end infinite;
 }
-
+.pac-container{
+  z-index: 11111!important;
+}
 /* The typing effect */
 @keyframes typing {
   from { width: 0 }
