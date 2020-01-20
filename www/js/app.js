@@ -771,7 +771,7 @@ function geolocate() {
   alert("called"); 
    
 }
-autocomplete.addListener('place_changed', function() {
+/*autocomplete.addListener('place_changed', function() {
     alert("in");
   var place = autocomplete.getPlace();
   //alert("place :: "+place);
@@ -785,7 +785,8 @@ autocomplete.addListener('place_changed', function() {
   }
   alert("address :: "+address);    
   });
-
+*/
+var autocomplete;
 function initMap() {
 var map = new google.maps.Map(document.getElementById('map'), {
       center: {lat: -33.8688, lng: 151.2195},
@@ -795,7 +796,7 @@ alert(map);
 var input = document.getElementById('search').value;
 map.controls[google.maps.ControlPosition.TOP_LEFT].push(input);
  alert(input);
-var autocomplete = new google.maps.places.Autocomplete(input);
+autocomplete = new google.maps.places.Autocomplete(input);
 autocomplete.bindTo('bounds', map);
  
 var infowindow = new google.maps.InfoWindow();
