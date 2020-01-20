@@ -143,8 +143,8 @@
   border-radius: 3px;
 }
 .dash_bg{
-  background-color: #ccc!important;
-  /*background-color: #efefef!important;*/
+  /*background-color: #ccc!important;
+  background-color: #efefef!important;*/
 }
 .slide-height{
   height: 200px;
@@ -202,9 +202,14 @@ div.container4 img {
   display: inline-block;
 }
 .toolbar-customer{
-  background-color: #fff;
+  /*background-color: #fff;*/
+  background-color: #232F3E;
   bottom: 0;
     height: calc(var(--f7-toolbar-height) + var(--f7-safe-area-bottom));
+}
+.navbg{
+  background-color: #232F3E;
+  color: #fff!important;
 }
 .tcust{
   align-items: inherit!important;

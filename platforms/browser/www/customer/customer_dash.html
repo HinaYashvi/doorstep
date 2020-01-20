@@ -1,17 +1,17 @@
 <div data-name="customer_dash" class="page dash_bg navbar-fixed toolbar-fixed">
   <div class="toolbar tabbar tabbar-labels toolbar-customer">
     <div class="toolbar-inner tcust">
-      <a href="#tab-1" class="tab-link tab-link-active">
+      <a href="#tab-1" class="tab-link tab-link-active text-white">
         <!-- Different icons for iOS and MD themes -->
         <i class="f7-icons">house_fill</i>
         <!-- Label text -->
         <span class="tabbar-label fs-12">Home</span>
       </a>
-      <a href="#tab-2" class="tab-link">
+      <a href="#tab-2" class="tab-link text-white">
         <i class="f7-icons">square_favorites_fill</i><span class="badge color-red bookings_tot">5</span></i>
         <span class="tabbar-label fs-12">Bookings</span>
       </a>
-      <a href="#tab-3" class="tab-link">
+      <a href="#tab-3" class="tab-link text-white">
         <i class="f7-icons">person_circle_fill</i>
         <span class="tabbar-label fs-12">Profile</span>
       </a>
@@ -21,6 +21,8 @@
   <div class="tabs">
 
   <div class="page-content">
+    <input type="hidden" name="hidd_currlat" id="hidd_currlat" />
+    <input type="hidden" name="hidd_currlon" id="hidd_currlon" />
     <div class="row locationDiv" onclick="chnagelocation()">
       <i class="f7-icons text-white fs-18 mr-5">placemark_fill</i><span id="formatted_address" >Gandhinagar - Vijapur Rd, GSECL colony,Thermal Power Plant Area, Pethapur, Gandhinagar, Gujarat 382041, India</span>
     </div>

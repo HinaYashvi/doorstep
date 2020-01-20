@@ -674,11 +674,11 @@ $$(document).on('page:init', '.page[data-name="customer_servicedet"]', function 
         var j_img_path = j_img[0].j_img_path;
         job_slide='<div id="imageContainer"><img src="'+base_url+j_img_path+'" height="200" width="360"><!--div class="slider_txt">'+j_desc+'</div--></div>';         
       }
-      alert("hidd_day "+hidd_day);
+      //alert("hidd_day "+hidd_day);
       if(hidd_day=='today'){
         for(var j=0;j<slot.length;j++){
           var sl_from = slot[j].from;
-          alert(sl_from);
+          //alert(sl_from);
         }  
       }else if(hidd_day=='tomorrow'){
         
@@ -697,7 +697,7 @@ function change_day(obj){
   $('.day').val(day);
 }
 function curr_loc(){
-  alert("called");
+  //alert("called");
   openLOC();
   navigator.geolocation.getCurrentPosition(onSuccess, onError,{ maximumAge: 3000, timeout: 5000, enableHighAccuracy: true });
 }
@@ -714,6 +714,13 @@ function onSuccess(position){
         'Timestamp: '         + position.timestamp                + '\n');*/
   var longitude = position.coords.longitude;
   var latitude = position.coords.latitude;
+
+  $("#hidd_currlat").val(latitude);
+  $("#hidd_currlon").val(longitude);
+
+  var hidd_currlat = $("#hidd_currlat").val();
+  var hidd_currlon = $("#hidd_currlon").val();
+  alert(hidd_currlat+"---------"+hidd_currlon);
   var geocoder = new google.maps.Geocoder();
   var LatLong = new google.maps.LatLng(latitude,longitude);
   geocoder.geocode({'latLng': LatLong}, function(results, status) {
@@ -794,14 +801,16 @@ function geolocate() {
       zoom: 13
     });*/
 //alert(map);
-var defaultBounds = new google.maps.LatLngBounds(new google.maps.LatLng(-33.8902, 151.1759), new google.maps.LatLng(-33.8474, 151.2631));
+//var defaultBounds = new google.maps.LatLngBounds(new google.maps.LatLng(-33.8902, 151.1759), new google.maps.LatLng(-33.8474, 151.2631));
+
+var defaultBounds = new google.maps.LatLngBounds(new google.maps.LatLng(-33.8902, 151.1759));
 //console.log(defaultBounds);
 var input = document.getElementById('search');
 //map.controls[google.maps.ControlPosition.TOP_LEFT].push(input);
  //alert(input);
  var options = {
         bounds: defaultBounds,
-        types: ['geocode']
+        types: ['geocode','establishment']
     };
 
 var autocomplete = new google.maps.places.Autocomplete(input,options);
