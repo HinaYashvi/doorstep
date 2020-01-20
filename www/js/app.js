@@ -792,7 +792,7 @@ var map = new google.maps.Map(document.getElementById('map'), {
       zoom: 13
     });
 alert(map);
-var input = document.getElementById('search');
+var input = document.getElementById('search').value;
 map.controls[google.maps.ControlPosition.TOP_LEFT].push(input);
  alert(input);
 var autocomplete = new google.maps.places.Autocomplete(input);
@@ -817,8 +817,10 @@ alert("Autocomplete's returned place contains no geometry");
  
         // If the place has a geometry, then present it on a map.
         if (place.geometry.viewport) {
+          alert(" in place.geometry.viewport");
 map.fitBounds(place.geometry.viewport);
         } else {
+          alert("in place.geometry.location");
 map.setCenter(place.geometry.location);
 map.setZoom(17);
         }
