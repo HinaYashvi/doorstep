@@ -801,15 +801,15 @@ autocomplete.bindTo('bounds', map);
  
 var infowindow = new google.maps.InfoWindow();
 alert("infowindow "+infowindow);
-var marker = new google.maps.Marker({
+/*var marker = new google.maps.Marker({
         map: map,
 anchorPoint: new google.maps.Point(0, -29)
     });
- 
+ */
 autocomplete.addListener('place_changed', function() {
   alert("in place_changed");
 infowindow.close();
-marker.setVisible(false);
+//marker.setVisible(false);
 var place = autocomplete.getPlace();
         if (!place.geometry) {
 alert("Autocomplete's returned place contains no geometry");
@@ -825,15 +825,15 @@ map.fitBounds(place.geometry.viewport);
 map.setCenter(place.geometry.location);
 map.setZoom(17);
         }
-marker.setIcon(({
+//marker.setIcon(({
             url: place.icon,
             size: new google.maps.Size(71, 71),
             origin: new google.maps.Point(0, 0),
             anchor: new google.maps.Point(17, 34),
 scaledSize: new google.maps.Size(35, 35)
         }));
-marker.setPosition(place.geometry.location);
-marker.setVisible(true);
+//marker.setPosition(place.geometry.location);
+//marker.setVisible(true);
  
  
     });
