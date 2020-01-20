@@ -763,7 +763,7 @@ function chnagelocation(){
   mainView.router.navigate("/customer_loc/");
 }
 var autocomplete;
-function geolocate() {
+function geolocate111() {
   var input = document.getElementById('autocomplete');
   //var input = $('#autocomplete').val();
   //alert(input);
@@ -786,31 +786,42 @@ function geolocate() {
   alert("address :: "+address);    
   });
 */
-var autocomplete;
+//var autocomplete;
 function geolocate() {
-var map = new google.maps.Map(document.getElementById('map'), {
+/*var map = new google.maps.Map(document.getElementById('map'), {
       center: {lat: -33.8688, lng: 151.2195},
       zoom: 13
-    });
-alert(map);
+    });*/
+//alert(map);
+var defaultBounds = new google.maps.LatLngBounds(new google.maps.LatLng(-33.8902, 151.1759), new google.maps.LatLng(-33.8474, 151.2631));
+//console.log(defaultBounds);
 var input = document.getElementById('search');
-map.controls[google.maps.ControlPosition.TOP_LEFT].push(input);
- alert(input);
-autocomplete = new google.maps.places.Autocomplete(input);
-autocomplete.bindTo('bounds', map);
+//map.controls[google.maps.ControlPosition.TOP_LEFT].push(input);
+ //alert(input);
+ var options = {
+        bounds: defaultBounds,
+        types: ['geocode']
+    };
+
+var autocomplete = new google.maps.places.Autocomplete(input,options);
+//autocomplete.bindTo('bounds', map);
  
-var infowindow = new google.maps.InfoWindow();
-alert("infowindow "+infowindow);
+//var infowindow = new google.maps.InfoWindow();
+//alert("infowindow "+infowindow);
 /*var marker = new google.maps.Marker({
         map: map,
 anchorPoint: new google.maps.Point(0, -29)
     });
  */
 autocomplete.addListener('place_changed', function() {
-  alert("in place_changed");
-infowindow.close();
+
+  console.log("in place_changed");
+//infowindow.close();
 //marker.setVisible(false);
 var place = autocomplete.getPlace();
+
+//alert("place "+place);
+console.log("in place "+place);
         if (!place.geometry) {
 alert("Autocomplete's returned place contains no geometry");
             return;
@@ -819,11 +830,11 @@ alert("Autocomplete's returned place contains no geometry");
         // If the place has a geometry, then present it on a map.
         if (place.geometry.viewport) {
           alert(" in place.geometry.viewport");
-map.fitBounds(place.geometry.viewport);
+//map.fitBounds(place.geometry.viewport);
         } else {
           alert("in place.geometry.location");
-map.setCenter(place.geometry.location);
-map.setZoom(17);
+//map.setCenter(place.geometry.location);
+//map.setZoom(17);
         }
 /*marker.setIcon(({
             url: place.icon,
