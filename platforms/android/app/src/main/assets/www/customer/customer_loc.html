@@ -1,21 +1,27 @@
 <div data-name="customer_loc" class="page navbar-fixed toolbar-fixed">	
-	<div class="navbar">
-		<div class="navbar-bg"></div>
-		<div class="navbar-inner">
-			<div class="left"><a href="#" class="link back"><i class="f7-icons">arrow_left</i></a>
+	<div class="navbar ">		
+		<div class="navbar-inner clocnav">
+			<div class="left"><a href="#" class="link back text-white"><i class="f7-icons">arrow_left</i></a>
 				<!--input type="text" name="autocomplete" id="autocomplete" placeholder="Enter your address" onkeyup="geolocate()"-->
-
-				<input id="search" class="controls" type="text" placeholder="Enter a location" onkeydown="geolocate()">
+				<input id="search" class="controls fs-16" type="text" placeholder="Enter your location" onkeydown="geolocate()"><span class="input-clear-button clearbtn"></span>
 			</div>
 				<div class="title"></div>
 			<div class="right"></div>
 		</div>
+
+		<div class="currlocDiv">
+			<i class="f7-icons fs-14 text-white">scope</i>
+			<span class="fs-14 text-white" onclick="curr_loc()">Use current location</span>
+		</div>
 	</div>
 
 	<div class="page-content"> 
-		<div id="slides"></div>   
-		<div class="list">
-			<ul class="jobList"></ul>			
-		</div>    
+		<!--div id="slides"></div--> 
+		<div class=container4>
+        	<img src="img/location/7.jpg" width="200">
+      	</div>  
+		<div class=container4>
+        	<img src="img/powered_by_google_on_white.png" >
+      	</div>    
 	</div>
 </div>

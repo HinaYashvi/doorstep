@@ -697,6 +697,7 @@ function change_day(obj){
   $('.day').val(day);
 }
 function curr_loc(){
+  alert("called");
   openLOC();
   navigator.geolocation.getCurrentPosition(onSuccess, onError,{ maximumAge: 3000, timeout: 5000, enableHighAccuracy: true });
 }

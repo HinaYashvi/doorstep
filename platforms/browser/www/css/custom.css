@@ -81,6 +81,12 @@
 .fs-12{
   font-size: 12px!important;
 }
+.fs-14{
+  font-size: 14px!important;
+}
+.fs-16{
+  font-size: 16px!important;
+}
 .fs-18{
   font-size: 18px!important;
 }
@@ -175,7 +181,8 @@ div.container4 img {
 }
 .locationDiv{
   height: 8px;
-    background-color: black;
+    /*background-color: black;*/
+    background-color: #232F3E;
     color: #fff!important;
     padding: 5% 7% 7% 5%;    
     overflow: hidden;
@@ -183,6 +190,16 @@ div.container4 img {
     text-overflow: ellipsis;
     width: 95%;
     display: inline-block;
+}
+.clocnav{
+  height: 56px;    
+  background-color: #232F3E;
+  color: #fff!important;  
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  width: 100%;
+  display: inline-block;
 }
 .toolbar-customer{
   background-color: #fff;
@@ -248,7 +265,21 @@ div.container4 img {
 }
 .pac-container{
   z-index: 11111!important;
+  box-shadow: 0px!important;
+  top: 60px!important;
+  width: 80%!important;
 }
+.clearbtn{
+  color: #ffffff;
+  right: 12px;
+}
+.currlocDiv{
+  position: relative;
+  top: 100%;
+  padding: 4%;
+  background-color: #516bf0;
+}
+
 /* The typing effect */
 @keyframes typing {
   from { width: 0 }
