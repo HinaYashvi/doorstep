@@ -718,9 +718,7 @@ function onSuccess(position){
   $("#hidd_currlat").val(latitude);
   $("#hidd_currlon").val(longitude);
 
-  var hidd_currlat = $("#hidd_currlat").val();
-  var hidd_currlon = $("#hidd_currlon").val();
-  alert(hidd_currlat+"---------"+hidd_currlon);
+
   var geocoder = new google.maps.Geocoder();
   var LatLong = new google.maps.LatLng(latitude,longitude);
   geocoder.geocode({'latLng': LatLong}, function(results, status) {
@@ -796,6 +794,9 @@ function geolocate111() {
 */
 //var autocomplete;
 function geolocate() {
+  var hidd_currlat = $("#hidd_currlat").val();
+  var hidd_currlon = $("#hidd_currlon").val();
+  $("#latlong").html(hidd_currlat+"***---------***"+hidd_currlon);
 /*var map = new google.maps.Map(document.getElementById('map'), {
       center: {lat: -33.8688, lng: 151.2195},
       zoom: 13
@@ -803,7 +804,7 @@ function geolocate() {
 //alert(map);
 //var defaultBounds = new google.maps.LatLngBounds(new google.maps.LatLng(-33.8902, 151.1759), new google.maps.LatLng(-33.8474, 151.2631));
 
-var defaultBounds = new google.maps.LatLngBounds(new google.maps.LatLng(-33.8902, 151.1759));
+var defaultBounds = new google.maps.LatLngBounds(new google.maps.LatLng(hidd_currlat, hidd_currlon));
 //console.log(defaultBounds);
 var input = document.getElementById('search');
 //map.controls[google.maps.ControlPosition.TOP_LEFT].push(input);
