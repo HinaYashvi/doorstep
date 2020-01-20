@@ -644,10 +644,58 @@ $$(document).on('page:init', '.page[data-name="customer_servicedet"]', function 
   var job_name = page.detail.route.params.j_name; 
   var job_price = page.detail.route.params.j_price; 
   $(".job_title").html(job_name);
+  var hidd_day = $("#day").val();
+  var d = new Date();
+  var tm = d.getTime();
+  //console.log(tm);
   app.preloader.show();
+  $.ajax({
+    type:'POST', 
+    data:{'j_id':j_id},
+    url:base_url+'APP/Appcontroller/getJobDetails',
+    success:function(res){
 
-  app.preloader.hide();
+      var jobdet = $.parseJSON(res);
+      var job_det = jobdet.job_det;
+      var j_img = jobdet.j_img;
+      var ser = jobdet.ser;
+      var servc = ser.servc;
+      var slot = ser.slot;
+      
+      //console.log(servc);
+      //console.log(slot);
+      var job_slide = '';
+      var jdet='';
+      for(var i=0;i<job_det.length;i++){
+        var j_desc = job_det[i].j_desc;
+        var j_duration = job_det[i].j_duration;
+        var j_price = job_det[i].j_price;
+        var time_slot = job_det[i].time_slot;
+        var j_img_path = j_img[0].j_img_path;
+        job_slide='<div id="imageContainer"><img src="'+base_url+j_img_path+'" height="200" width="360"><!--div class="slider_txt">'+j_desc+'</div--></div>';         
+      }
+      alert("hidd_day "+hidd_day);
+      if(hidd_day=='today'){
+        for(var j=0;j<slot.length;j++){
+          var sl_from = slot[j].from;
+          alert(sl_from);
+        }  
+      }else if(hidd_day=='tomorrow'){
+        
+      }
+
+      $("#job_slides").html(job_slide);
+      $(".jobdet").html(jdet);
+      app.preloader.hide();
+    }
+  });
+  
 });
+function change_day(obj){
+  var day = obj.attr("data-day");
+  //alert(day);
+  $('.day').val(day);
+}
 function curr_loc(){
   openLOC();
   navigator.geolocation.getCurrentPosition(onSuccess, onError,{ maximumAge: 3000, timeout: 5000, enableHighAccuracy: true });
@@ -714,16 +762,19 @@ function errorCallback(error){
 function chnagelocation(){
   mainView.router.navigate("/customer_loc/");
 }
-
+var autocomplete;
 function geolocate() {
-  //var input = document.getElementById('autocomplete');
-  var input = $('#autocomplete').val();
-  alert(input);
-  var autocomplete = new google.maps.places.Autocomplete(input);  
-  //alert("called"); 
-  autocomplete.addListener('place_changed', function() {
+  var input = document.getElementById('autocomplete');
+  //var input = $('#autocomplete').val();
+  //alert(input);
+  autocomplete = new google.maps.places.Autocomplete(input);  
+  alert("called"); 
+   
+}
+autocomplete.addListener('place_changed', function() {
+    alert("in");
   var place = autocomplete.getPlace();
-  alert("place :: "+place);
+  //alert("place :: "+place);
   var address = '';
   if (place.address_components) {
       address = [
@@ -733,7 +784,53 @@ function geolocate() {
       ].join(' ');
   }
   alert("address :: "+address);    
-  }); 
+  });
+
+function initMap() {
+var map = new google.maps.Map(document.getElementById('map'), {
+      center: {lat: -33.8688, lng: 151.2195},
+      zoom: 13
+    });
+var input = document.getElementById('search');
+map.controls[google.maps.ControlPosition.TOP_LEFT].push(input);
+ 
+var autocomplete = new google.maps.places.Autocomplete(input);
+autocomplete.bindTo('bounds', map);
+ 
+varinfowindow = new google.maps.InfoWindow();
+var marker = new google.maps.Marker({
+        map: map,
+anchorPoint: new google.maps.Point(0, -29)
+    });
+ 
+autocomplete.addListener('place_changed', function() {
+infowindow.close();
+marker.setVisible(false);
+var place = autocomplete.getPlace();
+        if (!place.geometry) {
+window.alert("Autocomplete's returned place contains no geometry");
+            return;
+        }
+ 
+        // If the place has a geometry, then present it on a map.
+        if (place.geometry.viewport) {
+map.fitBounds(place.geometry.viewport);
+        } else {
+map.setCenter(place.geometry.location);
+map.setZoom(17);
+        }
+marker.setIcon(({
+            url: place.icon,
+            size: new google.maps.Size(71, 71),
+            origin: new google.maps.Point(0, 0),
+            anchor: new google.maps.Point(17, 34),
+scaledSize: new google.maps.Size(35, 35)
+        }));
+marker.setPosition(place.geometry.location);
+marker.setVisible(true);
+ 
+ 
+    });
 }
 
 /*function onRequestSuccess(success){

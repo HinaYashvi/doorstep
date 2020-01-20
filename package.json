@@ -28,9 +28,9 @@
       "cordova.plugins.diagnostic": {}
     },
     "platforms": [
-      "browser",
+      "android",
       "ios",
-      "android"
+      "browser"
     ]
   },
   "dependencies": {

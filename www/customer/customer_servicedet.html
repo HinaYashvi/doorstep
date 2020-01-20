@@ -9,9 +9,27 @@
 	</div>
 
 	<div class="page-content"> 
-		<div id="slides"></div>   
+		<div id="job_slides"></div>
+		<input class="day" type="hidden" name="day" value="today" id="day"> 
+		<div class="toolbar tabbar tab-border">
+		    <div class="toolbar-inner tab_bg tcust">
+		      <a href="#tab-1" class="tab-link tab-link-active" data-day="today" onclick="change_day($(this))"><span class="today">Today</span></a>
+		      <a href="#tab-2" class="tab-link" data-day="tomorrow" onclick="change_day($(this))"><span class="tomorrow">Tomorrow</span></a>
+		    </div>
+		  </div>
+		  <div class="tabs-animated-wrap">
+		    <div class="tabs">
+		      <div id="tab-1" class="page-content tab tab-active pt-0">
+		          <div class="block today_slots">today_slots</div>
+		      </div>
+		      <div id="tab-2" class="page-content tab pt-0">        
+		          <div class="block tomorrow_slots">tomorrow_slots</div>        
+		      </div>      
+		    </div>
+		  </div>
+
 		<div class="list">
-			<ul class="jobList"></ul>
+			<ul class="jobdet"></ul>
 		</div>    
 	</div>
 </div>

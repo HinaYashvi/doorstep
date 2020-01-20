@@ -2,7 +2,11 @@
 	<div class="navbar">
 		<div class="navbar-bg"></div>
 		<div class="navbar-inner">
-			<div class="left"><a href="#" class="link back"><i class="f7-icons">arrow_left</i></a><input type="text" name="autocomplete" id="autocomplete" placeholder="Enter your address" onkeyup="geolocate()"></div>
+			<div class="left"><a href="#" class="link back"><i class="f7-icons">arrow_left</i></a>
+				<!--input type="text" name="autocomplete" id="autocomplete" placeholder="Enter your address" onkeyup="geolocate()"-->
+
+				<input id="search" class="controls" type="text" placeholder="Enter a location">
+			</div>
 				<div class="title"></div>
 			<div class="right"></div>
 		</div>
@@ -12,6 +16,16 @@
 		<div id="slides"></div>   
 		<div class="list">
 			<ul class="jobList"></ul>
+
+			
+				<div id="map"></div>
+				<ul id="geoData">
+				<li>Full Address: <span id="location"></span></li>
+				<li>Postal Code: <span id="postal_code"></span></li>
+				<li>Country: <span id="country"></span></li>
+				<li>Latitude: <span id="lat"></span></li>
+				<li>Longitude: <span id="lon"></span></li>
+				</ul>
 		</div>    
 	</div>
 </div>

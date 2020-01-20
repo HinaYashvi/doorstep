@@ -124,6 +124,9 @@
 .display-block{
   display: block;
 }
+.pt-0{
+  padding-top: 0px!important;
+}
 .dash_slides{
   /*-webkit-box-shadow:0 1px 4px rgba(0, 0, 0, 0.3), 0 0 40px rgba(0, 0, 0, 0.1) inset;
   -moz-box-shadow:0 1px 4px rgba(0, 0, 0, 0.3), 0 0 40px rgba(0, 0, 0, 0.1) inset;
@@ -226,7 +229,9 @@ div.container4 img {
   overflow: hidden;
   text-overflow: ellipsis; 
 }
-
+.tab-border{
+  border-bottom: 1px groove #cecece;
+}
 /* DEMO-SPECIFIC STYLES */
 .typewriter h1 {
   justify-content: center;
