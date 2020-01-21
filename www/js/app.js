@@ -266,13 +266,16 @@ function partner_exists(mobile_no){
             app.dialog.alert("Mobile Number already exists!");  
             //mainView.router.navigate('/partner_otpverify/');              
             mainView.router.navigate('/partner_otpverify/'+spl_spl_one+'/'+p_id+'/');
-          }else{ 
-            app.dialog.alert(msg); 
+          }else if(spl_zero=='Active'){ 
+            app.dialog.alert('Try to login with Doorstep you are an active user.'); 
             mainView.router.navigate('/login/'); 
+          }else{
+            //app.dialog.alert(msg); 
+            //mainView.router.navigate('/partner_register/');
           }
-        }
+        } 
       });
-    }else{}
+    }else{} 
   } 
 }
 function verify_otp(){
@@ -463,20 +466,23 @@ function customer_exists(mobile_no){
           var msg = json_msg.msg;
           //console.log(msg);
           var split_msg = msg.split("-");
-          console.log(split_msg);
+          //console.log(split_msg);
           var spl_zero = split_msg[0];
           var spl_one = split_msg[1];          
           if(spl_zero=="exists"){ 
-            var split_spl_one = spl_one.split("_");
+            var split_spl_one = spl_one.split("_"); 
             //console.log(split_spl_one);
             var c_id = split_spl_one[0];
             var spl_spl_one = split_spl_one[1];         
             app.dialog.alert("Mobile Number already exists!");  
             //mainView.router.navigate('/partner_otpverify/');              
             mainView.router.navigate('/customer_otpverify/'+spl_spl_one+'/'+c_id+'/');
-          }else{
-            app.dialog.alert(msg); 
+          }else if(spl_zero=='Active'){ 
+            app.dialog.alert('Try to login with Doorstep you are an active user.'); 
             mainView.router.navigate('/login/'); 
+          }else{
+            //app.dialog.alert(msg); 
+            //mainView.router.navigate('/customer_register/');
           }
         }
       });
