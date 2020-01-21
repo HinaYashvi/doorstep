@@ -2,16 +2,25 @@
 	<div class="navbar">
 		
 		<div class="navbar-inner navbg">
-			<div class="left"><a href="#" class="link back text-white"><i class="f7-icons">arrow_left</i></a></div>
+			<div class="left"><a href="#" class="link back text-white" onclick="service_pg()"><i class="f7-icons">arrow_left</i></a></div>
 				<div class="title serv_title"></div>
 			<div class="right"></div>
 		</div>
 	</div>
 
 	<div class="page-content"> 
+		<input type="hidden" name="hidd_catid" id="hidd_catid" />
+		<input type="hidden" name="hidd_c_img_path" id="hidd_c_img_path" />
 		<div id="slides"></div>   
 		<div class="list">
 			<ul class="jobList"></ul>
+		</div>
+
+		<div class="block no-service display-none"></div>
+
+		<div class="block amazontxt display-none">
+			<span class="">Customer Reviews &amp; Ratings</span>
+			<span class="float-right"><img src="img/review.png" width="30"></span>
 		</div>    
 	</div>
 </div>

@@ -91,8 +91,8 @@ var routes = [
   {
     //path: '/partner_otpverify/',
     //url: './partner/partner_otpverify.html',
-    path: '/customer_service_types/:sid/:sname/:cimg/',
-    url: './customer/customer_service_types.html?sid={{sid}}/sname={{sname}}/cimg={{cimg}}',
+    path: '/customer_service_types/:sid/:sname/:cimg/:cat_id/',
+    url: './customer/customer_service_types.html?sid={{sid}}/sname={{sname}}/cimg={{cimg}}/cat_id={{cat_id}}',
     name: 'customer_service_types',
     options: {
       animate: true,

@@ -569,12 +569,15 @@ $$(document).on('page:init', '.page[data-name="customer_dash"]', function (page)
 });
 function getcatServices(cat_id,c_img_path){
   mainView.router.navigate("/customer_servicelist/");
+  
   app.preloader.show();
   $.ajax({
     type:'POST', 
     data:{'cat_id':cat_id},
     url:base_url+'APP/Appcontroller/getServicelist',
     success:function(serv_res){
+      $("#hidd_catid").val(cat_id);
+      $("#hidd_c_img_path").val(c_img_path);
       var parseServ = $.parseJSON(serv_res);
       var serv_list = parseServ.serv_list;
       var list='';
@@ -584,7 +587,7 @@ function getcatServices(cat_id,c_img_path){
         var s_img_path = serv_list[j].s_img_path;
         var cimg = c_img_path.replace(/\//g, "-"); 
         //alert(cimg); 
-        list+='<li><a href="/customer_service_types/'+s_id+'/'+s_name+'/'+cimg+'/" class="item-link item-content"><div class="item-media"><img src="'+base_url+s_img_path+'" class="block_img lazy lazy-fade-in demo-lazy" height="60" width="60"/></div><div class="item-inner"><div class="item-title fs-12">'+s_name+'</div></div></a></li>';
+        list+='<li><a href="/customer_service_types/'+s_id+'/'+s_name+'/'+cimg+'/'+cat_id+'/" class="item-link item-content"><div class="item-media"><img src="'+base_url+s_img_path+'" class="block_img lazy lazy-fade-in demo-lazy" height="60" width="60"/></div><div class="item-inner"><div class="item-title fs-12">'+s_name+'</div></div></a></li>';
       }
       $(".servList").html(list);
       app.preloader.hide();
@@ -596,7 +599,10 @@ $$(document).on('page:init', '.page[data-name="customer_service_types"]', functi
   //console.log(page.detail.route.params);
   var sid = page.detail.route.params.sid; 
   var sname = page.detail.route.params.sname;
-  var c_img_path = page.detail.route.params.cimg;  
+  var c_img_path = page.detail.route.params.cimg; 
+  var catid = page.detail.route.params.cat_id;  
+  $("#hidd_catid").val(catid);
+  $("#hidd_c_img_path").val(c_img_path);
   var c_img = c_img_path.replace(/-/g, '/');
   //alert(sid+"-----"+sname);
   $(".serv_title").html(sname);
@@ -611,32 +617,52 @@ $$(document).on('page:init', '.page[data-name="customer_service_types"]', functi
       var jimg = jobparse.j_img;
       //console.log(jimg);
       var jlist='';
-      var slides = '';        
-      for(var i=0;i<job_list.length;i++){
-        var j_id = job_list[i].j_id;
-        var j_name = job_list[i].j_name;
-        var j_desc = job_list[i].j_desc;
-        var j_duration = job_list[i].j_duration;
-        var j_price = job_list[i].j_price;
-        var time_slot = job_list[i].time_slot;
-        var ji_id = job_list[i].ji_id;
-        var j_img_path = jimg[0].j_img_path;
-        //alert(j_img_path);
-        //if(i==0){
-        //  var jimg = j_img_path.replace(/\//g, "-");
-        //  alert(jimg);
-        //}
-        ///slides+='<a class="slide" title="Image '+i+'" href="#"><span class="animate down" style="background-image: '+base_url+j_img_path+'"></span></a>';
-        slides='<div id="imageContainer"><img src="'+base_url+c_img+'" height="200" width="360"><div class="slider_txt">'+j_desc+'</div></div>'; 
-        jlist+='<li><a href="/customer_servicedet/'+j_id+'/'+j_name+'/'+j_price+'/" class="item-link item-content"><div class="item-inner"><div class="item-title fs-12">'+j_name+'</div></div></a></li>'; 
+      var slides = ''; 
+      if(job_list.length > 0 ){
+        $(".no-service").removeClass("display-block");
+        $(".no-service").addClass("display-none");
+        for(var i=0;i<job_list.length;i++){
+          var j_id = job_list[i].j_id;
+          var j_name = job_list[i].j_name;
+          var j_desc = job_list[i].j_desc;
+          var j_duration = job_list[i].j_duration;
+          var j_price = job_list[i].j_price;
+          var time_slot = job_list[i].time_slot;
+          var ji_id = job_list[i].ji_id;
+          //var j_img_path = jimg[0].j_img_path;
+          //alert(j_img_path);
+          //if(i==0){
+          //  var jimg = j_img_path.replace(/\//g, "-");
+          //  alert(jimg);
+          //}
+          ///slides+='<a class="slide" title="Image '+i+'" href="#"><span class="animate down" style="background-image: '+base_url+j_img_path+'"></span></a>';
+          slides='<div id="imageContainer"><img src="'+base_url+c_img+'" height="200" width="360"><div class="slider_txt">'+j_desc+'</div></div>'; 
+          jlist+='<li><a href="/customer_servicedet/'+j_id+'/'+j_name+'/'+j_price+'/" class="item-link item-content"><div class="item-inner"><div class="item-title fs-12">'+j_name+'</div></div></a></li>'; 
+          $(".amazontxt").removeClass("display-none");
+          $(".amazontxt").addClass("display-block");
+          $(".jobList").html(jlist);
+        }
+      }else{
+        $(".no-service").removeClass("display-none");
+        $(".no-service").addClass("display-block");
+        jlist+='<div class="container4 text-center"><img src="img/no-disturb.png" width="80"></div><br/><div class=" text-red text-center fw-600">No Services Found.</div>';
+        $(".amazontxt").removeClass("display-block");
+        $(".amazontxt").addClass("display-none");
+        $(".no-service").html(jlist);
       }
       $("#slides").html(slides);
-      $(".jobList").html(jlist);
+      
       app.preloader.hide();
     }
   });
   
 });
+function service_pg(){  
+  var hidd_catid=$("#hidd_catid").val();
+  var hidd_c_img_path=$("#hidd_c_img_path").val();
+  //alert(hidd_catid+"======"+hidd_c_img_path);
+  getcatServices(hidd_catid,hidd_c_img_path);
+}
 $$(document).on('page:init', '.page[data-name="customer_servicedet"]', function (page) {  
   checkConnection();
   //console.log(page.detail.route.params);
@@ -748,7 +774,7 @@ function openLOC(){
       cordova.plugins.diagnostic.isLocationAuthorized(successCallback, errorCallback);
        //mainView.loadPage("current-location.html");
     }else{
-      alert("Location service is ON");        
+      //alert("Location service is ON");        
       mainView.router.navigate("/customer_dash/");
     }
   }, function(error){
@@ -796,7 +822,7 @@ function geolocate111() {
 function geolocate() {
   var hidd_currlat = $("#hidd_currlat").val();
   var hidd_currlon = $("#hidd_currlon").val();
-  alert(hidd_currlat+"***---------***"+hidd_currlon);
+  //alert(hidd_currlat+"***---------***"+hidd_currlon);
 /*var map = new google.maps.Map(document.getElementById('map'), {
       center: {lat: -33.8688, lng: 151.2195},
       zoom: 13
@@ -805,13 +831,13 @@ function geolocate() {
 //var defaultBounds = new google.maps.LatLngBounds(new google.maps.LatLng(-33.8902, 151.1759), new google.maps.LatLng(-33.8474, 151.2631));
 
 var defaultBounds = new google.maps.LatLngBounds(new google.maps.LatLng(hidd_currlat, hidd_currlon));
-alert(defaultBounds);
+//alert(defaultBounds);
 var input = document.getElementById('search');
 //map.controls[google.maps.ControlPosition.TOP_LEFT].push(input);
  //alert(input);
  var options = {
         bounds: defaultBounds,
-        types: ['geocode','establishment']
+        types: ['geocode','establishment','address','regions','cities']
     };
 
 var autocomplete = new google.maps.places.Autocomplete(input,options);

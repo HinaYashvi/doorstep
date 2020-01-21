@@ -142,6 +142,17 @@
   background-color: white;    
   border-radius: 3px;
 }
+.amazontxt{
+  border-left: 5px solid #ff3b30;
+  color: #232F3E;
+  height: 40px;
+  text-transform:capitalize;
+  font-weight: 600;
+  /* background-color: #929eaa; */
+  padding: 5% 5% 11% 5%;
+  border-bottom: 1px dashed #929eaa;
+  border-top: 1px dashed #929eaa;
+}
 .dash_bg{
   /*background-color: #ccc!important;
   background-color: #efefef!important;*/
