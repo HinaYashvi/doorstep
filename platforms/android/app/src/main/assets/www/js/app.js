@@ -105,7 +105,7 @@ function onBackKeyDown() {
 // -------------------------------------- DATA NAME : INDEX --------------------------------- //
 var swiper;
 $(document).on('page:init', '.page[data-name="index"]', function (e) {  
-  /*$(".gotit").hide();
+  $(".gotit").hide();
   swiper = new Swiper('.swiper-container', {
     parallax: true,
     autoHeight: true,
@@ -149,8 +149,8 @@ $(document).on('page:init', '.page[data-name="index"]', function (e) {
     }
     swiper.init(); 
     $(".dynamic_toolbar").html(sliderDiv);
-  });*/
-});
+  });
+});  
 $('.fnext').on('click', function(e) { 
   //alert("called");
   swiper.slideNext();
@@ -161,19 +161,21 @@ $$(document).on('page:init', '.page[data-name="partner_register"]', function (e)
   checkConnection();      
   $.ajax({
     type:'POST', 
-    url:base_url+'APP/Appcontroller/getServingAreas',    
+    //url:base_url+'APP/Appcontroller/getServingAreas',   
+    url:base_url+'APP/Appcontroller/getServingCity',   
     success:function(res){
       var result = $.parseJSON(res);
-      var serv_area = result.serving_areas;
+      //var serv_area = result.serving_areas;
+      var serv_city = result.serving_city;
       var serv_cat = result.serving_category;
       var serv_opt = '';
-      serv_opt='<option value="">--- SELECT ---</option>';
-      for(var i=0;i<serv_area.length;i++){
-        var a_id = serv_area[i].a_id;
-        var a_name = serv_area[i].a_name;
-        serv_opt+='<option value="'+a_id+'">'+a_name+'</option>';
+      serv_opt='<option value="">--- SELECT CITY ---</option>';
+      for(var i=0;i<serv_city.length;i++){
+        var city_id = serv_city[i].city_id;
+        var city_name = serv_city[i].city_name;
+        serv_opt+='<option value="'+city_id+'">'+city_name+'</option>';
       }
-      $("#serving_area").html(serv_opt);
+      $("#serving_city").html(serv_opt);
       var cat_opt = '';
       cat_opt='<option value="">--- SELECT ---</option>';
       for(var j=0;j<serv_cat.length;j++){
@@ -248,7 +250,7 @@ function partner_exists(mobile_no){
         type:'POST', 
         url:base_url+'APP/Appcontroller/partnerExistsChk',
         data:{'mobile':mobile_no},
-        success:function(mob_res){        
+        success:function(mob_res){         
           var json_msg = $.parseJSON(mob_res);
           var msg = json_msg.msg;
           //console.log(msg);
@@ -264,7 +266,10 @@ function partner_exists(mobile_no){
             app.dialog.alert("Mobile Number already exists!");  
             //mainView.router.navigate('/partner_otpverify/');              
             mainView.router.navigate('/partner_otpverify/'+spl_spl_one+'/'+p_id+'/');
-          }else{}
+          }else{ 
+            app.dialog.alert(msg); 
+            mainView.router.navigate('/login/'); 
+          }
         }
       });
     }else{}
@@ -286,6 +291,7 @@ function verify_otp(){
       var status = datamsg.status;
       if(status=="Active"){
         app.dialog.alert(v_msg);
+        app.preloader.hide();  
         mainView.router.navigate('/login/');
       }else if(status=="Inactive"){        
         var toastIcon = app.toast.create({
@@ -296,7 +302,7 @@ function verify_otp(){
         });       
         app.preloader.hide(); 
         toastIcon.open();
-        mainView.router.navigate('/partner_otpverify/'+hidd_mob+'/'+hidd_pid+'/');
+        mainView.router.navigate('/partner_otpverify/'+hidd_mob+'/'+hidd_pid+'/');        
       }
     }
   });
@@ -313,7 +319,8 @@ function register_part(){
   var name = $('#name').val();
   var email = $('#email').val();
   var add_line1 = $('#add_line1').val();
-  var add_line2 = $('#add_line2').val();
+  //var add_line2 = $('#add_line2').val();
+  var serving_city = $("#serving_city").val();
   var serving_area = $("#serving_area").val();
   var serving_category = $("#serving_category").val();
   var service = $("#service").val();
@@ -343,11 +350,16 @@ function register_part(){
     //$("#add_line1").html("Address line 1 is required");
     app.dialog.alert("Address line 1 is required");
     return false;
-  }else if(add_line2==''){
+  }/*else if(add_line2==''){
     //$("#add_line2").html("Address line 2 is required");
     app.dialog.alert("Address line 2 is required");
     return false;
-  }else if(serving_area==''){
+  }*/
+  else if(serving_city==''){
+    //$("#sareaerror").html("Select Serving Area");
+    app.dialog.alert("Select Serving City");
+    return false;
+  }  else if(serving_area==''){
     //$("#sareaerror").html("Select Serving Area");
     app.dialog.alert("Select Serving Area");
     return false;
@@ -363,7 +375,7 @@ function register_part(){
     //$("#joberror").html("Select Job");
     app.dialog.alert("Select Job");
     return false; 
-  }else{
+  }else{ 
     app.preloader.show();
     //console.log(partner_register);
     $.ajax({
@@ -393,7 +405,43 @@ function register_part(){
 $$(document).on('page:init', '.page[data-name="customer_register"]', function (e) { 
   checkConnection();
   $("#mobile").focus();
+  $.ajax({
+    type:'POST', 
+    //url:base_url+'APP/Appcontroller/getServingAreas',    
+    url:base_url+'APP/Appcontroller/getServingCity',    
+    success:function(res){
+      var result = $.parseJSON(res);
+      var serv_city = result.serving_city;
+      var serv_opt = '';
+      serv_opt='<option value="">--- SELECT CITY ---</option>';
+      for(var i=0;i<serv_city.length;i++){
+        var city_id = serv_city[i].city_id;
+        var city_name = serv_city[i].city_name;
+        serv_opt+='<option value="'+city_id+'">'+city_name+'</option>';
+      }
+      $("#serving_city").html(serv_opt);
+    }
+  });
 });
+function getservingArea(cityid){
+  $.ajax({
+    type:'POST', 
+    url:base_url+'APP/Appcontroller/getServingAreas',  
+    data:{'city_id':cityid},
+    success:function(res_area){
+      var area_parse = $.parseJSON(res_area);
+      var serv_area = area_parse.serving_areas;
+      var servar = '';
+      servar='<option value="">--- SELECT AREA ---</option>';
+      for(var i=0;i<serv_area.length;i++){
+        var a_id = serv_area[i].a_id;
+        var a_name = serv_area[i].a_name;
+        servar+='<option value="'+a_id+'">'+a_name+'</option>';
+      }
+      $("#serving_area").html(servar);
+    }
+  });
+}
 $$(document).on('page:init', '.page[data-name="customer_otpverify"]', function (page) {  
   checkConnection();
   //console.log(page.detail.route.params);
@@ -426,7 +474,10 @@ function customer_exists(mobile_no){
             app.dialog.alert("Mobile Number already exists!");  
             //mainView.router.navigate('/partner_otpverify/');              
             mainView.router.navigate('/customer_otpverify/'+spl_spl_one+'/'+c_id+'/');
-          }else{}
+          }else{
+            app.dialog.alert(msg); 
+            mainView.router.navigate('/login/'); 
+          }
         }
       });
     }else{} 
@@ -522,7 +573,8 @@ function onSuccess(position){
 function onError(error){
   alert('code: '    + error.code    + '\n' + 'message: ' + error.message + '\n');
 }*/
-$$(document).on('page:init', '.page[data-name="customer_dash"]', function (page) {  
+$$(document).on('page:init', '.page[data-name="customer_dash"]', function (page) { 
+  //logOut(); 
   checkConnection();    
   swiper = new Swiper('.swiper-container_dash', {
     parallax: true,
@@ -837,7 +889,7 @@ var input = document.getElementById('search');
  //alert(input);
  var options = {
         bounds: defaultBounds,
-        types: ['geocode','establishment','address','regions','cities']
+        types: ['geocode','establishment']
     };
 
 var autocomplete = new google.maps.places.Autocomplete(input,options);
@@ -1004,6 +1056,7 @@ function onError(error){
 // -------------------------------------- DATA NAME : PARTNER DASHBOARD ------------------------------- //
 $$(document).on('page:init', '.page[data-name="partner_dash"]', function (page) {  
   checkConnection();
+  //logOut();   
 });
 // -------------------------------------- DATA NAME : PARTNER DASHBOARD --------------------------------- //
 function register_cust(){
@@ -1017,6 +1070,9 @@ function register_cust(){
   var name = $('#name').val();
   var email = $('#email').val();
   var add_line1 = $('#add_line1').val();
+
+  var serving_city = $('#serving_city').val();
+  var serving_area = $('#serving_area').val();
   if(!validateEmail(email)){
     //$("#emailerror").html("Invalid email address");
     app.dialog.alert("Invalid email address");
@@ -1041,6 +1097,14 @@ function register_cust(){
   }else if(add_line1==''){
     //$("#add_line1").html("Address line 1 is required");
     app.dialog.alert("Address line 1 is required");
+    return false;
+  }else if(serving_city==''){
+    //$("#add_line1").html("Address line 1 is required");
+    app.dialog.alert("Select Serving City");
+    return false;
+  }else if(serving_area==''){
+    //$("#add_line1").html("Address line 1 is required");
+    app.dialog.alert("Select Serving Area");
     return false;
   }else{
     app.preloader.show();
@@ -1087,6 +1151,7 @@ function verifycust_otp(){
       var status = datamsg.status;
       if(status=="Active"){
         app.dialog.alert(v_msg);
+        app.preloader.hide(); 
         mainView.router.navigate('/login/');
       }else if(status=="Inactive"){        
         var toastIcon = app.toast.create({
@@ -1094,13 +1159,13 @@ function verifycust_otp(){
         text: v_msg,
         position: 'center',
         closeTimeout: 3000,
-        });        
+        });  
+        app.preloader.hide();      
         toastIcon.open();
-        mainView.router.navigate('/customer_otpverify/'+hidd_mob+'/'+hidd_cid+'/');
+        mainView.router.navigate('/customer_otpverify/'+hidd_mob+'/'+hidd_cid+'/');        
       }
     }
-  });
-  app.preloader.hide();
+  });  
 }
 // -------------------------------------- LOGIN CHECK -------------------------------------- //
 function logincheck(){

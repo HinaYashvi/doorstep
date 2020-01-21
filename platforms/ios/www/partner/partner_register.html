@@ -85,14 +85,23 @@
         <span class="text-left text-red mt-0" id='emailerror'></span>
 
         <div class="preg_inputbox text-white">   
-          <textarea class="resizable tarea" rows="4" name="add_line1" id="add_line1" placeholder="Address line 1" required validate data-error-message="Enter address line 1" class="pholder"></textarea>
+          <!--textarea class="resizable tarea" rows="4" name="add_line1" id="add_line1" placeholder="Address line 1" required validate data-error-message="Enter address line 1" class="pholder"></textarea-->
+          <i class="f7-icons text-white">placemark</i>  
+          <input type="text" name="add_line1" id="add_line1" placeholder="Address" required validate data-error-message="Enter email address" class="pholder">
         </div>
         <span class="text-left text-red mt-0" id='add1error'></span>
 
-        <div class="preg_inputbox text-white">   
-          <textarea class="resizable tarea" rows="4" name="add_line2" id="add_line2" placeholder="Address line 2" required validate data-error-message="Enter address line 2" class="pholder"></textarea>
+        <!--div class="preg_inputbox text-white"-->   
+          <!--textarea class="resizable tarea" rows="4" name="add_line2" id="add_line2" placeholder="Address line 2" required validate data-error-message="Enter address line 2" class="pholder"></textarea-->
+          <!--i class="f7-icons text-white">placemark</i>  
+          <input type="text" name="add_line2" id="add_line2" placeholder="Address line 2" required validate data-error-message="Enter email address" class="pholder">
+
         </div>
-        <span class="text-left text-red mt-0" id='add2error'></span>
+        <span class="text-left text-red mt-0" id='add2error'></span-->
+
+        <div class="preg_inputbox text-white">
+          <select name="serving_city" id="serving_city" required validate data-error-message="Please select serving city." class="res_sel " onchange="getservingArea(this.value)"></select>
+        </div>
 
         <div class="preg_inputbox text-white">
           <select name="serving_area" id="serving_area" required validate data-error-message="Please select serving area." class="res_sel "></select>

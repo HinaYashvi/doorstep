@@ -30,9 +30,21 @@
           <input type="email" name="email" id="email" placeholder="Email Address" required validate data-error-message="Enter email address" class="pholder" onkeypress="validateEmail(this.value)">
         </div>
 
-        <div class="preg_inputbox text-white">   
-          <textarea class="resizable tarea" rows="4" name="add_line1" id="add_line1" placeholder="Address" required validate data-error-message="Enter address line 1" class="pholder"></textarea>
-        </div>       
+        <div class="preg_inputbox text-white">
+          <i class="f7-icons text-white">placemark</i>  
+          <input type="text" name="add_line1" id="add_line1" placeholder="Address" required validate data-error-message="Enter email address" class="pholder" onkeypress="validateEmail(this.value)">
+
+          <!--textarea class="resizable tarea" rows="4" name="add_line1" id="add_line1" placeholder="Address" required validate data-error-message="Enter address line 1" class="pholder"></textarea-->
+        </div> 
+
+        <div class="preg_inputbox text-white">
+          <select name="serving_city" id="serving_city" required validate data-error-message="Please select serving city." class="res_sel " onchange="getservingArea(this.value)"></select>
+        </div>
+
+        <div class="preg_inputbox text-white">
+          <select name="serving_area" id="serving_area" required validate data-error-message="Please select serving area." class="res_sel "></select>
+        </div>
+
 
         <div class="">
           <div class="col"><a class="button form-btn text-white no-radius" href="#" 
