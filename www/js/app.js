@@ -837,7 +837,7 @@ var input = document.getElementById('search');
  //alert(input);
  var options = {
         bounds: defaultBounds,
-        types: ['geocode','establishment','address','regions','cities']
+        types: ['geocode','establishment','address']
     };
 
 var autocomplete = new google.maps.places.Autocomplete(input,options);
