@@ -71,6 +71,22 @@ var routes = [
     },
   },
   {
+    path: '/customer_editprof/',
+    url: './customer/customer_editprof.html',
+    name: 'customer_editprof',
+    options: {
+      animate: true,
+    },
+  },
+  {
+    path: '/customer_changepass/',
+    url: './customer/customer_changepass.html',
+    name: 'customer_changepass',
+    options: {
+      animate: true,
+    },
+  },
+  {
     //path: '/partner_otpverify/',
     //url: './partner/partner_otpverify.html',
     path: '/customer_otpverify/:mobile/:cid/',

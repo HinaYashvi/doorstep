@@ -42,6 +42,10 @@
 	/*bottom:10px; real value */
 	bottom: 60px;
 }
+.profile_div{
+  background-color: #232F3E;
+  height: 150px;
+}
 .skipnow{
 	position: absolute;
     top: 6%;
@@ -89,6 +93,9 @@
 }
 .fs-18{
   font-size: 18px!important;
+}
+.fs-22{
+  font-size: 22px!important;
 }
 .w-50{
   width: 50%;
@@ -158,9 +165,16 @@
   /*background-color: #ccc!important;
   background-color: #efefef!important;*/
 }
+.txt-amaz{
+  color: #232F3E;
+}
 .slide-height{
   height: 200px;
 }
+.md .tabbar .tab-link-highlight, .md .tabbar-labels .tab-link-highlight{
+  background: #ff3b30!important;
+}
+
 div.container4 {
   height: 10em;
   position: relative; 
@@ -172,6 +186,24 @@ div.container4 img {
   left: 50%;
   margin-right: -50%;
   transform: translate(-50%, -50%) 
+}
+.cname{
+  top: 80%;
+  position: relative;
+  color: #fff;
+  padding-left: 12%;
+}
+.fletter{
+  margin: 0;    
+  position: absolute; 
+  top: 4%;
+  left: 37%;
+  border-radius:50%;
+  background-color: #fff;  
+  padding: 8%;
+  height: 25px;
+  width: 25px;
+  text-align: center;
 }
 .loc-button{    
   margin: 0 38px 0 38px;
@@ -219,9 +251,16 @@ div.container4 img {
   bottom: 0;
     height: calc(var(--f7-toolbar-height) + var(--f7-safe-area-bottom));
 }
-.navbg{
+.navbg,.fab > a, .fab-buttons a,.submitbtn {
   background-color: #232F3E;
   color: #fff!important;
+}
+.submitbtn-outline{
+  border: 3px solid #232F3E;
+  color: #232F3E!important;
+}
+.md .item-input-focused:not(.item-input-outline) .item-input-wrap:after, .md .input-focused:not(.input-outline):after{
+  background: #232F3E!important;
 }
 .tcust{
   align-items: inherit!important;
@@ -263,8 +302,17 @@ div.container4 img {
   overflow: hidden;
   text-overflow: ellipsis; 
 }
+.op-5{
+  opacity: 0.5;
+}
+.fw-600{
+  font-weight: 600;
+}
 .tab-border{
   border-bottom: 1px groove #cecece;
+}
+.btm-12{
+  bottom: 12%!important;
 }
 /* DEMO-SPECIFIC STYLES */
 .typewriter h1 {
@@ -296,7 +344,21 @@ div.container4 img {
   padding: 4%;
   background-color: #516bf0;
 }
-
+.text-center{
+  text-align: center;
+}
+.p-20{
+  padding: 20%;
+}
+.p-5{
+    padding:5%;
+}
+.mb-5{
+  margin-bottom: 5px;
+}
+.mb-10{
+  margin-bottom: 10px;
+}
 /* The typing effect */
 @keyframes typing {
   from { width: 0 }

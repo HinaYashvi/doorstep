@@ -579,6 +579,11 @@ function onSuccess(position){
 function onError(error){
   alert('code: '    + error.code    + '\n' + 'message: ' + error.message + '\n');
 }*/
+function clicked_me(){
+  var active_tab = $(".tab-active").attr('id');
+  $("#hidd_proftab").val(active_tab);
+  //alert("tab-active "+active_tab); 
+}
 $$(document).on('page:init', '.page[data-name="customer_dash"]', function (page) { 
   //logOut(); 
   checkConnection();    
@@ -605,6 +610,7 @@ $$(document).on('page:init', '.page[data-name="customer_dash"]', function (page)
     observer: true,
     observeParents: true, 
   });    
+
   //navigator.geolocation.getCurrentPosition(onSuccess, onError);
   app.preloader.show();
   $.ajax({
@@ -623,11 +629,170 @@ $$(document).on('page:init', '.page[data-name="customer_dash"]', function (page)
       $(".catblocks").html(cat_blocks);
     }
   });
-  app.preloader.hide();
+  
+  var session_cid = window.localStorage.getItem("session_cid");
+  $.ajax({
+    type:'POST', 
+    data:{'session_cid':session_cid},
+    url:base_url+'APP/Appcontroller/userProfile',
+    success:function(prof_result){
+      var prf = $.parseJSON(prof_result);
+      var profile = prf.profile;
+      //console.log(profile);
+      var cid = profile[0].c_id;
+      //alert(cid);
+      var nm_fltr = (profile[0].c_name.charAt(0));
+      $(".nmfltr").html(nm_fltr);
+      var c_name = profile[0].c_name;
+      var c_email = profile[0].c_email;
+      var c_phone = profile[0].c_phone;
+      var c_addr = profile[0].c_addr;
+      var a_id = profile[0].a_id;
+      var city_id = profile[0].city_id;
+
+
+      var c_created_on = profile[0].c_created_on;
+      $(".cname").html(c_name);
+      $(".email_icon").html('<i class="f7-icons fs-18">envelope_fill</i>');
+      $(".cemail").html(c_email);
+
+      $(".phone_icon").html('<i class="f7-icons fs-18">phone_fill</i>');
+      $(".cphone").html(c_phone);
+
+      $(".addr_icon").html('<i class="f7-icons fs-18">placemark_fill</i>');
+      $(".caddr").html(c_addr);
+
+      $(".lock_icon").html('');
+      $(".changepass").html('<a href="/customer_changepass/" class="text-red fw-600 text-center">Change Password <i class="f7-icons fs-18">lock_fill</i></a>');
+
+      $.ajax({
+        type:'POST', 
+        data:{'a_id':a_id,'city_id':city_id},
+        url:base_url+'APP/Appcontroller/userAreaCity',
+        success:function(areacity){
+          var parsearea = $.parseJSON(areacity);
+          var area = parsearea.area;
+          var city = parsearea.city;
+          //console.log(area);
+          //console.log(city);
+          var carea = area[0].a_name;
+          var ccity = city[0].city_name;
+          $(".area_icon").html('<i class="f7-icons fs-18">map_pin_ellipse</i>');
+          $(".carea").html(carea);
+
+          $(".city_icon").html('<i class="f7-icons fs-18">location_circle_fill</i>');
+          $(".ccity").html(ccity);
+          app.preloader.hide();
+        }
+      });
+    }
+  });  
+});
+function change_custpass(){
+  checkConnection();  
+  app.preloader.show();
+  var session_cid = window.localStorage.getItem("session_cid");
+  var edit_cpass = $(".edit_cpass").serialize();
+  $.ajax({
+    type:'POST', 
+    data:edit_cpass+"&session_cid="+session_cid,
+    url:base_url+'APP/Appcontroller/changeCust_pass',
+    success:function(pass){
+      if(pass=='updated'){
+        app.dialog.alert("Password updated successfully!");
+      }else if(pass=='not'){
+        app.dialog.alert("Password noy updated.");
+      }    
+      mainView.router.navigate("/customer_changepass/");
+      app.preloader.hide();
+    }
+  });  
+}
+
+$$(document).on('page:init', '.page[data-name="customer_editprof"]', function (page) { 
+  checkConnection();  
+
+  app.preloader.show();
+  var session_cid = window.localStorage.getItem("session_cid");
+
+  $.ajax({
+    type:'POST', 
+    data:{'session_cid':session_cid},
+    url:base_url+'APP/Appcontroller/userProfile',
+    success:function(prof_result){
+      var prf = $.parseJSON(prof_result);
+      var profile = prf.profile;
+      console.log(profile);
+      var cid = profile[0].c_id;
+      //alert(cid);
+      var nm_fltr = (profile[0].c_name.charAt(0));
+      $(".nmfltr").html(nm_fltr);
+      var c_id = profile[0].c_id;
+      var c_name = profile[0].c_name;
+      var c_email = profile[0].c_email;
+      var c_phone = profile[0].c_phone;
+      var c_addr = profile[0].c_addr;
+      var a_id = profile[0].a_id;
+      var city_id = profile[0].city_id;
+      $("#hidden_cid").val(c_id);
+      $("#cname").val(c_name);
+      $("#cemail").val(c_email);
+      $("#cphone").val(c_phone);
+      $("#caddr").val(c_addr);
+      $.ajax({
+        type:'POST', 
+        data:{'a_id':a_id,'city_id':city_id},
+        url:base_url+'APP/Appcontroller/userAreaCity',
+        success:function(areacity){
+          var parsearea = $.parseJSON(areacity);
+          var area = parsearea.area;
+          var city = parsearea.city;
+          var carea = area[0].a_name;
+          var ccity = city[0].city_name;
+          $.ajax({
+            type:'POST', 
+            url:base_url+'APP/Appcontroller/AllActiveCityArea',
+            success:function(actv_city){
+              var cty = $.parseJSON(actv_city);
+              var act_city = cty.act_city;
+              var act_area = cty.act_area;
+              var all_city = '';
+              var all_area = '';
+              //var j;
+              for(var i=0;i<act_city.length;i++){
+                var cty_nm = act_city[i].city_name;
+                var cityid = act_city[i].city_id;
+                if(cityid == city_id){
+                  var sel='selected';
+                }else{
+                  var sel='';
+                }
+                all_city+='<option value='+cityid+' '+sel+'>'+cty_nm+'</option>';
+              }
+              $("#serving_city").html(all_city);
+            //}
+
+            for(var j=0;j<act_area.length;j++){
+              var a_nm = act_area[j].a_name;
+              var aid = act_area[j].a_id;
+              if(aid == a_id){
+                var sel_area='selected';
+              }else{
+                var sel_area='';
+              }
+              all_area+='<option value='+aid+' '+sel_area+'>'+a_nm+'</option>';
+            }
+            $("#serving_area").html(all_area);
+          }
+          }); 
+        }
+      });
+      app.preloader.hide();
+    }
+  });    
 });
 function getcatServices(cat_id,c_img_path){
-  mainView.router.navigate("/customer_servicelist/");
-  
+  mainView.router.navigate("/customer_servicelist/");  
   app.preloader.show();
   $.ajax({
     type:'POST', 
@@ -651,6 +816,33 @@ function getcatServices(cat_id,c_img_path){
       app.preloader.hide();
     }
   });
+}
+function edit_custprofile(){
+  //alert("in edit_custprofile");
+  checkConnection();
+  app.preloader.show();
+  var c_editprof_from = $(".edit_cprof").serialize();
+  //var hidd_proftab = $("#hidd_proftab").val();
+  //console.log(c_editprof_from);
+  $.ajax({
+    type:'POST', 
+    data:c_editprof_from,
+    url:base_url+'APP/Appcontroller/customer_edit',
+    success:function(cedit_res){
+      if(cedit_res=='updated'){
+        app.dialog.alert("Profile updated successfully!");
+        //mainView.router.navigate("/customer_dash/");
+        //$("#tab-3").addClass("tab-active");
+      }else if(cedit_res=='not'){
+        app.dialog.alert("Problem updating profile");
+        //mainView.router.navigate("/customer_dash/");
+        //$("#tab-3").addClass("tab-active");
+      }
+      mainView.router.navigate("/customer_dash/");
+      //$("#hidd_proftab").addClass("tab-active");
+      app.preloader.hide();
+    }
+  });  
 }
 $$(document).on('page:init', '.page[data-name="customer_service_types"]', function (page) {  
   checkConnection();
@@ -703,7 +895,7 @@ $$(document).on('page:init', '.page[data-name="customer_service_types"]', functi
       }else{
         $(".no-service").removeClass("display-none");
         $(".no-service").addClass("display-block");
-        jlist+='<div class="container4 text-center"><img src="img/no-disturb.png" width="80"></div><br/><div class=" text-red text-center fw-600">No Services Found.</div>';
+        jlist+='<div class="container4 text-center"><img src="img/no-service.png" width="80" class="op-5"></div><br/><div class="txt-amaz fs-16 text-center fw-600 p-20">No Services Found.</div>';
         $(".amazontxt").removeClass("display-block");
         $(".amazontxt").addClass("display-none");
         $(".no-service").html(jlist);
@@ -1385,4 +1577,5 @@ function logOut(){
   window.localStorage.removeItem("session_cphone"); 
   window.localStorage.removeItem("session_cemail"); 
   window.localStorage.removeItem("session_ccreated"); 
+  mainView.router.navigate("/login/");
 }
