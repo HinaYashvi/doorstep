@@ -113,8 +113,9 @@
   margin-top: 0px!important;
 }
 .block_img{
-  top: 10px;
+  top: 7px;
   position: relative;
+  border:1px groove #232F3E;
 }
 .text-red{
   color: red;

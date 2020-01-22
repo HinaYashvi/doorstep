@@ -674,7 +674,7 @@ $$(document).on('page:init', '.page[data-name="customer_service_types"]', functi
       var job_list = jobparse.job_list;
       var jimg = jobparse.j_img;
       //console.log(jimg);
-      var jlist='';
+      var jlist = '';
       var slides = ''; 
       if(job_list.length > 0 ){
         $(".no-service").removeClass("display-block");
@@ -708,8 +708,7 @@ $$(document).on('page:init', '.page[data-name="customer_service_types"]', functi
         $(".amazontxt").addClass("display-none");
         $(".no-service").html(jlist);
       }
-      $("#slides").html(slides);
-      
+      $("#slides").html(slides);      
       app.preloader.hide();
     }
   });
@@ -1211,6 +1210,7 @@ function logincheck(){
         //console.log(result);
         var parse_authmsg = result.auth_msg;
         var user_session = result.user_session[0];
+        var sess_city = result.city;
         //alert(parse_authmsg);
         //alert("user_session "+user_session);
         //console.log(user_session);        
@@ -1222,7 +1222,8 @@ function logincheck(){
           window.localStorage.setItem("session_pname",result.user_session[0].p_name);
           window.localStorage.setItem("session_pphone",result.user_session[0].p_phone);
           window.localStorage.setItem("session_pemail",result.user_session[0].p_email);
-          window.localStorage.setItem("session_pcreated",result.user_session[0].p_created_on);      
+          window.localStorage.setItem("session_pcreated",result.user_session[0].p_created_on);
+          window.localStorage.setItem("session_pcity",sess_city);      
         }else if(parse_authmsg=="c_success"){  
           //alert("customer_dash");
           mainView.router.navigate("/location_on/");
@@ -1231,7 +1232,8 @@ function logincheck(){
           window.localStorage.setItem("session_cname",result.user_session[0].c_name);
           window.localStorage.setItem("session_cphone",result.user_session[0].c_phone);
           window.localStorage.setItem("session_cemail",result.user_session[0].c_email);
-          window.localStorage.setItem("session_ccreated",result.user_session[0].c_created_on); 
+          window.localStorage.setItem("session_ccreated",result.user_session[0].c_created_on);
+          window.localStorage.setItem("session_ccity",sess_city);   
         }else if(parse_authmsg=="Inc_pass"){
           //alert("Incorrect Password!");
           app.dialog.alert("Incorrect Password!");
