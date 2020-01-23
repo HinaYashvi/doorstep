@@ -688,6 +688,29 @@ $$(document).on('page:init', '.page[data-name="customer_dash"]', function (page)
     }
   });  
 });
+$$(document).on('page:init', '.page[data-name="customer_changepass"]', function (page) { 
+  //logOut(); 
+  checkConnection();
+  app.preloader.show();
+  $("#conf_newpass").keyup(validate);  
+  app.preloader.hide();
+});
+function validate() {
+  var password1 = $("#new_pass").val();
+  var password2 = $("#conf_newpass").val();
+  if(password1 == password2) {
+    $("#success-badge").removeClass("display-none");
+    $(".unmatch-text").css("display",'none');
+    $(".match-text").css("display",'block');
+    $(".match-text").text("Passwords match.");        
+  }
+  else{
+    $("#warning-badge").removeClass("display-none");
+    $(".match-text").css("display",'none');
+    $(".unmatch-text").css("display",'block');
+    $(".unmatch-text").text("Passwords do not match!");  
+  }    
+}
 function change_custpass(){
   checkConnection();  
   app.preloader.show();
@@ -698,15 +721,28 @@ function change_custpass(){
     data:edit_cpass+"&session_cid="+session_cid,
     url:base_url+'APP/Appcontroller/changeCust_pass',
     success:function(pass){
-      if(pass=='updated'){
+      var pwdparse = $.parseJSON(pass);
+      var p_change = pwdparse.p_change;
+      //console.log(pass);
+      /*if(pass=='updated'){
         app.dialog.alert("Password updated successfully!");
-      }else if(pass=='not'){
-        app.dialog.alert("Password noy updated.");
-      }    
+      }*/
+      if(p_change=='wrongoldpwd'){
+        app.dialog.alert("Entered OldPassword is incorrect.");
+      }else if(p_change=='updated'){
+        app.dialog.alert("Password updated successfully!");
+      }   
       mainView.router.navigate("/customer_changepass/");
       app.preloader.hide();
     }
-  });  
+  });
+  $("#old_pass").val('');
+  $("#new_pass").val('');
+  $("#conf_newpass").val('');
+  $(".match-text").css("display",'none');
+  $(".unmatch-text").css("display",'none');
+  $("#warning-badge").addClass("display-none");
+  $("#success-badge").addClass("display-none");  
 }
 
 $$(document).on('page:init', '.page[data-name="customer_editprof"]', function (page) { 
@@ -1577,5 +1613,6 @@ function logOut(){
   window.localStorage.removeItem("session_cphone"); 
   window.localStorage.removeItem("session_cemail"); 
   window.localStorage.removeItem("session_ccreated"); 
+  window.localStorage.removeItem("session_ccity");
   mainView.router.navigate("/login/");
 }

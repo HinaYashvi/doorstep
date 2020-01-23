@@ -259,6 +259,12 @@ div.container4 img {
   border: 3px solid #232F3E;
   color: #232F3E!important;
 }
+#success-bg{
+  background-color:#2f883e!important;
+}
+.w-60{
+  width: 60%;
+}
 .md .item-input-focused:not(.item-input-outline) .item-input-wrap:after, .md .input-focused:not(.input-outline):after{
   background: #232F3E!important;
 }
@@ -352,6 +358,9 @@ div.container4 img {
 }
 .p-5{
     padding:5%;
+}
+.pl-20{
+  padding-left: 20%;
 }
 .mb-5{
   margin-bottom: 5px;
