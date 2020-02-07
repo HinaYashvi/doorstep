@@ -1732,6 +1732,8 @@ $$(document).on('page:init', '.page[data-name="customer_servicedet"]', function 
 });
 function timeSlotTabs(j_id,hidd_day){
   var session_cid = window.localStorage.getItem("session_cid"); 
+  var session_current_city = window.localStorage.getItem("session_current_city");
+  var session_ccity = window.localStorage.getItem("session_ccity"); 
   //alert(hidd_day);
   var d = new Date();
   var tm =Math.floor(d.getTime()/1000);
@@ -1799,7 +1801,7 @@ function timeSlotTabs(j_id,hidd_day){
         }
         tomorrow_slots+='</div></div></div></li></ul></div>';
       }
-      bookdiv='<li class="item-content item-input item-input-focused"><div class="item-inner"><div class="">Selected Region</div></div></li>   <li class="item-content item-input item-input-focused"><div class="item-inner"><div class="item-title item-floating-label">Name</div><div class="item-input-wrap"><input type="text" value='+c_name+'><span class="input-clear-button"></span></div></div></li><li class="item-content item-input item-input-focused"><div class="item-inner"><div class="item-title item-floating-label">Phone</div><div class="item-input-wrap"><input type="text" value='+c_phn+'><span class="input-clear-button"></span></div></div></li>';
+      bookdiv='<li class="item-content item-input item-input-focused"><div class="item-inner"><div class="">Current City: '+session_current_city+'</div><div class="">Your City: '+session_ccity+'</div></div></li>   <li class="item-content item-input item-input-focused"><div class="item-inner"><div class="item-title item-floating-label">Name</div><div class="item-input-wrap"><input type="text" value='+c_name+'><span class="input-clear-button"></span></div></div></li><li class="item-content item-input item-input-focused"><div class="item-inner"><div class="item-title item-floating-label">Phone</div><div class="item-input-wrap"><input type="text" value='+c_phn+'><span class="input-clear-button"></span></div></div></li>';
 
       $("#bookser_div").html(bookdiv);
       $("#job_slides").html(job_slide);
@@ -1828,47 +1830,54 @@ function curr_loc(){
   navigator.geolocation.getCurrentPosition(onSuccess, onError,{ maximumAge: 3000, timeout: 5000, enableHighAccuracy: true });
 }
 function currentCity(){
-  alert("in currentcity function");
+  //alert("in currentcity function");
   openLOC();
   navigator.geolocation.getCurrentPosition(onSuccessCity, onErrorCity,{ maximumAge: 3000, timeout: 5000, enableHighAccuracy: true });
 }
 function onSuccessCity(position){
-  alert("in onSuccessCity");
+  //alert("in onSuccessCity");
   app.preloader.show();
   var city_longitude = position.coords.longitude;
   var city_latitude = position.coords.latitude;
-  alert(city_longitude+"******************"+city_latitude);
+  //alert(city_longitude+"******************"+city_latitude);
 
   var city_geocoder = new google.maps.Geocoder();
   var city_LatLong = new google.maps.LatLng(city_latitude,city_longitude);
 
-  alert("city_LatLong "+city_LatLong);
+  //alert("city_LatLong "+city_LatLong);
   city_geocoder.geocode({'latLng': city_LatLong}, function(city_results, city_status) {
-    alert("city_status "+city_status);
+    //alert("city_status "+city_status);
     if (city_status === 'OK') {
       //$("#map-canvas").html(results+" ^^^^^^^^^^^^");
       if (city_results[0]) {
         //alert(results[0].formatted_address);
        // $("#currentcity").html(city_results[0].formatted_address);
 
-        alert(city_results[0].formatted_address);
-
+        //alert(city_results[0].formatted_address);
+        var addressComponents = city_results[0].address_components;
         var res=city_results[0].formatted_address;
-var city = "";
-         var state = "";
-        alert(res.length);
+        var city = "";        
+        var types;
+        var state = "";
+        //alert("addressComponents.length "+addressComponents.length);
         var address_components=[];
-        for(var i=0;i<res.length;i++){
-          address_components = res[i];
+        for(var i=0;i<addressComponents.length;i++){
+          //alert(addressComponents[i]+" addressComponents[i]");
+          address_component = addressComponents[i];
           types = address_component.types;
-          if (types[j] === 'administrative_area_level_1') {
-            state = address_component.long_name;
-          }
-          if (types[j] === 'administrative_area_level_2') {
-            city = address_component.long_name;
+          //alert(types.length+" types.length");
+          for (var j = 0; j < types.length; j++) {
+            //alert("types "+types[j]);
+            if (types[j] === 'administrative_area_level_1') {
+              state = address_component.long_name;
+            }
+            if (types[j] === 'administrative_area_level_2') {
+              city = address_component.long_name;
+            }
           }
         }
-        alert("Hello to you out there in " + city + ", " + state + "!");
+        window.localStorage.setItem("session_current_city",city);
+        //alert("city :" + city );
 /*var city = "";
          var state = "";
 alert("res.address_components.length   "+city_results.address_components.length);
