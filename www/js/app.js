@@ -1859,11 +1859,11 @@ var types;
          var state = "";
         alert("addressComponents.length "+addressComponents.length);
 
-        
+
         var address_components=[];
         for(var i=0;i<addressComponents.length;i++){
-          //alert(res[i]+" res");
-          address_component = address_components[i];
+          alert(addressComponents[i]+" addressComponents[i]");
+          address_component = addressComponents[i];
           types = address_component.types;
           alert(types.length+" types.length");
           for (var j = 0; j < types.length; j++) {
