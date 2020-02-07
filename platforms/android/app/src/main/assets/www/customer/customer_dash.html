@@ -6,7 +6,7 @@
         <span class="tabbar-label fs-12">Home</span>
       </a>
       <a href="#tab-2" class="tab-link text-white">
-        <i class="f7-icons">square_favorites_fill</i><span class="badge color-red bookings_tot">5</span></i>
+        <i class="f7-icons">square_favorites_fill</i><span class="badge color-red bookings_tot"></span></i>
         <span class="tabbar-label fs-12">Bookings</span>
       </a>
       <a href="#tab-3" class="tab-link text-white" onclick="clicked_me()">
@@ -58,9 +58,14 @@
     <input type="hidden" name="hidd_currlat" id="hidd_currlat" />
     <input type="hidden" name="hidd_currlon" id="hidd_currlon" />
     <div class="row locationDiv" onclick="chnagelocation()">
-      <i class="f7-icons text-white fs-18 mr-5">placemark_fill</i><span id="formatted_address" >Gandhinagar - Vijapur Rd, GSECL colony,Thermal Power Plant Area, Pethapur, Gandhinagar, Gujarat 382041, India</span>
+      <div><i class="f7-icons text-white fs-18 mr-5">placemark_fill</i><span id="formatted_address" >Gandhinagar - Vijapur Rd, GSECL colony,Thermal Power Plant Area, Pethapur, Gandhinagar, Gujarat 382041, India</span></div>
+      <br/>
+      <div class="block">
+        <input type="text" name="search_service" id="search_service" />
+      </div>
     </div>
-
+    
+    
     <div class="swiper-container_dash slide-height swiper-init demo-swiper">
       <!--div class="swiper-pagination"></div-->
       <div class="swiper-wrapper">
@@ -77,7 +82,7 @@
         <div class="swiper-slide dash_slides"><img src="img/dashboard_slides/8.jpg" class="w-100 slide-height"></div>
         <div class="swiper-slide dash_slides"><img src="img/dashboard_slides/9.jpg" class="w-100 slide-height"></div>
         <div class="swiper-slide dash_slides"><img src="img/dashboard_slides/10.png" class="w-100 slide-height"></div> 
-      </div>
+      </div>   
     </div>
 
     <div class="block">
@@ -85,7 +90,57 @@
     </div>
   </div>
 
-  <div class="page-content tab" id="tab-2"><div class="block"><p><b>Tab 2 content</b></p><p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Itaque quos asperiores ut, odio numquam ab, qui, alias adipisci in magni reiciendis reprehenderit. Labore esse quae ut tempore consequatur, reprehenderit similique!</p><p>Quis omnis, quam maiores voluptates vero atque porro? Soluta modi dolore eum dolor iste eos perspiciatis vero porro aliquam officia deleniti, cumque rem, consequatur, ea ipsa temporibus dicta architecto saepe.</p><p>Tempora eius, sit distinctio architecto repellat, rerum quae, eum suscipit aperiam libero beatae ut eveniet ex labore illo! Labore illo harum voluptatum nulla ullam natus beatae iste tempora ut fugiat!</p><p>Veritatis vero quis ipsum explicabo beatae consequatur, deleniti, tenetur assumenda sit quisquam soluta, possimus magnam nostrum animi hic sapiente sed laudantium similique quas labore, voluptatem eius aliquam. Sunt, ad aliquam!</p><p>Animi iste, optio mollitia, sint hic neque sed, quis labore deserunt esse delectus fugit impedit qui consequatur reiciendis quam. Totam tenetur, mollitia. Porro optio similique perspiciatis aliquam ipsam vel reprehenderit!</p><p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Itaque quos asperiores ut, odio numquam ab, qui, alias adipisci in magni reiciendis reprehenderit. Labore esse quae ut tempore consequatur, reprehenderit similique!</p><p>Quis omnis, quam maiores voluptates vero atque porro? Soluta modi dolore eum dolor iste eos perspiciatis vero porro aliquam officia deleniti, cumque rem, consequatur, ea ipsa temporibus dicta architecto saepe.</p><p>Tempora eius, sit distinctio architecto repellat, rerum quae, eum suscipit aperiam libero beatae ut eveniet ex labore illo! Labore illo harum voluptatum nulla ullam natus beatae iste tempora ut fugiat!</p><p>Veritatis vero quis ipsum explicabo beatae consequatur, deleniti, tenetur assumenda sit quisquam soluta, possimus magnam nostrum animi hic sapiente sed laudantium similique quas labore, voluptatem eius aliquam. Sunt, ad aliquam!</p><p>Animi iste, optio mollitia, sint hic neque sed, quis labore deserunt esse delectus fugit impedit qui consequatur reiciendis quam. Totam tenetur, mollitia. Porro optio similique perspiciatis aliquam ipsam vel reprehenderit!</p></div></div>
+  <div class="page-content tab" id="tab-2">    
+    <div class="navbar">
+      <div class="navbar-bg"></div>
+      <div class="navbar-inner sliding navbg">
+        <div class="left">
+          <a class="link back text-white">
+            <i class="f7-icons">arrow_left</i>
+          </a>
+        </div>
+        <div class="title">My Bookings</div>
+        <div class="right"></div>
+
+        
+
+      </div>
+    </div>
+    <div class="block">
+      <p class="segmented segmented-raised">
+        <button class="button button-active fs-12 seg_btn pen_btn" value="0" onclick="getActivate(this.value)">Pending<span class="ml-5 badge pen_badge"></span></button>
+        <button class="button fs-12 seg-outline start_btn" value="1" onclick="getActivate(this.value)">Started<span class="ml-5 badge fin_badge"></span></button>
+        <button class="button fs-12 seg-outline finish_btn" value="2" onclick="getActivate(this.value)">Finished<span class="ml-5 badge start_badge"></span></button>
+      </p>
+    </div>
+    <div class="list accordion-list">
+      <ul id="pen_orders" class="display-block ordercls"></ul>
+      <ul id="start_orders" class="display-none ordercls"></ul>
+      <ul id="finish_orders" class="display-none ordercls"></ul>
+    </div>
+
+    <!--div class="list">
+      <ul>
+        <li>
+          <a href="#" class="item-link item-content">
+            <div class="item-inner">
+              <div class="item-title">Ivan Petrov</div>
+            </div>
+          </a>
+        </li>
+        <li class="item-divider">Divider Here</li>
+        <li>
+          <a href="#" class="item-link item-content">
+            <div class="item-inner">
+              <div class="item-title">John Doe</div>
+            </div>
+          </a>
+        </li>
+        <li class="item-divider">Divider Here</li>        
+      </ul>
+    </div-->    
+  </div>
+
   <input type="hidden" name="hidd_proftab" id="hidd_proftab">
   <div class="page-content tab" id="tab-3">
     <div class="fab fab-extended fab-right-bottom btm-12">

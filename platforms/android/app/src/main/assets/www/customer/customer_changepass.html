@@ -33,7 +33,7 @@
 					  <div class="item-inner">
 					    <div class="item-title item-floating-label">New Password</div>
 					    <div class="item-input-wrap">
-					      <input type="text" placeholder="New Password" id="new_pass" name="new_pass">
+					      <input type="text" placeholder="New Password" id="new_pass" name="new_pass" onblur="pass_length(this.value)">
 					      <span class="input-clear-button"></span>
 					    </div>
 					  </div>
@@ -46,7 +46,7 @@
 					  <div class="item-inner">
 					    <div class="item-title item-floating-label">Confirm Password</div>
 					    <div class="item-input-wrap">
-					      <input type="text" placeholder="Confirm Password" id="conf_newpass" name="conf_newpass">
+					      <input type="text" placeholder="Confirm Password" id="conf_newpass" name="conf_newpass" onblur="pass_length(this.value)">
 					      <span class="input-clear-button"></span>
 					    </div>
 					  </div>

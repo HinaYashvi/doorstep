@@ -82,8 +82,26 @@
 .text-uppercase{
 	text-transform: uppercase;
 }
+.fs-6{
+  font-size: 6px!important;
+}
+.fs-8{
+  font-size: 8px!important;
+}
+.fs-9{
+  font-size: 9px!important;
+}
+.fs-10{
+  font-size: 10px!important;
+}
+.fs-11{
+  font-size: 11px!important;
+}
 .fs-12{
   font-size: 12px!important;
+}
+.fs-13{
+  font-size: 13px!important;
 }
 .fs-14{
   font-size: 14px!important;
@@ -97,11 +115,23 @@
 .fs-22{
   font-size: 22px!important;
 }
+.fs-24{
+  font-size: 24px!important;
+}
+.w-20{
+  width: 20%;
+}
 .w-50{
   width: 50%;
 }
+.fs-25-em{
+  font-size: 2.25em;
+}
 .nav-bg,.btn-teal,.footer-bg{
   background-color: #006D5B!important;
+}
+.ml-20{
+  margin-left: 20%;
 }
 .form-btn{
   margin: 30px 38px 15px 38px;
@@ -122,10 +152,19 @@
 .block_img{
   top: 7px;
   position: relative;
-  border:1px groove #232F3E;
+  /*border:1px groove #232F3E;*/
 }
 .text-red{
-  color: red;
+  color: red!important;
+}
+.rev_div{
+  padding: 0% 6% 0% 25%;
+  width: 60%;
+  top: -18px;
+  position: relative; 
+}
+.lightblue{
+  background-color: #d1ebff;
 }
 .showpass{
   position: absolute;
@@ -160,10 +199,20 @@
   padding: 5% 5% 11% 5%;
   border-bottom: 1px dashed #929eaa;
   border-top: 1px dashed #929eaa;
+  margin-bottom: 0px!important;
 }
 .dash_bg{
   /*background-color: #ccc!important;
   background-color: #efefef!important;*/
+}
+.lightgrey{
+  color: #ccc;
+}
+.rating-stars ul > li.star.hover > i.fa{
+  color: #ffcc36;
+}
+.hover {
+  color: #FF912C;
 }
 .txt-amaz{
   color: #232F3E;
@@ -174,7 +223,9 @@
 .md .tabbar .tab-link-highlight, .md .tabbar-labels .tab-link-highlight{
   background: #ff3b30!important;
 }
-
+.light-grey{
+  color: #969696!important;
+}
 div.container4 {
   height: 10em;
   position: relative; 
@@ -214,6 +265,9 @@ div.container4 img {
   color: #fff;  
   width: 79%;
 }
+.display-if{
+  display: inline-flex!important;
+}
 .othloc-button{
   margin: 0 38px 0 38px;
   position: relative;
@@ -249,9 +303,9 @@ div.container4 img {
   /*background-color: #fff;*/
   background-color: #232F3E;
   bottom: 0;
-    height: calc(var(--f7-toolbar-height) + var(--f7-safe-area-bottom));
+  height: calc(var(--f7-toolbar-height) + var(--f7-safe-area-bottom));
 }
-.navbg,.fab > a, .fab-buttons a,.submitbtn {
+.navbg,.fab > a, .fab-buttons a,.submitbtn,.seg_btn {
   background-color: #232F3E;
   color: #fff!important;
 }
@@ -259,17 +313,48 @@ div.container4 img {
   border: 3px solid #232F3E;
   color: #232F3E!important;
 }
+.seg-outline{
+  border: 1px solid #232F3E;
+  color: #232F3E!important;
+}
 #success-bg{
   background-color:#2f883e!important;
 }
+.rate_star{
+  color: #78B75B!important;
+}
+.pen_badge{
+  background-color: #FF3B30;
+  color: #fff;
+}
+.start_badge{
+  background-color: forestgreen;
+  color: #fff;
+}
+
+.subrate{
+  color: #ffb32e!important;
+}
 .w-60{
   width: 60%;
+}
+.w-65{
+  width: 65%;
+}
+.w-75{
+  width: 75%;
+}
+.w-25{
+  width: 25%;
 }
 .md .item-input-focused:not(.item-input-outline) .item-input-wrap:after, .md .input-focused:not(.input-outline):after{
   background: #232F3E!important;
 }
 .tcust{
   align-items: inherit!important;
+}
+.l-0{
+  left: 0!important;
 }
 .bookings_tot{
   left: 55%;
@@ -287,6 +372,12 @@ div.container4 img {
     width: 360px;
     height: 200px;
     overflow: hidden;    
+}
+.fw-500{
+  font-weight: 500!important;
+}
+.lh-12{
+  line-height: 1.2!important;
 }
 /*#imageContainer img {
   animation: kenburns 20s infinite;
@@ -312,10 +403,13 @@ div.container4 img {
   opacity: 0.5;
 }
 .fw-600{
-  font-weight: 600;
+  font-weight: 600!important;
 }
 .tab-border{
   border-bottom: 1px groove #cecece;
+}
+.list-border{
+  border-bottom:1px solid #ccc;
 }
 .btm-12{
   bottom: 12%!important;
@@ -357,16 +451,115 @@ div.container4 img {
   padding: 20%;
 }
 .p-5{
-    padding:5%;
+  padding:5%;
+}
+.p-2{
+  padding:2%;
 }
 .pl-20{
   padding-left: 20%;
+}
+.pl-4{
+  padding-left: 4%;
+}
+.ml-2{
+  margin-left: 2%;
+}
+.ml-5{
+  margin-left: 5%;
 }
 .mb-5{
   margin-bottom: 5px;
 }
 .mb-10{
   margin-bottom: 10px;
+}
+.mt-5{
+  margin-top: 5%; 
+}
+.mt-2{
+  margin-top: 2%;
+}
+.text-blue{
+  color: #2196f3!important;
+}
+.bord-bot-blue{
+  border-bottom: 1px solid #2196f3;
+}
+.nobg{
+  background-color: #fff;
+}
+.tabhgt{
+  height: auto!important;
+}
+.text-grey{
+  color: grey!important;
+}
+.pending{
+  border: 2px solid red;
+  padding: 5px;
+  border-radius: 5px;
+  color:red;
+}
+.started{
+  border: 2px solid grey;
+  padding: 5px;
+  border-radius: 5px;
+  color:grey;
+}
+.finished{
+  border: 2px solid #3e8a1b;
+  padding: 5px;
+  border-radius: 5px;
+  color:#3e8a1b;
+}
+.action_line{
+  background-color: #e1e6ea;
+  border: 1px solid #929eaa;
+  padding: 2%;
+}
+.for_green{
+  background-color:forestgreen;
+}
+.w-72{
+  width: 72%;
+}
+.mr-2{
+  margin-right: 2px;
+}
+.mr-15{
+  margin-right: 15px;
+}
+.change_add{
+  bottom: 48px;
+  position: relative;
+}
+.rating-stars ul {
+  list-style-type:none;
+  padding:0;
+  
+  -moz-user-select:none;
+  -webkit-user-select:none;
+}
+.rating-stars ul > li.star {
+  display:inline-block;
+  
+}
+
+/* Idle State of the stars */
+.rating-stars ul > li.star > i.fa {
+  font-size:2.5em; /* Change the size of the stars */
+  color:#ccc; /* Color on idle state */
+}
+
+/* Hover state of the stars */
+.rating-stars ul > li.star.hover > i.fa {
+  color:#FFCC36;
+}
+
+/* Selected state of the stars */
+.rating-stars ul > li.star.selected > i.fa {
+  color:#FF912C;
 }
 /* The typing effect */
 @keyframes typing {
