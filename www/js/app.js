@@ -1852,12 +1852,20 @@ function onSuccessCity(position){
        // $("#currentcity").html(city_results[0].formatted_address);
 
         alert(city_results[0].formatted_address);
-        var  value=add.split(",");
+
+        var filtered_array = data.results[0].address_components.filter(function(address_component){
+            var adminis2=address_component.types.includes("administrative_area_level_2");
+        }); 
+        alert("filtered_array.length "+filtered_array.length);
+        var city = filtered_array.length ? filtered_array[0].long_name: "";
+        alert('city: ' + city);
+
+        /*var  value=add.split(",");
         count=value.length;
         country=value[count-1];
         state=value[count-2];
         city=value[count-3];
-        alert("city name is: " + city);
+        alert("city name is: " + city);*/
         app.preloader.hide();             
       } else {
         app.dialog.alert('No results found');
