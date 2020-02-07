@@ -1856,8 +1856,8 @@ function onSuccessCity(position){
         var res=city_results[0].formatted_address;
 var city = "";
          var state = "";
-
-         for (var i = 0, len = res.address_components.length; i < len; i++) {
+alert("res.address_components.length   "+res.address_components.length);
+         for (var i = 0, i < res.address_components.length;i++) {
              var ac = res.address_components[i];
             if (ac.types.indexOf("administrative_area_level_1") >= 0) state = ac.long_name;
             if (ac.types.indexOf("administrative_area_level_2") >= 0) city = ac.long_name;
