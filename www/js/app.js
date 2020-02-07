@@ -1855,6 +1855,8 @@ function onSuccessCity(position){
 
         var filtered_array = city_results[0].address_components.filter(function(address_component){
             var adminis2=address_component.types.includes("administrative_area_level_2");
+            $("#currentcity").html(adminis2);
+            alert(adminis2);
         }); 
         alert("filtered_array.length "+filtered_array.length);
         var city = filtered_array.length ? filtered_array[0].long_name: "";
