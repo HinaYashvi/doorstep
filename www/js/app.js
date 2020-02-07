@@ -1828,21 +1828,30 @@ function curr_loc(){
   navigator.geolocation.getCurrentPosition(onSuccess, onError,{ maximumAge: 3000, timeout: 5000, enableHighAccuracy: true });
 }
 function currentCity(){
+  alert("in currentcity function");
   openLOC();
   navigator.geolocation.getCurrentPosition(onSuccessCity, onErrorCity,{ maximumAge: 3000, timeout: 5000, enableHighAccuracy: true });
 }
 function onSuccessCity(position){
+  alert("in onSuccessCity");
   app.preloader.show();
   var city_longitude = position.coords.longitude;
   var city_latitude = position.coords.latitude;
+  alert(city_longitude+"******************"+city_latitude);
+
   var city_geocoder = new google.maps.Geocoder();
   var city_LatLong = new google.maps.LatLng(city_latitude,city_longitude);
+
+  alert("city_LatLong "+city_LatLong);
   city_geocoder.geocode({'latLng': city_LatLong}, function(city_results, city_status) {
+    alert("city_status "+city_status);
     if (city_status === 'OK') {
       //$("#map-canvas").html(results+" ^^^^^^^^^^^^");
       if (city_results[0]) {
         //alert(results[0].formatted_address);
-        $("#currentcity").html(city_results[0].formatted_address);
+       // $("#currentcity").html(city_results[0].formatted_address);
+
+        alert(city_results[0].formatted_address);
         var  value=add.split(",");
         count=value.length;
         country=value[count-1];
