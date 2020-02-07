@@ -1860,10 +1860,11 @@ var types;
         alert("res.length "+res.length);
         var address_components=[];
         for(var i=0;i<res.length;i++){
-          alert(res[i]+" res[i]");
+          alert(res[i]+" res");
           address_components = res[i];
           types = address_component.types;
-          for (j = 0; j < types.length; j++) {
+          alert(types.length+" types.length");
+          for (var j = 0; j < types.length; j++) {
             alert("types "+types[j]);
             if (types[j] === 'administrative_area_level_1') {
               state = address_component.long_name;
