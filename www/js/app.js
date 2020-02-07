@@ -1853,7 +1853,7 @@ function onSuccessCity(position){
 
         alert(city_results[0].formatted_address);
 
-        var filtered_array = data.results[0].address_components.filter(function(address_component){
+        var filtered_array = city_results[0].address_components.filter(function(address_component){
             var adminis2=address_component.types.includes("administrative_area_level_2");
         }); 
         alert("filtered_array.length "+filtered_array.length);
