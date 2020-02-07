@@ -1855,6 +1855,7 @@ function onSuccessCity(position){
 
         var res=city_results[0].formatted_address;
 var city = "";
+var types;
          var state = "";
         alert(res.length);
         var address_components=[];
