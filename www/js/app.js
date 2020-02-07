@@ -1853,15 +1853,17 @@ function onSuccessCity(position){
 
         alert(city_results[0].formatted_address);
 
-        var filtered_array = city_results[0].address_components.filter(function(address_component){
-            var adminis2=address_component.types.includes("administrative_area_level_2");
-            $("#currentcity").html(adminis2);
-            alert(adminis2);
-        }); 
-        alert("filtered_array.length "+filtered_array.length);
-        var city = filtered_array.length ? filtered_array[0].long_name: "";
-        alert('city: ' + city);
+        var res=city_results[0].formatted_address;
+var city = "";
+         var state = "";
 
+         for (var i = 0, len = res.address_components.length; i < len; i++) {
+             var ac = res.address_components[i];
+            if (ac.types.indexOf("administrative_area_level_1") >= 0) state = ac.long_name;
+            if (ac.types.indexOf("administrative_area_level_2") >= 0) city = ac.long_name;
+         }
+
+         alert("Hello to you out there in " + city + ", " + state + "!");
         /*var  value=add.split(",");
         count=value.length;
         country=value[count-1];
