@@ -1856,6 +1856,21 @@ function onSuccessCity(position){
         var res=city_results[0].formatted_address;
 var city = "";
          var state = "";
+        alert(res.length);
+        var address_components=[];
+        for(var i=0;i<res.length;i++){
+          address_components = res[i];
+          types = address_component.types;
+          if (types[j] === 'administrative_area_level_1') {
+            state = address_component.long_name;
+          }
+          if (types[j] === 'administrative_area_level_2') {
+            city = address_component.long_name;
+          }
+        }
+        alert("Hello to you out there in " + city + ", " + state + "!");
+/*var city = "";
+         var state = "";
 alert("res.address_components.length   "+city_results.address_components.length);
          for (var i = 0;i < city_results.address_components.length;i++) {
              var ac = res.address_components[i];
@@ -1863,7 +1878,7 @@ alert("res.address_components.length   "+city_results.address_components.length)
             if (ac.types.indexOf("administrative_area_level_2") >= 0) city = ac.long_name;
          }
 
-         alert("Hello to you out there in " + city + ", " + state + "!");
+         alert("Hello to you out there in " + city + ", " + state + "!");*/
         /*var  value=add.split(",");
         count=value.length;
         country=value[count-1];
