@@ -1852,16 +1852,18 @@ function onSuccessCity(position){
        // $("#currentcity").html(city_results[0].formatted_address);
 
         alert(city_results[0].formatted_address);
-
+        var addressComponents = city_results[0].address_components;
         var res=city_results[0].formatted_address;
 var city = "";
 var types;
          var state = "";
-        alert("res.length "+res.length);
+        alert("addressComponents.length "+addressComponents.length);
+
+        
         var address_components=[];
-        for(var i=0;i<res.length;i++){
-          alert(res[i]+" res");
-          address_components = res[i];
+        for(var i=0;i<addressComponents.length;i++){
+          //alert(res[i]+" res");
+          address_component = address_components[i];
           types = address_component.types;
           alert(types.length+" types.length");
           for (var j = 0; j < types.length; j++) {
