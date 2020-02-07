@@ -1857,16 +1857,20 @@ function onSuccessCity(position){
 var city = "";
 var types;
          var state = "";
-        alert(res.length);
+        alert("res.length "+res.length);
         var address_components=[];
         for(var i=0;i<res.length;i++){
+          alert(res[i]+" res[i]");
           address_components = res[i];
           types = address_component.types;
-          if (types[j] === 'administrative_area_level_1') {
-            state = address_component.long_name;
-          }
-          if (types[j] === 'administrative_area_level_2') {
-            city = address_component.long_name;
+          for (j = 0; j < types.length; j++) {
+            alert("types "+types[j]);
+            if (types[j] === 'administrative_area_level_1') {
+              state = address_component.long_name;
+            }
+            if (types[j] === 'administrative_area_level_2') {
+              city = address_component.long_name;
+            }
           }
         }
         alert("Hello to you out there in " + city + ", " + state + "!");
