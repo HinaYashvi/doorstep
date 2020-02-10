@@ -592,7 +592,7 @@ $$(document).on('page:init', '.page[data-name="customer_dash"]', function (page)
   var session_cid = window.localStorage.getItem("session_cid");  
   var session_current_city = window.localStorage.getItem("session_current_city");
   var session_current_loc = window.localStorage.getItem("session_current_loc");
-  
+  alert("session_current_city "+session_current_city+"******** session_current_loc "+session_current_loc);
   swiper = new Swiper('.swiper-container_dash', {
     parallax: true,
     //autoHeight: true,
@@ -617,7 +617,7 @@ $$(document).on('page:init', '.page[data-name="customer_dash"]', function (page)
     observeParents: true, 
   });  
   if(session_current_loc!='' && session_current_loc!=null){
-    //alert("session_current_city ^^^ customer dashboard "+session_current_city);
+    alert("session_current_city ^^^ customer dashboard "+session_current_city);
     $.ajax({
       type:'POST', 
         url:base_url+'APP/Appcontroller/getLastCurrLoc_cust',
