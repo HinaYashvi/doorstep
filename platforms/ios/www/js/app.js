@@ -591,9 +591,8 @@ $$(document).on('page:init', '.page[data-name="customer_dash"]', function (page)
   checkConnection();  
   var session_cid = window.localStorage.getItem("session_cid");  
   var session_current_city = window.localStorage.getItem("session_current_city");
-  if(session_current_city!=''){
-    alert("session_current_city ^^^ customer dashboard "+session_current_city);
-  }
+  var session_current_loc = window.localStorage.getItem("session_current_loc");
+  
   swiper = new Swiper('.swiper-container_dash', {
     parallax: true,
     //autoHeight: true,
@@ -616,9 +615,22 @@ $$(document).on('page:init', '.page[data-name="customer_dash"]', function (page)
     },
     observer: true,
     observeParents: true, 
-  });    
-  //currentCity();  // uncomment this for apk //
-
+  });  
+  if(session_current_loc!='' && session_current_loc!=null){
+    //alert("session_current_city ^^^ customer dashboard "+session_current_city);
+    $.ajax({
+      type:'POST', 
+        url:base_url+'APP/Appcontroller/getLastCurrLoc_cust',
+        data:{'session_cid':session_cid},
+        success:function(loc_res){        
+          var json_loc = $.parseJSON(loc_res);
+          var c_current_loc_app = json_loc.c_current_loc_app;
+          $("#formatted_address").html(c_current_loc_app);
+        }
+    });
+  }else{  
+    currentCity();  // uncomment this for apk //
+  }
 
 
   //navigator.geolocation.getCurrentPosition(onSuccess, onError);
@@ -1967,6 +1979,7 @@ function onSuccessCity(position){
           }
         }
         window.localStorage.setItem("session_current_city",city);
+        window.localStorage.setItem("session_current_loc",res);
         updateCurrLocCust(session_cid,res);
         //alert("city :" + city );
         app.preloader.hide();             
@@ -2130,6 +2143,7 @@ function geolocate() {
           }
         }
         window.localStorage.setItem("session_current_city",city);
+        window.localStorage.setItem("session_current_loc",res);
         updateCurrLocCust(session_cid,res);
         //alert("city :" + city );
         app.preloader.hide();             
