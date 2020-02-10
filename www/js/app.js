@@ -592,7 +592,7 @@ $$(document).on('page:init', '.page[data-name="customer_dash"]', function (page)
   var session_cid = window.localStorage.getItem("session_cid");  
   var session_current_city = window.localStorage.getItem("session_current_city");
   var session_current_loc = window.localStorage.getItem("session_current_loc");
-  alert("session_current_city "+session_current_city+"******** session_current_loc "+session_current_loc);
+  //alert("session_current_city "+session_current_city+"******** session_current_loc "+session_current_loc);
   swiper = new Swiper('.swiper-container_dash', {
     parallax: true,
     //autoHeight: true,
@@ -617,7 +617,7 @@ $$(document).on('page:init', '.page[data-name="customer_dash"]', function (page)
     observeParents: true, 
   });  
   if(session_current_loc!='' && session_current_loc!=null){
-    alert("session_current_city ^^^ customer dashboard "+session_current_city);
+    //alert("session_current_city ^^^ customer dashboard "+session_current_city);
     $.ajax({
       type:'POST', 
         url:base_url+'APP/Appcontroller/getLastCurrLoc_cust',
@@ -631,7 +631,7 @@ $$(document).on('page:init', '.page[data-name="customer_dash"]', function (page)
         }
     });
   }else{  
-    currentCity();  // uncomment this for apk //
+    //currentCity();  // uncomment this for apk //
   }
 
 
@@ -653,7 +653,6 @@ $$(document).on('page:init', '.page[data-name="customer_dash"]', function (page)
       $(".catblocks").html(cat_blocks);
     }
   });
-
 
   var button_active=$(".button-active").val();
   //alert(button_active+"button_active");
@@ -758,9 +757,8 @@ $$(document).on('page:init', '.page[data-name="customer_dash"]', function (page)
       }  
       $("#pen_orders").html(ord_list);
     }
-  });*/
-  
-  
+  });*/    
+    
   $.ajax({
     type:'POST', 
     data:{'session_cid':session_cid},
@@ -804,7 +802,7 @@ $$(document).on('page:init', '.page[data-name="customer_dash"]', function (page)
           //console.log(area);
           //console.log(city);
           var carea = area[0].a_name;
-          console.log("****"+carea);
+          //console.log("****"+carea);
           var ccity = city[0].city_name;
           $(".area_icon").html('<i class="f7-icons fs-18">map_pin_ellipse</i>');
           $(".carea").html(carea);
@@ -815,7 +813,7 @@ $$(document).on('page:init', '.page[data-name="customer_dash"]', function (page)
         }
       });
     }
-  });   
+  });  
 });
 function getBookingbyStatus(button_active,divname){
   checkConnection();  
@@ -898,26 +896,22 @@ function getBookingbyStatus(button_active,divname){
             }else if(acpt_status==1){              
               var patner_det=status_txt+ ' By '+p_name+'<br/><i class="f7-icons fs-12 text-grey mr-5">phone_fill</i><span class="fs-10">'+p_phone+'</span><br/><i class="f7-icons fs-12 text-grey mr-5">envelope_fill</i><span class="fs-10">'+p_email+'</span>';
               var thumb='<i class="f7-icons text-blue fs-14">hand_thumbsup_fill</i>';
-              /*if(change_address!='' && change_add_status==1){                
-                //$("#action_line_"+i).removeClass("display-none");
-                //$("#action_line_"+i).addClass("display-block");
-                btn_loc+='<button class="col-33 button button-small button-fill loc_btn submitbtn fs-10 display-block" id="loc_btn_'+i+'" onclick="changeServiceLoc('+i+','+c_id+','+acpt_id+','+o_id+')"><i class="f7-icons fs-12 mr-5">placemark_fill</i>Location</button>';      
-              }else if(change_address=='' && change_add_status==0){                
-                //$("#action_line_"+i).removeClass("display-block");
-                //$("#action_line_"+i).addClass("display-none");
-                btn_loc+='';                
-              }*/
-              /*if((change_address!=null || change_address!='') && change_add_status==0){                 
-                 btn_loc+='<button class="col-60 button button-small button-fill loc_btn submitbtn fs-10 display-block reqsent_'+i+'"><i class="f7-icons fs-13 mr-5">checkmark_alt</i>Location Request Sent </button>'; 
-                }
-*/ 
-              //console.log(i+"@@@@@@@@@@@@@@@@@@@@@"+change_add_status);
-              if((change_address!='' && change_add_status==1) || (address!='' && change_add_status!=1 && (change_address=='' || change_address==null))){
-                /*btn_loc+='<button class="col-33 button button-small button-fill loc_btn submitbtn fs-10 display-block" id="loc_btn_'+i+'" onclick="changeServiceLoc('+i+','+c_id+','+acpt_id+','+o_id+')"><i class="f7-icons fs-12 mr-5">placemark_fill</i>Location</button>'; 
-                if((change_address!=null || change_address!='') && change_add_status==1){
-                btn_loc+='<button class="col-66 button button-small button-fill loc_btn submitbtn fs-10 display-block w-100 mr-5" id="seal_'+i+'"><i class="f7-icons fs-13 text-red mr-5">checkmark_seal_fill</i>Location approved</button>';
-                }*/
-                //console.log(i+"^^^^^^^"+change_add_status);
+               
+              //alert(i+"-----"+change_add_status);
+              if(change_add_status==1){
+                //alert("if 1");
+                btn_loc+='<button class="col-50 seg-outline loc_btn p-2 nobg fs-11 display-block w-100 mr-5" id="seal_'+i+'"><i class="f7-icons fs-13 text-red mr-5">checkmark_seal_fill</i>Location approved</button>';
+                btn_loc+='';
+              }else if(change_add_status==2){
+                //alert("else if 2");
+                btn_loc+='<button class="col-50 seg-outline loc_btn p-2 nobg fs-11 display-block w-100 mr-5" id="seal_'+i+'"><i class="f7-icons fs-13 text-red mr-5">multiply_circle_fill</i>Change location request decline</button>';
+              }else if(change_add_status==0){
+                //alert("else if 0");
+                btn_loc+='<button class="col-33 button button-small button-fill loc_btn submitbtn fs-10 display-block" id="loc_btn_'+i+'" onclick="changeServiceLoc('+i+','+c_id+','+acpt_id+','+o_id+')"><i class="f7-icons fs-12 mr-5">placemark_fill</i>Location</button>';
+              }  
+
+
+              /*if((change_address!='' && change_add_status==1) || (address!='' && change_add_status!=1 && (change_address=='' || change_address==null))){
                 if((address!='' && change_add_status!=1 && (change_address=='' || change_address==null))){
                   //console.log(i+"if"+change_add_status);
                   btn_loc+='<button class="col-33 button button-small button-fill loc_btn submitbtn fs-10 display-block" id="loc_btn_'+i+'" onclick="changeServiceLoc('+i+','+c_id+','+acpt_id+','+o_id+')"><i class="f7-icons fs-12 mr-5">placemark_fill</i>Location</button>';
@@ -938,7 +932,7 @@ function getBookingbyStatus(button_active,divname){
                 //console.log("else if%%% -----"+change_add_status);
                 //btn_loc+='<button class="col-60 button button-small button-fill loc_btn submitbtn fs-10 display-block reqsent_'+i+'"><i class="f7-icons fs-13 mr-5">checkmark_alt</i>Location Request Sent </button>';
                 btn_loc+='<span class="col-60 loc_btn fw-600 fs-10 display-block reqsent_'+i+'"><i class="f7-icons fs-13 mr-5">checkmark_alt</i>Location Request Sent </span>';
-              }
+              }*/
 
             }
           }else if(order_status==1){
