@@ -1989,9 +1989,11 @@ function updateCurrLocCust(session_cid,res){
     data:{'session_cid':session_cid,'res':res},
     url:base_url+'APP/Appcontroller/updateCurrLoc',
     success:function(loc_res){
-      if(loc_res=="loc_updated"){        
+      var parseres = $.parseJSON(loc_res);
+      var resmsg = parseres.msg;
+      if(resmsg=="loc_updated"){        
         mainView.router.navigate("/customer_dash/");
-      }else if(loc_res=="not_updated"){
+      }else if(resmsg=="not_updated"){
         app.dialog.alert("Error updating change location");
       }
       app.preloader.hide();
