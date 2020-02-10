@@ -2105,13 +2105,16 @@ anchorPoint: new google.maps.Point(0, -29)
  */
 autocomplete.addListener('place_changed', function() {
 
-  console.log("in place_changed");
+  //console.log("in place_changed");
   //infowindow.close();
   //marker.setVisible(false);
   var place = autocomplete.getPlace();
+  var lat = place.geometry.location.lat();
+  var lng = place.geometry.location.lng();
+  alert("LAT "+lat+" LNG "+lng);
  // on 10-2-2020 start //
   var ct_geocoder = new google.maps.Geocoder();
-  var ct_LatLong = new google.maps.LatLng(hidd_currlat,hidd_currlon);
+  var ct_LatLong = new google.maps.LatLng(lat,lng);
   alert("HINA "+ct_LatLong);
   ct_geocoder.geocode({'latLng': ct_LatLong}, function(city_res, city_sta) {
     alert("city_sta "+city_sta);
@@ -2145,7 +2148,7 @@ autocomplete.addListener('place_changed', function() {
           }
         }
         window.localStorage.setItem("session_current_city",city);
-        alert("city :" + city);
+        alert("city :" + city );
         app.preloader.hide();             
       } else {
         app.dialog.alert('No results found');
