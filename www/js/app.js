@@ -626,6 +626,8 @@ $$(document).on('page:init', '.page[data-name="customer_dash"]', function (page)
           var json_loc = $.parseJSON(loc_res);
           var c_current_loc_app = json_loc.c_current_loc_app;
           $("#formatted_address").html(c_current_loc_app);
+          window.localStorage.removeItem("session_current_loc");
+          window.localStorage.setItem("session_current_loc",c_current_loc_app);
         }
     });
   }else{  
