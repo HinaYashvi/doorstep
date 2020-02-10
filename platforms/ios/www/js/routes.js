@@ -117,8 +117,8 @@ var routes = [
   {
     //path: '/partner_otpverify/',
     //url: './partner/partner_otpverify.html',
-    path: '/customer_servicedet/:j_id/:j_name/:j_price/',
-    url: './customer/customer_servicedet.html?j_id={{j_id}}/j_name={{j_name}}/j_price={{j_price}}',
+    path: '/customer_servicedet/:j_id/:j_name/:j_price/:sid/',
+    url: './customer/customer_servicedet.html?j_id={{j_id}}/j_name={{j_name}}/j_price={{j_price}}/sid={{sid}}',
     name: 'customer_servicedet',
     options: {
       animate: true,

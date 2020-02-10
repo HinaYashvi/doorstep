@@ -590,6 +590,10 @@ $$(document).on('page:init', '.page[data-name="customer_dash"]', function (page)
   //logOut(); 
   checkConnection();  
   var session_cid = window.localStorage.getItem("session_cid");  
+  var session_current_city = window.localStorage.getItem("session_current_city");
+  if(session_current_city!=''){
+    alert("session_current_city ^^^ customer dashboard "+session_current_city);
+  }
   swiper = new Swiper('.swiper-container_dash', {
     parallax: true,
     //autoHeight: true,
@@ -613,7 +617,10 @@ $$(document).on('page:init', '.page[data-name="customer_dash"]', function (page)
     observer: true,
     observeParents: true, 
   });    
-  currentCity();
+  //currentCity();  // uncomment this for apk //
+
+
+
   //navigator.geolocation.getCurrentPosition(onSuccess, onError);
   app.preloader.show();
   $.ajax({
@@ -635,6 +642,7 @@ $$(document).on('page:init', '.page[data-name="customer_dash"]', function (page)
 
 
   var button_active=$(".button-active").val();
+  //alert(button_active+"button_active");
   var divname="pen_orders";
   getBookingbyStatus(button_active,divname);
   /*$.ajax({
@@ -782,6 +790,7 @@ $$(document).on('page:init', '.page[data-name="customer_dash"]', function (page)
           //console.log(area);
           //console.log(city);
           var carea = area[0].a_name;
+          console.log("****"+carea);
           var ccity = city[0].city_name;
           $(".area_icon").html('<i class="f7-icons fs-18">map_pin_ellipse</i>');
           $(".carea").html(carea);
@@ -1641,7 +1650,7 @@ $$(document).on('page:init', '.page[data-name="customer_service_types"]', functi
           //}
           ///slides+='<a class="slide" title="Image '+i+'" href="#"><span class="animate down" style="background-image: '+base_url+j_img_path+'"></span></a>';
           slides='<div id="imageContainer"><img src="'+base_url+c_img+'" height="200" width="360"><div class="slider_txt">'+j_desc+'</div></div>'; 
-          jlist+='<li><a href="/customer_servicedet/'+j_id+'/'+j_name+'/'+j_price+'/" class="item-link item-content"><div class="item-inner"><div class="item-title fs-12">'+j_name+'</div></div></a></li>'; 
+          jlist+='<li><a href="/customer_servicedet/'+j_id+'/'+j_name+'/'+j_price+'/'+sid+'/" class="item-link item-content"><div class="item-inner"><div class="item-title fs-12">'+j_name+'</div></div></a></li>'; 
           $(".amazontxt").removeClass("display-none");
           $(".amazontxt").addClass("display-block");
           $(".jobList").html(jlist);
@@ -1720,20 +1729,26 @@ function service_pg(){
 $$(document).on('page:init', '.page[data-name="customer_servicedet"]', function (page) {  
   checkConnection();
   //console.log(page.detail.route.params);
+  var session_cid = window.localStorage.getItem("session_cid"); 
+  var session_ccityid = window.localStorage.getItem("session_ccityid");
   var j_id = page.detail.route.params.j_id; 
+  var sid = page.detail.route.params.sid;
   var job_name = page.detail.route.params.j_name; 
   var job_price = page.detail.route.params.j_price; 
   $(".job_title").html(job_name);
   var hidd_day = $(".day").val();
   $("#jobid").val(j_id);
-  timeSlotTabs(j_id,hidd_day);
-
-   
+  $("#cid").val(session_cid);
+  $("#city_id").val(session_ccityid);
+  $("#sid").val(sid);
+  timeSlotTabs(j_id,hidd_day);   
 });
 function timeSlotTabs(j_id,hidd_day){
+  checkConnection();
   var session_cid = window.localStorage.getItem("session_cid"); 
   var session_current_city = window.localStorage.getItem("session_current_city");
-  var session_ccity = window.localStorage.getItem("session_ccity"); 
+  var session_ccity = window.localStorage.getItem("session_ccity");
+  var session_ccityid = window.localStorage.getItem("session_ccityid");
   //alert(hidd_day);
   var d = new Date();
   var tm =Math.floor(d.getTime()/1000);
@@ -1741,7 +1756,7 @@ function timeSlotTabs(j_id,hidd_day){
   app.preloader.show();
   $.ajax({
     type:'POST', 
-    data:{'j_id':j_id,'session_cid':session_cid},
+    data:{'j_id':j_id,'session_cid':session_cid,'session_ccityid':session_ccityid},
     url:base_url+'APP/Appcontroller/getJobDetails',
     success:function(res){
       var jobdet = $.parseJSON(res);
@@ -1752,12 +1767,15 @@ function timeSlotTabs(j_id,hidd_day){
       var slot = ser.slot;
       var tt_slot = ser.tt_slot;   
       var cust = jobdet.cust;   
-      console.log(cust);
-      var c_name = cust.c_name;
+      //console.log(cust);
+      var cst_name = cust.c_name;
+      //alert(cst_name);
       var c_phn = cust.c_phone;
       var c_reg = cust.city_name;
 
-      //console.log(slot);      
+      var area = jobdet.area;
+
+      //console.log(job_det);      
       var job_slide = '';
       var jdet='';  
       var today_slots='';
@@ -1769,6 +1787,9 @@ function timeSlotTabs(j_id,hidd_day){
         var j_price = job_det[i].j_price;
         var time_slot = job_det[i].time_slot;
         var j_img_path = j_img[0].j_img_path;
+
+        $("#amount").val(j_price);
+        $("#hidd_timeslot").val(time_slot);
         job_slide+='<div id="imageContainer"><img src="'+base_url+j_img_path+'" height="200" width="360"><!--div class="slider_txt">'+j_desc+'</div--></div>';         
       }
       
@@ -1782,7 +1803,7 @@ function timeSlotTabs(j_id,hidd_day){
             var st_id = slot[j].id;
             var slot_string = sl_from+" - "+sl_to;
             var slot_string1 = sl_from+" to "+sl_to;
-            today_slots+='<input type="hidden" name="slot_id" id="'+st_id+'" value="'+st_id+"|"+slot_string1+'" /><div class="col-50 p-2"><span class="lh-12"><label class="radio"><input type="radio" name="demo-radio-inline"><i class="icon-radio mr-2"></i></label><span class="fs-9 fw-500">'+slot_string+'</span></span></div>'; 
+            today_slots+='<!--input type="hidden" name="slot_id" id="'+st_id+'" value="'+st_id+"|"+slot_string1+'" /--><div class="col-50 p-2"><span class="lh-12"><label class="radio"><input type="radio" name="slot_id" value="'+st_id+"|"+slot_string1+'"><i class="icon-radio mr-2"></i></label><span class="fs-9 fw-500">'+slot_string+'</span></span></div>'; 
             //console.log(sl_from+" "+sl_to);
             continue; 
           }
@@ -1797,11 +1818,24 @@ function timeSlotTabs(j_id,hidd_day){
           var st_id = slot[j].id;
           var slot_string = sl_from+" - "+sl_to;
           var slot_string1 = sl_from+" to "+sl_to;
-          tomorrow_slots+='<input type="hidden" name="slot_id" id="'+st_id+'" value="'+st_id+"|"+slot_string1+'" /><div class="col-50 p-2"><span class="lh-12"><label class="radio"><input type="radio" name="demo-radio-inline"><i class="icon-radio mr-2"></i></label><span class="fs-9 fw-500">'+slot_string+'</span></span></div>';      
+          tomorrow_slots+='<!--input type="hidden" name="slot_id" id="'+st_id+'" value="'+st_id+"|"+slot_string1+'" /--><div class="col-50 p-2"><span class="lh-12"><label class="radio"><input type="radio" name="slot_id" value="'+st_id+"|"+slot_string1+'"><i class="icon-radio mr-2"></i></label><span class="fs-9 fw-500">'+slot_string+'</span></span></div>';      
         }
         tomorrow_slots+='</div></div></div></li></ul></div>';
       }
-      bookdiv='<li class="item-content item-input item-input-focused"><div class="item-inner"><div class="">Current City: '+session_current_city+'</div><div class="">Your City: '+session_ccity+'</div></div></li>   <li class="item-content item-input item-input-focused"><div class="item-inner"><div class="item-title item-floating-label">Name</div><div class="item-input-wrap"><input type="text" value='+c_name+'><span class="input-clear-button"></span></div></div></li><li class="item-content item-input item-input-focused"><div class="item-inner"><div class="item-title item-floating-label">Phone</div><div class="item-input-wrap"><input type="text" value='+c_phn+'><span class="input-clear-button"></span></div></div></li>';
+      
+      var jobid=$("#jobid").val();
+      bookdiv+='<li class="item-content item-input item-input-focused"><div class="item-inner"><div class="">Current City: <span class="badge">'+session_current_city+'</span></div><div class="text-capitalize">Your City: <div class="chip chip-outline color-orange"><span class="chip-label fw-600">'+session_ccity+'<span></div></div></div></li>   <li class="item-content item-input item-input-focused"><div class="item-inner"><div class="item-title item-floating-label">Name</div><div class="item-input-wrap"><input type="text" name="c_name" value="'+cst_name+'"><span class="input-clear-button"></span></div></div></li><li class="item-content item-input item-input-focused"><div class="item-inner"><div class="item-title item-floating-label">Phone</div><div class="item-input-wrap"><input type="text" name="c_phone" value='+c_phn+'><span class="input-clear-button"></span></div></div></li><li class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Gender</div><div class="item-input-wrap input-dropdown-wrap"><select name="c_area" id="c_area" onchange="check_service(this.value,'+jobid+')"><option value="">---SELECT AREA---</option>';
+        for(var i=0;i<area.length;i++){
+          var a_id=area[i].a_id;
+          var a_name=area[i].a_name;
+          //alert(a_name);
+          bookdiv+='<option value='+a_id+'>'+a_name+'</option>';
+        } 
+
+      bookdiv+='</select></div></div></li><li class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Address</div><div class="item-input-wrap"><textarea placeholder="Please enter the address as per selected city and area." name="address" id="address"></textarea></div></div></li>';
+      if(slot.length!=0){
+        bookdiv+='<div class="block"><div class="col"><a class="button submitbtn no-radius mb-10" onclick="bookCustService()">Pay <i class="f7-icons fs-16">money_dollar</i> '+j_price+'</a></div></div>';
+      }
 
       $("#bookser_div").html(bookdiv);
       $("#job_slides").html(job_slide);
@@ -1816,6 +1850,61 @@ function timeSlotTabs(j_id,hidd_day){
       app.preloader.hide();
     }
   }); 
+}
+function bookCustService(){
+  checkConnection();
+  app.preloader.show();
+  var cust_orderForm = $(".cust_orderForm").serialize();
+  var slot_id = $('input[name="slot_id"]').val();
+  var j_id = $('input[name="jobid"]').val();
+  var j_name = $('.job_title').html();
+  var j_price = $('input[name="amount"]').val();
+  var sid = $('input[name="sid"]').val();
+  //alert(slot_id+" slot_id");  
+  //console.log(cust_orderForm);
+  $.ajax({
+    type:'POST',     
+    data:cust_orderForm, 
+    url:base_url+'APP/Appcontroller/cust_order',
+    success:function(ord_res){
+      var parseRes = $.parseJSON(ord_res);
+      var msg_msg = parseRes.msg;
+      if(msg_msg=="notime"){ 
+        app.dialog.alert("Please select Time.Time is required OR Time not available.");
+        mainView.router.navigate("/customer_servicedet/"+j_id+"/"+j_name+"/"+j_price+"/"+sid+"/");  
+      //  /customer_servicedet/'+j_id+'/'+j_name+'/'+j_price+'/'+sid+'/
+      }else if(msg_msg=="inserted"){
+        app.dialog.alert("Your service request has been placed.");   
+        mainView.router.navigate("/customer_dash/");     
+      }else if(msg_msg=="not_inserted"){
+        app.dialog.alert("Error in booking the service!");    
+        mainView.router.navigate("/customer_dash/");    
+      }
+      /*$(".tab-link").removeClass("tab-link-active");
+      $(".tab").removeClass("tab-active");
+      app.tab.show("#tab-2");
+      $("#tab-2").addClass("tab-active");*/
+      app.preloader.hide();
+    } 
+  }); 
+}
+function check_service(a_id,jobid){
+  checkConnection();
+  app.preloader.show();
+  $.ajax({
+    type:'POST', 
+    data:{'a_id':a_id,'jobid':jobid},
+    url:base_url+'APP/Appcontroller/check_service',
+    success:function(status_res){
+      var st_res = $.parseJSON(status_res);
+      var status = st_res.status;
+      //alert(status);
+      if(status=="error"){
+        app.dialog.alert("Oops!Service provider is not available in selected area");
+      }
+    }
+  });
+  app.preloader.hide();
 }
 function change_day(obj){
   var day = obj.attr("data-day");
@@ -1878,22 +1967,6 @@ function onSuccessCity(position){
         }
         window.localStorage.setItem("session_current_city",city);
         //alert("city :" + city );
-/*var city = "";
-         var state = "";
-alert("res.address_components.length   "+city_results.address_components.length);
-         for (var i = 0;i < city_results.address_components.length;i++) {
-             var ac = res.address_components[i];
-            if (ac.types.indexOf("administrative_area_level_1") >= 0) state = ac.long_name;
-            if (ac.types.indexOf("administrative_area_level_2") >= 0) city = ac.long_name;
-         }
-
-         alert("Hello to you out there in " + city + ", " + state + "!");*/
-        /*var  value=add.split(",");
-        count=value.length;
-        country=value[count-1];
-        state=value[count-2];
-        city=value[count-3];
-        alert("city name is: " + city);*/
         app.preloader.hide();             
       } else {
         app.dialog.alert('No results found');
@@ -2002,7 +2075,7 @@ function geolocate111() {
 function geolocate() {
   var hidd_currlat = $("#hidd_currlat").val();
   var hidd_currlon = $("#hidd_currlon").val();
-  //alert(hidd_currlat+"***---------***"+hidd_currlon);
+  alert(hidd_currlat+"***---------***"+hidd_currlon);
 /*var map = new google.maps.Map(document.getElementById('map'), {
       center: {lat: -33.8688, lng: 151.2195},
       zoom: 13
@@ -2033,38 +2106,70 @@ anchorPoint: new google.maps.Point(0, -29)
 autocomplete.addListener('place_changed', function() {
 
   console.log("in place_changed");
-//infowindow.close();
-//marker.setVisible(false);
-var place = autocomplete.getPlace();
+  //infowindow.close();
+  //marker.setVisible(false);
+  var place = autocomplete.getPlace();
+ // on 10-2-2020 start //
+  var ct_geocoder = new google.maps.Geocoder();
+  var ct_LatLong = new google.maps.LatLng(hidd_currlat,hidd_currlon);
+  alert("HINA "+ct_LatLong);
+  ct_geocoder.geocode({'latLng': ct_LatLong}, function(city_res, city_sta) {
+    alert("city_sta "+city_sta);
+    if (city_sta === 'OK') {
+      //$("#map-canvas").html(results+" ^^^^^^^^^^^^");
+      if (city_res[0]) {
+        //alert(city_res[0].formatted_address);
+       // $("#currentcity").html(city_res[0].formatted_address);
 
-//alert("place "+place);
-console.log("in place "+place.name);
-        if (!place.geometry) {
-//alert("Autocomplete's returned place contains no geometry");
-            return;
+        alert(city_res[0].formatted_address);
+        var addressComponents = city_res[0].address_components;
+        var res=city_res[0].formatted_address;
+        var city = "";        
+        var types;
+        var state = "";
+        alert("addressComponents.length "+addressComponents.length);
+        var address_components=[];
+        for(var i=0;i<addressComponents.length;i++){
+          alert(addressComponents[i]+" addressComponents[i]");
+          address_component = addressComponents[i];
+          types = address_component.types;
+          alert(types.length+" types.length");
+          for (var j = 0; j < types.length; j++) {
+            //alert("types "+types[j]);
+            if (types[j] === 'administrative_area_level_1') {
+              state = address_component.long_name;
+            }
+            if (types[j] === 'administrative_area_level_2') {
+              city = address_component.long_name;
+            }
+          }
         }
- 
-        // If the place has a geometry, then present it on a map.
-        if (place.geometry.viewport) {
-          //alert(" in place.geometry.viewport");
-//map.fitBounds(place.geometry.viewport);
-        } else {
-          //alert("in place.geometry.location");
-//map.setCenter(place.geometry.location);
-//map.setZoom(17);
-        }
-/*marker.setIcon(({
-            url: place.icon,
-            size: new google.maps.Size(71, 71),
-            origin: new google.maps.Point(0, 0),
-            anchor: new google.maps.Point(17, 34),
-scaledSize: new google.maps.Size(35, 35)
-        }));*/
-//marker.setPosition(place.geometry.location);
-//marker.setVisible(true);
- 
- 
-    });
+        window.localStorage.setItem("session_current_city",city);
+        alert("city :" + city);
+        app.preloader.hide();             
+      } else {
+        app.dialog.alert('No results found');
+      }
+    } else {
+      app.dialog.alert('Geocoder failed due to: ' + city_sta);
+    }
+  });
+// on 10-2-2020 end //
+  //alert("place "+place);
+  console.log("in place "+place.name);
+  if (!place.geometry) {
+    //alert("Autocomplete's returned place contains no geometry");
+      return;
+  } 
+  // If the place has a geometry, then present it on a map.
+  if (place.geometry.viewport) {
+    //alert(" in place.geometry.viewport");
+    //map.fitBounds(place.geometry.viewport);
+  } else {
+    //alert("in place.geometry.location");
+  }
+
+  });
 }
 
 /*function onRequestSuccess(success){
@@ -2334,6 +2439,7 @@ function logincheck(){
         var parse_authmsg = result.auth_msg;
         var user_session = result.user_session[0];
         var sess_city = result.city;
+        var sess_cityid = result.city_id;
         //alert(parse_authmsg);
         //alert("user_session "+user_session);
         //console.log(user_session);        
@@ -2346,7 +2452,8 @@ function logincheck(){
           window.localStorage.setItem("session_pphone",result.user_session[0].p_phone);
           window.localStorage.setItem("session_pemail",result.user_session[0].p_email);
           window.localStorage.setItem("session_pcreated",result.user_session[0].p_created_on);
-          window.localStorage.setItem("session_pcity",sess_city);      
+          window.localStorage.setItem("session_pcity",sess_city);
+          window.localStorage.setItem("session_pcityid",sess_cityid);          
         }else if(parse_authmsg=="c_success"){  
           //alert("customer_dash");
           mainView.router.navigate("/location_on/");
@@ -2356,7 +2463,8 @@ function logincheck(){
           window.localStorage.setItem("session_cphone",result.user_session[0].c_phone);
           window.localStorage.setItem("session_cemail",result.user_session[0].c_email);
           window.localStorage.setItem("session_ccreated",result.user_session[0].c_created_on);
-          window.localStorage.setItem("session_ccity",sess_city);   
+          window.localStorage.setItem("session_ccity",sess_city); 
+          window.localStorage.setItem("session_ccityid",sess_cityid);    
         }else if(parse_authmsg=="Inc_pass"){
           //alert("Incorrect Password!");
           app.dialog.alert("Incorrect Password!");
@@ -2509,5 +2617,6 @@ function logOut(){
   window.localStorage.removeItem("session_cemail"); 
   window.localStorage.removeItem("session_ccreated"); 
   window.localStorage.removeItem("session_ccity");
+  window.localStorage.removeItem("session_ccityid");
   mainView.router.navigate("/login/");
 }
