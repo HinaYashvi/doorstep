@@ -2075,7 +2075,7 @@ function geolocate111() {
 function geolocate() {
   var hidd_currlat = $("#hidd_currlat").val();
   var hidd_currlon = $("#hidd_currlon").val();
-  alert(hidd_currlat+"***---------***"+hidd_currlon);
+ // alert(hidd_currlat+"***---------***"+hidd_currlon);
 /*var map = new google.maps.Map(document.getElementById('map'), {
       center: {lat: -33.8688, lng: 151.2195},
       zoom: 13
