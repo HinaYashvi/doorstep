@@ -2038,7 +2038,9 @@ function onSuccess(position){
       //$("#map-canvas").html(results+" ^^^^^^^^^^^^");
       if (results[0]) {
         //alert(results[0].formatted_address);
-        $("#formatted_address").html(results[0].formatted_address);
+        var res = results[0].formatted_address;
+        $("#formatted_address").html(res);
+        window.localStorage.setItem("session_current_loc",res);
         app.preloader.hide();             
       } else {
         app.dialog.alert('No results found');
