@@ -1924,6 +1924,7 @@ function currentCity(){
   navigator.geolocation.getCurrentPosition(onSuccessCity, onErrorCity,{ maximumAge: 3000, timeout: 5000, enableHighAccuracy: true });
 }
 function onSuccessCity(position){
+  var session_cid = window.localStorage.getItem("session_cid"); 
   //alert("in onSuccessCity");
   app.preloader.show();
   var city_longitude = position.coords.longitude;
@@ -1966,6 +1967,7 @@ function onSuccessCity(position){
           }
         }
         window.localStorage.setItem("session_current_city",city);
+        updateCurrLocCust(session_cid,res);
         //alert("city :" + city );
         app.preloader.hide();             
       } else {
@@ -1979,6 +1981,22 @@ function onSuccessCity(position){
 }
 function onErrorCity(error){
   alert('code: '    + error.code    + '\n' + 'message: ' + error.message + '\n');
+}
+function updateCurrLocCust(session_cid,res){
+  app.preloader.show();
+  $.ajax({
+    type:'POST', 
+    data:{'session_cid':session_cid,'res':res},
+    url:base_url+'APP/Appcontroller/updateCurrLoc',
+    success:function(loc_res){
+      if(loc_res=="loc_updated"){        
+        mainView.router.navigate("/customer_dash/");
+      }else if(loc_res=="not_updated"){
+        app.dialog.alert("Error updating change location");
+      }
+      app.preloader.hide();
+    }
+  })
 }
 function onSuccess(position){
   app.preloader.show();
@@ -2051,92 +2069,54 @@ var autocomplete;
 function geolocate111() {
   var input = document.getElementById('autocomplete');
   //var input = $('#autocomplete').val();
-  //alert(input);
-  autocomplete = new google.maps.places.Autocomplete(input);  
-  alert("called"); 
-   
+  autocomplete = new google.maps.places.Autocomplete(input);     
 }
-/*autocomplete.addListener('place_changed', function() {
-    alert("in");
-  var place = autocomplete.getPlace();
-  //alert("place :: "+place);
-  var address = '';
-  if (place.address_components) {
-      address = [
-        (place.address_components[0] && place.address_components[0].short_name || ''),
-        (place.address_components[1] && place.address_components[1].short_name || ''),
-        (place.address_components[2] && place.address_components[2].short_name || '')
-      ].join(' ');
-  }
-  alert("address :: "+address);    
-  });
-*/
-//var autocomplete;
+
 function geolocate() {
   var hidd_currlat = $("#hidd_currlat").val();
   var hidd_currlon = $("#hidd_currlon").val();
- // alert(hidd_currlat+"***---------***"+hidd_currlon);
-/*var map = new google.maps.Map(document.getElementById('map'), {
-      center: {lat: -33.8688, lng: 151.2195},
-      zoom: 13
-    });*/
-//alert(map);
-//var defaultBounds = new google.maps.LatLngBounds(new google.maps.LatLng(-33.8902, 151.1759), new google.maps.LatLng(-33.8474, 151.2631));
+  var session_cid = window.localStorage.getItem("session_cid"); 
+  //var defaultBounds = new google.maps.LatLngBounds(new google.maps.LatLng(-33.8902, 151.1759), new google.maps.LatLng(-33.8474, 151.2631)); // STATIC //
 
-var defaultBounds = new google.maps.LatLngBounds(new google.maps.LatLng(hidd_currlat, hidd_currlon));
-//alert(defaultBounds);
-var input = document.getElementById('search');
-//map.controls[google.maps.ControlPosition.TOP_LEFT].push(input);
- //alert(input);
- var options = {
-        bounds: defaultBounds,
-        types: ['geocode','establishment']
-    };
+  var defaultBounds = new google.maps.LatLngBounds(new google.maps.LatLng(hidd_currlat, hidd_currlon));
+  //alert(defaultBounds);
+  var input = document.getElementById('search');
+  var options = {
+    bounds: defaultBounds,
+    types: ['geocode','establishment']
+  };
+  var autocomplete = new google.maps.places.Autocomplete(input,options);
+  autocomplete.addListener('place_changed', function() {
 
-var autocomplete = new google.maps.places.Autocomplete(input,options);
-//autocomplete.bindTo('bounds', map);
- 
-//var infowindow = new google.maps.InfoWindow();
-//alert("infowindow "+infowindow);
-/*var marker = new google.maps.Marker({
-        map: map,
-anchorPoint: new google.maps.Point(0, -29)
-    });
- */
-autocomplete.addListener('place_changed', function() {
-
-  //console.log("in place_changed");
-  //infowindow.close();
-  //marker.setVisible(false);
   var place = autocomplete.getPlace();
   var lat = place.geometry.location.lat();
   var lng = place.geometry.location.lng();
-  alert("LAT "+lat+" LNG "+lng);
+  //alert("LAT "+lat+" LNG "+lng);
  // on 10-2-2020 start //
   var ct_geocoder = new google.maps.Geocoder();
   var ct_LatLong = new google.maps.LatLng(lat,lng);
-  alert("HINA "+ct_LatLong);
+  //alert("HINA "+ct_LatLong);
   ct_geocoder.geocode({'latLng': ct_LatLong}, function(city_res, city_sta) {
-    alert("city_sta "+city_sta);
+    //alert("city_sta "+city_sta);
     if (city_sta === 'OK') {
       //$("#map-canvas").html(results+" ^^^^^^^^^^^^");
       if (city_res[0]) {
         //alert(city_res[0].formatted_address);
        // $("#currentcity").html(city_res[0].formatted_address);
 
-        alert(city_res[0].formatted_address);
+        //alert(city_res[0].formatted_address);
         var addressComponents = city_res[0].address_components;
         var res=city_res[0].formatted_address;
         var city = "";        
         var types;
         var state = "";
-        alert("addressComponents.length "+addressComponents.length);
+        //alert("addressComponents.length "+addressComponents.length);
         var address_components=[];
         for(var i=0;i<addressComponents.length;i++){
-          alert(addressComponents[i]+" addressComponents[i]");
+          //alert(addressComponents[i]+" addressComponents[i]");
           address_component = addressComponents[i];
           types = address_component.types;
-          alert(types.length+" types.length");
+          //alert(types.length+" types.length");
           for (var j = 0; j < types.length; j++) {
             //alert("types "+types[j]);
             if (types[j] === 'administrative_area_level_1') {
@@ -2148,7 +2128,8 @@ autocomplete.addListener('place_changed', function() {
           }
         }
         window.localStorage.setItem("session_current_city",city);
-        alert("city :" + city );
+        updateCurrLocCust(session_cid,res);
+        //alert("city :" + city );
         app.preloader.hide();             
       } else {
         app.dialog.alert('No results found');
