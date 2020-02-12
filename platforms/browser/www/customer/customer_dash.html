@@ -106,7 +106,14 @@
         <div class="right"></div>
       </div>
     </div>
-    <div class="block">
+
+    <div class="center-screen">
+      <div class="col">
+        <div class="text-grey fw-600">You can book a service right now.</div><a class="button submitbtn no-radius bookserbtn display-none link" href="/customer_dash/">Book a Service</a>
+      </div>
+    </div>
+
+    <div class="block booking_btns display-block">
       <p class="segmented segmented-raised">
         <button class="button button-active fs-12 seg_btn pen_btn" value="0" onclick="getActivate(this.value)">Pending<span class="ml-5 badge pen_badge"></span></button>
         <button class="button fs-12 seg-outline start_btn" value="1" onclick="getActivate(this.value)">Started<span class="ml-5 badge fin_badge"></span></button>
@@ -143,58 +150,134 @@
 
   <input type="hidden" name="hidd_proftab" id="hidd_proftab">
   <div class="page-content tab" id="tab-3">
-    <div class="fab fab-extended fab-right-bottom btm-12">
-    <a href="/customer_editprof/" >
+    <div class="navbar no_session_profile display-none">
+    <div class="navbar-bg navbg"></div>
+    <div class="navbar-inner sliding">
+      <div class="left">
+        <a class="link back text-white">
+          <i class="f7-icons ">arrow_left</i>
+        </a>
+      </div>
+      <div class="title text-white">Profile</div>
+      <!--div class="right">
+        <a class="text-white button button-small button-outline" href="/login/">Login</a>
+      </div-->
+      <div class="right">
+          <a class="link " href="/login/"><button class="button button-small button-outline text-white border-white">Login</button></a>
+      </div>
+    </div>
+  </div>
+
+  <div class="list no_sess_list display-none">
+    <ul>
+      <li>
+        <div class="item-content">
+          <div class="item-media"><i class="f7-icons">ellipses_bubble</i></div>
+          <div class="item-inner">
+            <div class="item-title">About Doorstep</div>
+            <!--div class="item-after">CEO</div-->
+          </div>
+        </div>
+      </li>
+
+      <li>
+        <div class="item-content">
+          <div class="item-media"><i class="f7-icons">checkmark_shield_fill</i></div>
+          <div class="item-inner">
+            <div class="item-title">Privacy Policy</div>
+            <!--div class="item-after">CEO</div-->
+          </div>
+        </div>
+      </li>
+
+      <li>
+        <div class="item-content">
+          <div class="item-media"><i class="f7-icons">captions_bubble</i></div>
+          <div class="item-inner">
+            <div class="item-title">Terms &amp; conditions</div>
+            <!--div class="item-after">CEO</div-->
+          </div>
+        </div>
+      </li>
+
+    </ul>
+  </div>
+
+  <div class="fab fab-extended fab-right-top top-18 editprofbtn">
+    <a href="/customer_editprof/" class="h-35">
       <i class="f7-icons fs-18">pencil</i>
       <div class="fab-text fs-12">Edit Profile</div>
     </a>
   </div>
 
-    <div class="profile_div elevation-1 ">
-      <!--a class="float-left text-red p-5 link back text-white" > 
-        <i class="f7-icons fs-22 fw-600">arrow_left</i>
-      </a-->
-      <a class="float-right text-red p-5" onclick="logOut()"> 
-        <i class="f7-icons fs-22 fw-600">power</i>
-      </a>
-      <div class="fletter">
-        <span class="nmfltr fs-14 fw-600 fs-18"></span>
-      </div>
-      <div class="cname text-center"></div>
+  <div class="profile_div elevation-1 ">
+    <!--a class="float-left text-red p-5 link back text-white" > 
+      <i class="f7-icons fs-22 fw-600">arrow_left</i>
+    </a-->
+    <a class="float-right text-red p-5" onclick="logOut()"> 
+      <i class="f7-icons fs-22 fw-600">power</i>
+    </a>
+    <div class="fletter">
+      <span class="nmfltr fs-14 fw-600 fs-18"></span>
+    </div>
+    <div class="cname text-center"></div>
+  </div>
+
+
+    
+  <div class="block prof_info display-none mt-15 mb-20">
+    <div class="row p-5">
+      <div class="col-20 email_icon"></div>
+      <div class="col-75 cemail "></div> 
     </div>
 
-    <div class="block prof_info">
-      <div class="row p-5">
-        <div class="col-20 email_icon"></div>
-        <div class="col-75 cemail "></div> 
-      </div>
-
-      <div class="row p-5">
-        <div class="col-20 phone_icon"></div>
-        <div class="col-75 cphone "></div> 
-      </div>
-
-      <div class="row p-5">
-        <div class="col-20 addr_icon"></div>
-        <div class="col-75 caddr "></div> 
-      </div>
-
-     <div class="row p-5">
-        <div class="col-20 area_icon"></div>
-        <div class="col-75 carea "></div> 
-      </div>
-
-      <div class="row p-5">
-        <div class="col-20 city_icon"></div>
-        <div class="col-75 ccity "></div> 
-      </div>
-
-      <div class="text-center text-red">        
-        <div class="changepass"></div>
-        <span class="lock_icon"></span>
-      </div>
-
+    <div class="row p-5">
+      <div class="col-20 phone_icon"></div>
+      <div class="col-75 cphone "></div> 
     </div>
+
+    <!--div class="row p-5 address">
+      <div class="col-20 addr_icon"></div>
+      <div class="col-75 caddr "></div> 
+    </div-->
+
+    <div class="row p-5 street_no">
+      <div class="col-20 strno_icon"></div>
+      <div class="col-75 cstno "></div> 
+    </div>
+
+    <div class="row p-5 street_nm">
+      <div class="col-20 strnm_icon"></div>
+      <div class="col-75 cstnm "></div> 
+    </div>
+
+    <div class="row p-5 unit_str">
+      <div class="col-20 struniy_icon"></div>
+      <div class="col-75 cstuny"></div> 
+    </div>
+
+    <div class="row p-5 pinico">
+      <div class="col-20 pin_icon"></div>
+      <div class="col-75 cpincode"></div> 
+    </div>
+
+
+   <div class="row p-5">
+      <div class="col-20 area_icon"></div>
+      <div class="col-75 carea "></div> 
+    </div>
+
+    <div class="row p-5">
+      <div class="col-20 city_icon"></div>
+      <div class="col-75 ccity "></div> 
+    </div>
+
+    <div class="text-center text-red">        
+      <div class="changepass"></div>
+      <span class="lock_icon"></span>
+    </div>
+
+  </div>
 
     </div>
   </div>

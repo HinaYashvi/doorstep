@@ -43,7 +43,14 @@ var routes = [
       animate: true,
     },
   },
-
+  {
+    path: '/partner_shopping_cart/',
+    url: './partner/partner_shopping_cart.html',
+    name: 'partner_shopping_cart',
+    options: {
+      animate: true,
+    },
+  },
   {
     path: '/customer_dash/',
     url: './customer/customer_dash.html',

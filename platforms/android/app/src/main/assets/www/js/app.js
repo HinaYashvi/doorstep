@@ -107,7 +107,7 @@ var swiper;
 $(document).on('page:init', '.page[data-name="index"]', function (e) {  
   $(".gotit").hide();
   swiper = new Swiper('.swiper-container', {
-    parallax: true,
+    //parallax: true,
     autoHeight: true,
     setWrapperSize: true,
     slidesPerView: 1,
@@ -137,9 +137,18 @@ $(document).on('page:init', '.page[data-name="index"]', function (e) {
   //swiper.init(); 
   var sliderDiv='';
   swiper.on('slideChange', function () {
-    //console.log("slideChange called");
+    //alert("slideChange called"+$(this).attr('class'));
     var last_slide = swiper.realIndex;
-    //alert(last_slide);
+    //var last_slide1 = swiper.activeIndex;
+    var arr_slides = swiper.slides;
+    /*var clickedIndex = swiper.clickedIndex;
+    alert("clickedIndex "+clickedIndex);
+    var isEnd = swiper.isEnd;
+    alert("isEnd "+isEnd);    
+    var clickedSlide = swiper.clickedSlide;
+    alert("clickedSlide "+clickedSlide);*/
+
+    //alert(totalSlides+"-----last_slide "+last_slide+" last_slide1 "+last_slide1); 
     if(totalSlides == last_slide){      
       //$(".lastslide").html('<a class="link text-white text-uppercase" href="/login/">got it</a>');
       $(".gotit").show();
@@ -149,12 +158,13 @@ $(document).on('page:init', '.page[data-name="index"]', function (e) {
       $(".fnext").show();
       //$(".lastslide").html('<a class="link text-white text-uppercase fnext" >next-1</a>');
     }
+    
     //swiper.init();  
     $(".dynamic_toolbar").html(sliderDiv);
   });
 });  
 $('.fnext').on('click', function(e) { 
-  //alert("called");
+  //alert("called"); 
   swiper.slideNext();
 });
 // ----------------------------------- DATA NAME : PARTNER REGISTER --------------------------------- //
@@ -323,7 +333,14 @@ function register_part(){
   var password = $(".p_pass").val();
   var name = $('#name').val();
   var email = $('#email').val();
-  var add_line1 = $('#add_line1').val();
+  var street_no = $("#street_no").val();
+  var street_name = $("#street_name").val();
+  var street_unit = $("#street_unit").val();  
+  var street_no = $("#street_no").val();
+  var street_name = $("#street_name").val();
+  var street_unit = $("#street_unit").val();
+  var pincode = $("#pincode").val(); 
+  //var add_line1 = $('#add_line1').val();
   //var add_line2 = $('#add_line2').val();
   var serving_city = $("#serving_city").val();
   var serving_area = $("#serving_area").val();
@@ -351,7 +368,18 @@ function register_part(){
     //$("#email").html("Email is required");
     app.dialog.alert("Email is required");
     return false;
-  }else if(add_line1==''){
+  }else if(street_no==''){
+    app.dialog.alert("Street no is required");
+  }else if(street_name==''){
+    app.dialog.alert("Street name is required");
+  }else if(street_unit==''){
+    app.dialog.alert("Street unit is required");
+  }else if(pincode==''){
+    app.dialog.alert("Pincode is required");
+  }
+
+  
+  /*else if(add_line1==''){
     //$("#add_line1").html("Address line 1 is required");
     app.dialog.alert("Address line 1 is required");
     return false;
@@ -437,7 +465,7 @@ function getservingArea(cityid){
       var area_parse = $.parseJSON(res_area);
       var serv_area = area_parse.serving_areas;
       var servar = '';
-      servar='<option value="">--- SELECT AREA ---</option>';
+      servar='<option value="">--- SELECT SUBURB ---</option>';
       for(var i=0;i<serv_area.length;i++){
         var a_id = serv_area[i].a_id;
         var a_name = serv_area[i].a_name;
@@ -657,7 +685,22 @@ $$(document).on('page:init', '.page[data-name="customer_dash"]', function (page)
   var button_active=$(".button-active").val();
   //alert(button_active+"button_active");
   var divname="pen_orders";
-  getBookingbyStatus(button_active,divname);
+  //alert(session_cid);
+  if(session_cid!='' && session_cid!=null){ 
+    $(".center-screen").remove(); 
+    $(".booking_btns").removeClass("display-none");
+    $(".booking_btns").addClass("display-block"); 
+    $(".bookserbtn").removeClass("display-block");
+    $(".bookserbtn").addClass("display-none");
+    getBookingbyStatus(button_active,divname);
+  }else{
+    //console.log("ELSE");
+    $(".bookings_tot").remove();
+    $(".booking_btns").removeClass("display-block");
+    $(".booking_btns").addClass("display-none");
+    $(".bookserbtn").removeClass("display-none");
+    $(".bookserbtn").addClass("display-block");
+  }
   /*$.ajax({
     type:'POST', 
     data:{'session_cid':session_cid,'button_active':button_active},
@@ -757,64 +800,121 @@ $$(document).on('page:init', '.page[data-name="customer_dash"]', function (page)
       }  
       $("#pen_orders").html(ord_list);
     }
-  });*/    
-    
-  $.ajax({
-    type:'POST', 
-    data:{'session_cid':session_cid},
-    url:base_url+'APP/Appcontroller/userProfile',
-    success:function(prof_result){
-      var prf = $.parseJSON(prof_result);
-      var profile = prf.profile;
-      //console.log(profile);
-      var cid = profile[0].c_id;
-      //alert(cid);
-      var nm_fltr = (profile[0].c_name.charAt(0));
-      $(".nmfltr").html(nm_fltr);
-      var c_name = profile[0].c_name;
-      var c_email = profile[0].c_email;
-      var c_phone = profile[0].c_phone;
-      var c_addr = profile[0].c_addr;
-      var a_id = profile[0].a_id;
-      var city_id = profile[0].city_id;
-      var c_created_on = profile[0].c_created_on;
-      $(".cname").html(c_name);
-      $(".email_icon").html('<i class="f7-icons fs-18">envelope_fill</i>');
-      $(".cemail").html(c_email);
+  });*/ 
+     
+  if(session_cid!='' && session_cid!=null){  
+    $(".no_session_profile").removeClass("display-block");
+    $(".no_session_profile").addClass("display-none");
+    $(".prof_info").removeClass("display-none");
+    $(".prof_info").addClass("display-block");
+    $(".profile_div").removeClass("display-none");   
+    $(".profile_div").addClass("display-block");
+    $(".editprofbtn").removeClass("display-none");
+    $(".editprofbtn").addClass("display-block");
+    $(".no_sess_list").removeClass("display-block");
+    $(".no_sess_list").addClass("display-none");
+    $.ajax({
+      type:'POST', 
+      data:{'session_cid':session_cid},
+      url:base_url+'APP/Appcontroller/userProfile',
+      success:function(prof_result){
+        var prf = $.parseJSON(prof_result);
+        var profile = prf.profile;
+        //console.log("profile "+profile);
+        var cid = profile[0].c_id;
+        //alert(cid);
+        var nm_fltr = (profile[0].c_name.charAt(0));
+        $(".nmfltr").html(nm_fltr);
+        var c_name = profile[0].c_name;
+        var c_email = profile[0].c_email;
+        var c_phone = profile[0].c_phone;
+        //var c_addr = profile[0].c_addr;
+        var street_no = profile[0].street_no;
+        var street_name = profile[0].street_name;
+        var street_unit = profile[0].street_unit;
+        var pin = profile[0].pin;
+        var a_id = profile[0].a_id;
+        var city_id = profile[0].city_id;
+        var c_created_on = profile[0].c_created_on;
+        $(".cname").html(c_name);
+        $(".email_icon").html('<i class="f7-icons fs-18">envelope_fill</i>');
+        $(".cemail").html(c_email);
 
-      $(".phone_icon").html('<i class="f7-icons fs-18">phone_fill</i>');
-      $(".cphone").html(c_phone);
+        $(".phone_icon").html('<i class="f7-icons fs-18">phone_fill</i>');
+        $(".cphone").html(c_phone);
 
-      $(".addr_icon").html('<i class="f7-icons fs-18">placemark_fill</i>');
-      $(".caddr").html(c_addr);
+        //$(".addr_icon").html();
+        //$(".caddr").html(c_addr);
 
-      $(".lock_icon").html('');
-      $(".changepass").html('<a href="/customer_changepass/" class="text-red fw-600 text-center">Change Password <i class="f7-icons fs-18">lock_fill</i></a>');
-
-      $.ajax({
-        type:'POST', 
-        data:{'a_id':a_id,'city_id':city_id},
-        url:base_url+'APP/Appcontroller/userAreaCity',
-        success:function(areacity){
-          var parsearea = $.parseJSON(areacity);
-          var area = parsearea.area;
-          var city = parsearea.city;
-          //console.log(area);
-          //console.log(city);
-          var carea = area[0].a_name;
-          //console.log("****"+carea);
-          var ccity = city[0].city_name;
-          $(".area_icon").html('<i class="f7-icons fs-18">map_pin_ellipse</i>');
-          $(".carea").html(carea);
-
-          $(".city_icon").html('<i class="f7-icons fs-18">location_circle_fill</i>');
-          $(".ccity").html(ccity);
-          app.preloader.hide();
+        if(street_no!=""){
+          $(".strno_icon").html('<i class="f7-icons fs-18">placemark</i>');
+          $(".cstno").html(street_no);
+          //$(".caddr").html(c_addr);
+        }else{
+          $(".street_no").remove();
         }
-      });
-    }
-  });  
-});
+ 
+        if(street_name!=""){
+          $(".strnm_icon").html('<i class="f7-icons fs-18">placemark_fill</i>');
+          $(".cstnm").html(street_name);
+        }else{
+          $(".street_nm").remove();        
+        }
+
+        if(street_unit!=""){
+          $(".struniy_icon").html('<i class="f7-icons fs-18">map_pin_ellipse</i>');
+          $(".cstuny").html(street_unit);
+        }else{
+          $(".unit_str").remove();
+        }
+        if(pin!=""){
+          $(".pin_icon").html('<i class="f7-icons fs-18">map_pin</i>');
+          $(".cpincode").html(pin);
+        }else{
+          $(".pinico").remove();
+        }
+
+        $(".lock_icon").html('');
+        $(".changepass").html('<a href="/customer_changepass/" class="text-red fw-600 text-center">Change Password <i class="f7-icons fs-18">lock_fill</i></a>');
+
+        $.ajax({
+          type:'POST', 
+          data:{'a_id':a_id,'city_id':city_id},
+          url:base_url+'APP/Appcontroller/userAreaCity',
+          success:function(areacity){
+            var parsearea = $.parseJSON(areacity);
+            var area = parsearea.area;
+            var city = parsearea.city;
+            //console.log(area);
+            //console.log(city);
+            var carea = area[0].a_name;
+            //console.log("****"+carea);
+            var ccity = city[0].city_name;
+            $(".area_icon").html('<i class="f7-icons fs-18">map_pin_ellipse</i>');
+            $(".carea").html(carea);
+
+            $(".city_icon").html('<i class="f7-icons fs-18">location_circle_fill</i>');
+            $(".ccity").html(ccity);
+            app.preloader.hide();
+          }
+        });
+      }
+    });  
+  }else{
+    $(".prof_info").removeClass("display-block");
+    $(".prof_info").addClass("display-none"); 
+    $(".profile_div").removeClass("display-block");   
+    $(".profile_div").addClass("display-none");
+    $(".editprofbtn").removeClass("display-block");
+    $(".editprofbtn").addClass("display-none");
+    $(".no_session_profile").removeClass("display-none");
+    $(".no_session_profile").addClass("display-block");
+    $(".no_sess_list").removeClass("display-none");
+    $(".no_sess_list").addClass("display-block");
+    app.preloader.hide();
+  }
+  app.preloader.hide();
+}); 
 function getBookingbyStatus(button_active,divname){
   checkConnection();  
   app.preloader.show();
@@ -834,8 +934,10 @@ function getBookingbyStatus(button_active,divname){
 
       //console.log(order_cnts_pen+"----"+order_cnts_start+"*****"+order_cnts_fin);
       var c_id = cust.c_id;      
-      console.log(order);
+      //console.log(order);
       var ord_list=''; 
+      $(".booking_btns").removeClass("display-none");
+      $(".booking_btns").addClass("display-block"); 
       $(".bookings_tot").html(order_cnts);
       $(".pen_badge").html(order_cnts_pen);
       $(".fin_badge").html(order_cnts_start);
@@ -1390,9 +1492,7 @@ function changeAddress(rowid,c_id,acpt_id,o_id,o_num,o_code){
           //$("#action_line_"+rowid).css("padding",'0');
           /*mainView.router.navigate("/customer_dash/",{
             reloadCurrent : true
-          });*/
-
-          
+          });*/          
           
           //$("#reqsent_"+rowid).removeClass("display-none");
           /*$("#reqsent_"+rowid).addClass("display-block");
@@ -1499,14 +1599,24 @@ $$(document).on('page:init', '.page[data-name="customer_editprof"]', function (p
       var c_name = profile[0].c_name;
       var c_email = profile[0].c_email;
       var c_phone = profile[0].c_phone;
-      var c_addr = profile[0].c_addr;
+      var c_strno = profile[0].street_no;
+      var c_sname = profile[0].street_name;
+      var c_sunit = profile[0].street_unit;
+      var c_pin = profile[0].pin;
+
+      //var c_addr = profile[0].c_addr;
       var a_id = profile[0].a_id;
       var city_id = profile[0].city_id;
       $("#hidden_cid").val(c_id);
       $("#cname").val(c_name);
       $("#cemail").val(c_email);
       $("#cphone").val(c_phone);
-      $("#caddr").val(c_addr);
+      $("#str_no").val(c_strno);
+      $("#str_nm").val(c_sname);
+      $("#str_unit").val(c_sunit);
+      $("#str_pin").val(c_pin);
+
+      //$("#caddr").val(c_addr);
       $.ajax({
         type:'POST', 
         data:{'a_id':a_id,'city_id':city_id},
@@ -1592,7 +1702,7 @@ function edit_custprofile(){
   var c_editprof_from = $(".edit_cprof").serialize();
   //var hidd_proftab = $("#hidd_proftab").val();
   //console.log(c_editprof_from);
-  $.ajax({
+  $.ajax({ 
     type:'POST', 
     data:c_editprof_from,
     url:base_url+'APP/Appcontroller/customer_edit',
@@ -1605,10 +1715,8 @@ function edit_custprofile(){
         app.dialog.alert("Problem updating profile");
         //mainView.router.navigate("/customer_dash/");
         //$("#tab-3").addClass("tab-active");
-      }
-      
-      mainView.router.navigate("/customer_dash/");
-       
+      }      
+      mainView.router.navigate("/customer_dash/");       
       //$("#hidd_proftab").addClass("tab-active");
       app.preloader.hide();
     }
@@ -1674,10 +1782,19 @@ $$(document).on('page:init', '.page[data-name="customer_service_types"]', functi
       $("#slides").html(slides);        
     }
   });
+  var session_current_city = window.localStorage.getItem("session_current_city");
+  alert(" hiiii session_current_city "+session_current_city);
+  if(session_ccity=='' && session_ccity== null){
+    alert("IF");
+    session_ccity = session_current_city;
+  }else{
+    alert("ELSE");
+    session_ccity = session_ccity;
+  }
   $.ajax({
     type:'POST', 
     data:{'sid':sid,'session_ccity':session_ccity},
-    url:base_url+'APP/Appcontroller/getCustReviews',
+    url:base_url+'APP/Appcontroller/getCustReviews', 
     success:function(rev_res){
       var rev = $.parseJSON(rev_res);
       var review_rate = rev.review_rate;      
@@ -1703,17 +1820,22 @@ $$(document).on('page:init', '.page[data-name="customer_service_types"]', functi
         }else{
           var rt='<i class="f7-icons fs-16 rate_star mr-5">star_fill</i><span class="fs-14 text-grey">'+rate+'</span>';
         }
+
         rev_list+='<li class="accordion-item accordion-item-opened lightblue mb-5"><a href="#" class="item-content item-link"><div class="item-inner"><div class="item-title fs-12 text-capitalize"><span class="text-blue fw-600">'+p_name+'</span><br><i class="f7-icons fs-12 fw-600 text-grey">phone :</i> &nbsp;'+p_phone+'<br><i class="f7-icons fs-12 fw-600 text-grey">at_circle :</i> &nbsp;'+p_email+'</div><span class="float-right">'+rt+'</span></div></a><div class="accordion-item-content nobg"><div class="list no-hairlines-between"><ul>'; 
         if(rev2.length > 0){
-          for(var j=0;j<rev2.length;j++){
-            
+          for(var j=0;j<rev2.length;j++){            
             var c_name = rev2[j].c_name; 
             var rates = rev2[j].rate+".0";
             var review = rev2[j].review;
             var date_time = rev2[j].date_time;
             var res_dt = date_time.replace("`", " ");
             var final_dt = res_dt.replace("`","");
-            sub_rate+=rates;     
+            sub_rate+=rates; 
+            if(c_name!=null){
+              c_name=c_name;
+            }else{
+              c_name='';
+            }    
             rev_list+='<li class="list-border"><div class="item-content"><div class="item-media"><i class="f7-icons fs-24 text-grey">person_crop_circle_fill</i></div><div class="item-inner"><div class="item-title fs-14 text-grey fw-600">'+c_name+'<br/><i class="f7-icons fs-12 light-grey mr-5">calendar</i><span class="light-grey fs-12">'+final_dt+'</span></div><div class="item-after lh-12"><i class="f7-icons fs-14 subrate mr-5">star_fill</i><span class="fw-500">'+rates+'</span></div></div></div><span><img class="ml-20" src="img/double-quote-grey.png" height="10" width="10"></span>&nbsp;<div class="fs-12 light-grey rev_div">'+review+'</div></li>';
           }
         }else{
@@ -2287,7 +2409,82 @@ function onError(error){
 // -------------------------------------- DATA NAME : PARTNER DASHBOARD ------------------------------- //
 $$(document).on('page:init', '.page[data-name="partner_dash"]', function (page) {  
   checkConnection();
-  //logOut();   
+  app.preloader.show();
+  getPartnerData();
+  app.preloader.hide();
+  //logOut();    
+}); 
+function getPartnerData(){
+  checkConnection();
+  var session_pid = window.localStorage.getItem("session_pid"); 
+  app.preloader.show();
+  $.ajax({
+    type:'POST', 
+    url:base_url+'APP/Appcontroller/partnerData',
+    data:{'session_pid':session_pid},
+    success:function(part_data){
+      var parse_part = $.parseJSON(part_data);
+      var partner = parse_part.partner;
+      var p_credit_amount = partner[0].amount;
+      var credits = parse_part.credits;
+      var neword_cnt = parse_part.neword_cnt;
+      //console.log(partner);
+      //console.log(credits);
+      //console.log(neword_cnt);
+      $(".creditDiv").html("<div class='chip seg-outline'><div class='chip-label credits text-uppercase fs-10 fw-600'>credits : "+credits+" ($ "+p_credit_amount+".00)</div></div>");
+      $(".partner_ordcnt").html(neword_cnt.length);
+    }
+  });
+  app.preloader.hide();
+} 
+$$(document).on('page:init', '.page[data-name="partner_shopping_cart"]', function (page) {
+  //$("span .tab-link-highlight").addClass("tab-highlight");
+  //$(".tab-link-highlight").css('background','#232F3E!important');
+  //$(".tab-link-highlight").css('top','94%!important');
+  $('img.lazy').trigger('lazy');
+  $.ajax({
+    type:'POST', 
+    url:base_url+'APP/Appcontroller/partnerShop',
+    //data:{'session_pid':session_pid},
+    success:function(prod_data){
+      var parse_prod = $.parseJSON(prod_data);
+      var newarival = parse_prod.newarival;
+      var popularprd = parse_prod.popularprd;
+      console.log(newarival);
+      console.log(popularprd);
+      var new_prods = '';
+      var popular_prods = '';
+      var jqstep = '';
+      //new_prods+='<div class="stepper stepper-small stepper-fill stepper-init color-orange"><div class="stepper-button-minus"></div><div class="stepper-input-wrap"><input type="text" value="0" min="0" max="20" step="1" readonly></div><div class="stepper-button-plus"></div></div>';
+      for(var i=0;i<newarival.length;i++){
+        var p_img_path = newarival[i].p_img_path;
+        var p_name = newarival[i].p_name;
+        var p_price = newarival[i].p_price;
+         jqstep+="<div class='stepper stepper-small stepper-init'> <div class='stepper-button-minus'></div> <div class='stepper-input-wrap'> <input type='text' value='0' min='0' max='100' step='1' readonly> </div> <div class='stepper-button-plus'></div> </div>";
+        /*var stepper = app.stepper.create({
+          el: '.stepper',
+          on: {
+            change: function () {
+              console.log('Stepper value changed');
+            }
+          }
+        });*/
+        new_prods+='<li class="col-50 elevation-19 mb-10"><img src="'+base_url+p_img_path+'" class="prod_img lazy lazy-fade-in demo-lazy" /><div class="text-center text-grey fw-600">'+p_name+'</div><div class="text-center text-grey fw-600"><i class="f7-icons fs-18">money_dollar</i>'+p_price+'</div><div class="text-center"><div class="jqstepper_'+i+'"></div></div></li>';
+        //console.log(jqstep);
+        //stepper.open();
+       $(".jqstepper_"+i).html(jqstep);
+      }
+      for(var j=0;j<popularprd.length;j++){
+        var pop_img_path = popularprd[j].p_img_path;
+        var pop_name = popularprd[j].p_name;
+        var pop_price = popularprd[j].p_price;
+        popular_prods+='<li class="col-50 elevation-19 mb-10"><img src="'+base_url+pop_img_path+'" class="prod_img lazy lazy-fade-in demo-lazy" /><div class="text-center text-grey fw-600">'+pop_name+'</div><div class="text-center text-grey fw-600"><i class="f7-icons fs-18">money_dollar</i>'+pop_price+'</div></li>';
+      }
+     //$(".jqstepper_"+i).html(jqstep);
+      $("#new_arrivals").html(new_prods);
+      $("#popular_prods").html(popular_prods);
+    }
+  });
 });
 // -------------------------------------- DATA NAME : PARTNER DASHBOARD --------------------------------- //
 function register_cust(){
@@ -2300,7 +2497,11 @@ function register_cust(){
   var password = $(".c_pass").val();
   var name = $('#name').val();
   var email = $('#email').val();
-  var add_line1 = $('#add_line1').val();
+  //var add_line1 = $('#add_line1').val();
+  var street_no =$("#street_no").val();
+  var street_name = $("#street_name").val();
+  var street_unit = $("#street_unit").val();
+  var pincode = $("#pincode").val();
 
   var serving_city = $('#serving_city').val();
   var serving_area = $('#serving_area').val();
@@ -2325,11 +2526,27 @@ function register_cust(){
     //$("#email").html("Email is required");
     app.dialog.alert("Email is required");
     return false;
-  }else if(add_line1==''){
+  }else if(street_no==''){
+    //$("#email").html("Email is required");
+    app.dialog.alert("Street no is required");
+    return false;
+  }else if(street_name==''){
+    //$("#email").html("Email is required");
+    app.dialog.alert("Street name is required");
+    return false;
+  }else if(street_unit==''){
+    //$("#email").html("Email is required");
+    app.dialog.alert("Street unit is required");
+    return false;
+  }else if(pincode==''){
+    //$("#email").html("Email is required");
+    app.dialog.alert("Pincode is required");
+    return false;
+  }/*else if(add_line1==''){
     //$("#add_line1").html("Address line 1 is required");
     app.dialog.alert("Address line 1 is required");
     return false;
-  }else if(serving_city==''){
+  }*/else if(serving_city==''){
     //$("#add_line1").html("Address line 1 is required");
     app.dialog.alert("Select Serving City");
     return false;
@@ -2339,9 +2556,9 @@ function register_cust(){
     return false;
   }else{
     app.preloader.show();
-    $.ajax({
+    $.ajax({     
       type:'POST', 
-      url:base_url+'APP/Appcontroller/register_customer',
+      url:base_url+'APP/Appcontroller/register_customer', 
       data:customer_register+"&i_mode="+i_mode,
       success:function(int_result){
         //if(int_result=="inserted"){
@@ -2609,6 +2826,8 @@ function logOut(){
   window.localStorage.removeItem("session_pphone"); 
   window.localStorage.removeItem("session_pemail"); 
   window.localStorage.removeItem("session_pcreated"); 
+  window.localStorage.removeItem("session_pcity"); 
+  window.localStorage.removeItem("session_pcityid"); 
   window.localStorage.removeItem("session_cid"); 
   window.localStorage.removeItem("session_cname"); 
   window.localStorage.removeItem("session_cphone"); 
@@ -2616,5 +2835,7 @@ function logOut(){
   window.localStorage.removeItem("session_ccreated"); 
   window.localStorage.removeItem("session_ccity");
   window.localStorage.removeItem("session_ccityid");
+  window.localStorage.removeItem("session_current_city");
+  window.localStorage.removeItem("session_current_loc");
   mainView.router.navigate("/login/");
 }

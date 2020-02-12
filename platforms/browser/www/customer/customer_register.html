@@ -30,12 +30,32 @@
           <input type="email" name="email" id="email" placeholder="Email Address" required validate data-error-message="Enter email address" class="pholder" onkeypress="validateEmail(this.value)">
         </div>
 
-        <div class="preg_inputbox text-white">
+        <div class="preg_inputbox text-white">         
           <i class="f7-icons text-white">placemark</i>  
-          <input type="text" name="add_line1" id="add_line1" placeholder="Address" required validate data-error-message="Enter email address" class="pholder" onkeypress="validateEmail(this.value)">
+          <input type="text" name="street_no" id="street_no" placeholder="Street No" required validate data-error-message="Enter street no" class="pholder">
+        </div>
+        <!--span class="text-left text-red mt-0" id='strtnoerror'></span-->
 
-          <!--textarea class="resizable tarea" rows="4" name="add_line1" id="add_line1" placeholder="Address" required validate data-error-message="Enter address line 1" class="pholder"></textarea-->
-        </div> 
+        <div class="preg_inputbox text-white">         
+          <i class="f7-icons text-white">placemark_fill</i>  
+          <input type="text" name="street_name" id="street_name" placeholder="Street Name" required validate data-error-message="Enter street name" class="pholder">
+        </div>
+
+        <div class="preg_inputbox text-white">         
+          <i class="f7-icons text-white">map_pin_ellipse</i>  
+          <input type="text" name="street_unit" id="street_unit" placeholder="Street Unit" required validate data-error-message="Enter street unit" class="pholder">
+        </div>
+
+        <div class="preg_inputbox text-white">         
+          <i class="f7-icons text-white">map_pin</i>  
+          <input type="text" name="pincode" id="pincode" placeholder="Pincode" required validate data-error-message="Enter pincode" class="pholder">
+        </div>
+
+        <!--div class="preg_inputbox text-white">
+          <i class="f7-icons text-white">placemark</i>  
+          <input type="text" name="add_line1" id="add_line1" placeholder="Address" required validate data-error-message="Enter email address" class="pholder" onkeypress="validateEmail(this.value)">         
+        </div--> 
+        <!--textarea class="resizable tarea" rows="4" name="add_line1" id="add_line1" placeholder="Address" required validate data-error-message="Enter address line 1" class="pholder"></textarea-->
 
         <div class="preg_inputbox text-white">
           <select name="serving_city" id="serving_city" required validate data-error-message="Please select serving city." class="res_sel " onchange="getservingArea(this.value)"></select>
@@ -43,6 +63,12 @@
 
         <div class="preg_inputbox text-white">
           <select name="serving_area" id="serving_area" required validate data-error-message="Please select serving area." class="res_sel "></select>
+        </div>
+
+
+        <div class="block text-white">
+          <div><label class="checkbox text-white"><input type="checkbox" name="accept" id="accept" value="1"><i class="icon-checkbox"></i></label><span class="ml-2">I accept the terms and conditions. </span></div>
+          <div><label class="checkbox text-white"><input type="checkbox" name="subscribe" id="subscribe" value="1"><i class="icon-checkbox"></i></label><span class="ml-2"> Subscribe?</span></div>
         </div>
 
 
