@@ -2098,7 +2098,7 @@ function onSuccessCity(position){
         }
         window.localStorage.setItem("session_current_city",city);
         window.localStorage.setItem("session_current_loc",res);
-        updateCurrLocCust(session_cid,res);
+        updateCurrLocCust(session_cid,res,city);
         //alert("city :" + city );
         app.preloader.hide();             
       } else {
@@ -2113,11 +2113,11 @@ function onSuccessCity(position){
 function onErrorCity(error){
   alert('code: '    + error.code    + '\n' + 'message: ' + error.message + '\n');
 }
-function updateCurrLocCust(session_cid,res){
+function updateCurrLocCust(session_cid,res,city){
   app.preloader.show();
   $.ajax({
     type:'POST', 
-    data:{'session_cid':session_cid,'res':res},
+    data:{'session_cid':session_cid,'res':res,'city':city},
     url:base_url+'APP/Appcontroller/updateCurrLoc',
     success:function(loc_res){
       var parseres = $.parseJSON(loc_res);
@@ -2264,7 +2264,7 @@ function geolocate() {
         }
         window.localStorage.setItem("session_current_city",city);
         window.localStorage.setItem("session_current_loc",res);
-        updateCurrLocCust(session_cid,res);
+        updateCurrLocCust(session_cid,res,city);
         //alert("city :" + city );
         app.preloader.hide();             
       } else {
