@@ -644,6 +644,7 @@ $$(document).on('page:init', '.page[data-name="customer_dash"]', function (page)
     observer: true,
     observeParents: true, 
   });  
+  alert("session_current_loc "+session_current_loc); 
   if(session_current_loc!='' && session_current_loc!=null){
     //alert("session_current_city ^^^ customer dashboard "+session_current_city);
     $.ajax({
@@ -2049,7 +2050,7 @@ function curr_loc(){
   navigator.geolocation.getCurrentPosition(onSuccess, onError,{ maximumAge: 3000, timeout: 5000, enableHighAccuracy: true });
 }
 function currentCity(){
-  alert("in currentcity function");
+  //alert("in currentcity function");
   openLOC();
   navigator.geolocation.getCurrentPosition(onSuccessCity, onErrorCity,{ maximumAge: 3000, timeout: 5000, enableHighAccuracy: true });
 }

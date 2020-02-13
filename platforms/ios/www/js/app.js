@@ -644,6 +644,7 @@ $$(document).on('page:init', '.page[data-name="customer_dash"]', function (page)
     observer: true,
     observeParents: true, 
   });  
+  alert("session_current_loc "+session_current_loc); 
   if(session_current_loc!='' && session_current_loc!=null){
     //alert("session_current_city ^^^ customer dashboard "+session_current_city);
     $.ajax({
@@ -659,7 +660,7 @@ $$(document).on('page:init', '.page[data-name="customer_dash"]', function (page)
         }
     });
   }else{  
-    //currentCity();  // uncomment this for apk //
+    currentCity();  // uncomment this for apk //
   }
 
 
@@ -2049,7 +2050,7 @@ function curr_loc(){
   navigator.geolocation.getCurrentPosition(onSuccess, onError,{ maximumAge: 3000, timeout: 5000, enableHighAccuracy: true });
 }
 function currentCity(){
-  alert("in currentcity function");
+  //alert("in currentcity function");
   openLOC();
   navigator.geolocation.getCurrentPosition(onSuccessCity, onErrorCity,{ maximumAge: 3000, timeout: 5000, enableHighAccuracy: true });
 }
@@ -2098,7 +2099,7 @@ function onSuccessCity(position){
         }
         window.localStorage.setItem("session_current_city",city);
         window.localStorage.setItem("session_current_loc",res);
-        updateCurrLocCust(session_cid,res);
+        updateCurrLocCust(session_cid,res,city);
         //alert("city :" + city );
         app.preloader.hide();             
       } else {
@@ -2113,11 +2114,11 @@ function onSuccessCity(position){
 function onErrorCity(error){
   alert('code: '    + error.code    + '\n' + 'message: ' + error.message + '\n');
 }
-function updateCurrLocCust(session_cid,res){
+function updateCurrLocCust(session_cid,res,city){
   app.preloader.show();
   $.ajax({
     type:'POST', 
-    data:{'session_cid':session_cid,'res':res},
+    data:{'session_cid':session_cid,'res':res,'city':city},
     url:base_url+'APP/Appcontroller/updateCurrLoc',
     success:function(loc_res){
       var parseres = $.parseJSON(loc_res);
@@ -2264,7 +2265,7 @@ function geolocate() {
         }
         window.localStorage.setItem("session_current_city",city);
         window.localStorage.setItem("session_current_loc",res);
-        updateCurrLocCust(session_cid,res);
+        updateCurrLocCust(session_cid,res,city);
         //alert("city :" + city );
         app.preloader.hide();             
       } else {
