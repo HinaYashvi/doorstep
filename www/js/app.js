@@ -659,7 +659,7 @@ $$(document).on('page:init', '.page[data-name="customer_dash"]', function (page)
         }
     });
   }else{  
-    //currentCity();  // uncomment this for apk //
+    currentCity();  // uncomment this for apk //
   }
 
 
