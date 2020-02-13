@@ -662,11 +662,11 @@ $$(document).on('page:init', '.page[data-name="customer_dash"]', function (page)
           }
       });
     }else{  
-      currentCity();  // uncomment this for apk //
+      //currentCity();  // uncomment this for apk //
     }
   }else{
     alert("FORFULLY OPEN LOCATION");
-    currentCity();  // uncomment this for apk //
+    //currentCity();  // uncomment this for apk //
   }
 
 
@@ -1797,6 +1797,12 @@ $$(document).on('page:init', '.page[data-name="customer_service_types"]', functi
     alert("ELSE");
     session_ccity = session_ccity;
   }*/
+  var session_current_city = window.localStorage.getItem("session_current_city");
+  if(session_current_city!='' && session_current_city!=null){
+    session_ccity = session_current_city;
+  }else{
+    session_ccity = session_ccity;
+  }
   $.ajax({
     type:'POST', 
     data:{'sid':sid,'session_ccity':session_ccity},
@@ -2138,7 +2144,7 @@ function geolocate() {
         }
         window.localStorage.setItem("session_current_city",city);
         window.localStorage.setItem("session_current_loc",res);
-        //$("#formatted_address").html(res);
+        $("#formatted_address").html(res);
         updateCurrLocCust(session_cid,res,city);
         //alert("city :" + city );
         app.preloader.hide();             
