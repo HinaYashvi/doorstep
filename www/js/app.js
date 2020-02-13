@@ -643,24 +643,30 @@ $$(document).on('page:init', '.page[data-name="customer_dash"]', function (page)
     },
     observer: true,
     observeParents: true, 
-  });  
+  });
+  alert("customer dashboard session_cid "+session_cid); 
   alert("session_current_loc "+session_current_loc); 
-  if(session_current_loc!='' && session_current_loc!=null){
-    //alert("session_current_city ^^^ customer dashboard "+session_current_city);
-    $.ajax({
-      type:'POST', 
-        url:base_url+'APP/Appcontroller/getLastCurrLoc_cust',
-        data:{'session_cid':session_cid},
-        success:function(loc_res){        
-          var json_loc = $.parseJSON(loc_res);
-          var c_current_loc_app = json_loc.c_current_loc_app;
-          $("#formatted_address").html(c_current_loc_app);
-          window.localStorage.removeItem("session_current_loc");
-          window.localStorage.setItem("session_current_loc",c_current_loc_app);
-        }
-    });
-  }else{  
-    //currentCity();  // uncomment this for apk //
+  if(session_cid!='' && session_cid!=null){
+    if(session_current_loc!='' && session_current_loc!=null){
+      //alert("session_current_city ^^^ customer dashboard "+session_current_city);
+      $.ajax({
+        type:'POST', 
+          url:base_url+'APP/Appcontroller/getLastCurrLoc_cust',
+          data:{'session_cid':session_cid},
+          success:function(loc_res){        
+            var json_loc = $.parseJSON(loc_res);
+            var c_current_loc_app = json_loc.c_current_loc_app;
+            $("#formatted_address").html(c_current_loc_app);
+            window.localStorage.removeItem("session_current_loc");
+            window.localStorage.setItem("session_current_loc",c_current_loc_app);
+          }
+      });
+    }else{  
+      currentCity();  // uncomment this for apk //
+    }
+  }else{
+    alert("FORFULLY OPEN LOCATION");
+    currentCity();  // uncomment this for apk //
   }
 
 
@@ -2044,15 +2050,16 @@ function change_day(obj){
   timeSlotTabs(jobid,day);
 }
 function curr_loc(){
-  //alert("called");
+  alert("called curr_loc");
   openLOC();
   navigator.geolocation.getCurrentPosition(onSuccess, onError,{ maximumAge: 3000, timeout: 5000, enableHighAccuracy: true });
 }
 function chnagelocation(){
+  alert("IN chnagelocation function");
   mainView.router.navigate("/customer_loc/");
 }
 function currentCity(){
-  //alert("in currentcity function");
+  alert("in currentcity function");
   openLOC();
   navigator.geolocation.getCurrentPosition(onSuccessCity, onErrorCity,{ maximumAge: 3000, timeout: 5000, enableHighAccuracy: true });
 }
@@ -2064,7 +2071,7 @@ function openLOC(){
       cordova.plugins.diagnostic.isLocationAuthorized(successCallback, errorCallback);
        //mainView.loadPage("current-location.html");
     }else{
-      //alert("Location service is ON");        
+      alert("Location service is ON");        
       mainView.router.navigate("/customer_dash/");
     }
   }, function(error){
@@ -2131,7 +2138,7 @@ function geolocate() {
         }
         window.localStorage.setItem("session_current_city",city);
         window.localStorage.setItem("session_current_loc",res);
-        $("#formatted_address").html(res);
+        //$("#formatted_address").html(res);
         updateCurrLocCust(session_cid,res,city);
         //alert("city :" + city );
         app.preloader.hide();             
@@ -2144,7 +2151,7 @@ function geolocate() {
   });
   // on 10-2-2020 end //
   //alert("place "+place);
-  console.log("in place "+place.name);
+  //console.log("in place "+place.name);
   if (!place.geometry) {
     //alert("Autocomplete's returned place contains no geometry");
       return;
