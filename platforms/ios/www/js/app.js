@@ -676,7 +676,7 @@ $$(document).on('page:init', '.page[data-name="customer_dash"]', function (page)
         var cat_id = ser_cat[i].c_id; 
         var c_name = ser_cat[i].c_name;
         var c_img_path = ser_cat[i].c_img_path;
-        cat_blocks+='<div class="col-33 text-center elevation_blocks elevation-9" onclick="getcatServices('+cat_id+','+"'"+c_img_path+"'"+')"><img src="'+base_url+c_img_path+'" class="block_img lazy lazy-fade-in demo-lazy" height="50" width="50"/><div class="fs-12">'+c_name+'</div></div>';
+        cat_blocks+='<div class="col-33 text-center elevation_blocks elevation-9" onclick="getcatServices('+cat_id+','+"'"+c_img_path+"'"+')"><img src="'+base_url+c_img_path+'" class="block_img lazy lazy-fade-in" height="50" width="50"/><div class="fs-12">'+c_name+'</div></div>';
       }
       $(".catblocks").html(cat_blocks);
     }
@@ -1688,7 +1688,7 @@ function getcatServices(cat_id,c_img_path){
         var s_img_path = serv_list[j].s_img_path;
         var cimg = c_img_path.replace(/\//g, "-"); 
         //alert(cimg); 
-        list+='<li><a href="/customer_service_types/'+s_id+'/'+s_name+'/'+cimg+'/'+cat_id+'/" class="item-link item-content"><div class="item-media"><img src="'+base_url+s_img_path+'" class="block_img lazy lazy-fade-in demo-lazy" height="60" width="60"/></div><div class="item-inner"><div class="item-title fs-12">'+s_name+'</div></div></a></li>';
+        list+='<li><a href="/customer_service_types/'+s_id+'/'+s_name+'/'+cimg+'/'+cat_id+'/" class="item-link item-content"><div class="item-media"><img src="'+base_url+s_img_path+'" class="block_img lazy lazy-fade-in" height="60" width="60"/></div><div class="item-inner"><div class="item-title fs-12">'+s_name+'</div></div></a></li>';
       }
       $(".servList").html(list);
       app.preloader.hide();
@@ -1782,7 +1782,7 @@ $$(document).on('page:init', '.page[data-name="customer_service_types"]', functi
       $("#slides").html(slides);        
     }
   });
-  var session_current_city = window.localStorage.getItem("session_current_city");
+  /*var session_current_city = window.localStorage.getItem("session_current_city");
   alert(" hiiii session_current_city "+session_current_city);
   if(session_ccity=='' && session_ccity== null){
     alert("IF");
@@ -1790,7 +1790,7 @@ $$(document).on('page:init', '.page[data-name="customer_service_types"]', functi
   }else{
     alert("ELSE");
     session_ccity = session_ccity;
-  }
+  }*/
   $.ajax({
     type:'POST', 
     data:{'sid':sid,'session_ccity':session_ccity},
@@ -2049,7 +2049,7 @@ function curr_loc(){
   navigator.geolocation.getCurrentPosition(onSuccess, onError,{ maximumAge: 3000, timeout: 5000, enableHighAccuracy: true });
 }
 function currentCity(){
-  //alert("in currentcity function");
+  alert("in currentcity function");
   openLOC();
   navigator.geolocation.getCurrentPosition(onSuccessCity, onErrorCity,{ maximumAge: 3000, timeout: 5000, enableHighAccuracy: true });
 }
