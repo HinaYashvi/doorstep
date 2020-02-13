@@ -2073,7 +2073,6 @@ function onSuccessCity(position){
       if (city_results[0]) {
         //alert(results[0].formatted_address);
        // $("#currentcity").html(city_results[0].formatted_address);
-
         //alert(city_results[0].formatted_address);
         var addressComponents = city_results[0].address_components;
         var res=city_results[0].formatted_address;
@@ -2266,6 +2265,7 @@ function geolocate() {
         }
         window.localStorage.setItem("session_current_city",city);
         window.localStorage.setItem("session_current_loc",res);
+        $("#formatted_address").html(res);
         updateCurrLocCust(session_cid,res,city);
         //alert("city :" + city );
         app.preloader.hide();             
