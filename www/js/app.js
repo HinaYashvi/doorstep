@@ -2099,6 +2099,7 @@ function onSuccessCity(position){
         }
         window.localStorage.setItem("session_current_city",city);
         window.localStorage.setItem("session_current_loc",res);
+        $("#formatted_address").html(res);
         updateCurrLocCust(session_cid,res,city);
         alert("city :" + city );
         app.preloader.hide();             
