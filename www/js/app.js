@@ -2050,13 +2050,13 @@ function curr_loc(){
   navigator.geolocation.getCurrentPosition(onSuccess, onError,{ maximumAge: 3000, timeout: 5000, enableHighAccuracy: true });
 }
 function currentCity(){
-  //alert("in currentcity function");
+  alert("in currentcity function");
   openLOC();
   navigator.geolocation.getCurrentPosition(onSuccessCity, onErrorCity,{ maximumAge: 3000, timeout: 5000, enableHighAccuracy: true });
 }
 function onSuccessCity(position){
   var session_cid = window.localStorage.getItem("session_cid"); 
-  //alert("in onSuccessCity");
+  alert("in onSuccessCity");
   app.preloader.show();
   var city_longitude = position.coords.longitude;
   var city_latitude = position.coords.latitude;
@@ -2100,7 +2100,7 @@ function onSuccessCity(position){
         window.localStorage.setItem("session_current_city",city);
         window.localStorage.setItem("session_current_loc",res);
         updateCurrLocCust(session_cid,res,city);
-        //alert("city :" + city );
+        alert("city :" + city );
         app.preloader.hide();             
       } else {
         app.dialog.alert('No results found');
