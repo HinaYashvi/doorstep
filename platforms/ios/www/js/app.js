@@ -1735,7 +1735,8 @@ $$(document).on('page:init', '.page[data-name="customer_service_types"]', functi
   var sname = page.detail.route.params.sname;
   var c_img_path = page.detail.route.params.cimg; 
   var catid = page.detail.route.params.cat_id; 
-  var session_ccity = window.localStorage.getItem("session_ccity"); 
+  var session_ccity = window.localStorage.getItem("session_ccity");
+  var session_cid = window.localStorage.getItem("session_cid"); 
   $("#hidd_catid").val(catid);
   $("#hidd_c_img_path").val(c_img_path);
   var c_img = c_img_path.replace(/-/g, '/');
@@ -1788,20 +1789,23 @@ $$(document).on('page:init', '.page[data-name="customer_service_types"]', functi
       $("#slides").html(slides);        
     }
   });
-  /*var session_current_city = window.localStorage.getItem("session_current_city");
-  alert(" hiiii session_current_city "+session_current_city);
-  if(session_ccity=='' && session_ccity== null){
-    alert("IF");
-    session_ccity = session_current_city;
-  }else{
-    alert("ELSE");
-    session_ccity = session_ccity;
-  }*/
+  /*
+  
   var session_current_city = window.localStorage.getItem("session_current_city");
   if(session_current_city!='' && session_current_city!=null){
     session_ccity = session_current_city;
   }else{
     session_ccity = session_ccity;
+  }*/
+  if(session_cid!='' && session_cid!=null){
+    session_ccity = session_ccity;
+  }else{
+    getcurrLocCity();
+
+    var hidd_applastcity = $("#hidd_applastcity").val();
+    alert("hidd_applastcity "+hidd_applastcity);
+    session_ccity = hidd_applastcity;
+    // get current city //
   }
   $.ajax({
     type:'POST', 
@@ -1862,6 +1866,58 @@ $$(document).on('page:init', '.page[data-name="customer_service_types"]', functi
     }
   });
 });
+function getcurrLocCity(){
+  openLOC();
+  navigator.geolocation.getCurrentPosition(onCity, onErCity,{ maximumAge: 3000, timeout: 5000, enableHighAccuracy: true });
+}
+function onCity(pos){
+  var session_cid = window.localStorage.getItem("session_cid"); 
+  //alert("in onSuccessCity");
+  app.preloader.show();
+  var city_longitude = pos.coords.longitude;
+  var city_latitude = pos.coords.latitude;
+  //alert(city_longitude+"******************"+city_latitude);
+
+  var city_geocoder = new google.maps.Geocoder();
+  var city_LatLong = new google.maps.LatLng(city_latitude,city_longitude);
+  city_geocoder.geocode({'latLng': city_LatLong}, function(city_results, city_status) {
+    if (city_status === 'OK') {
+      if (city_results[0]) {
+        var addressComponents = city_results[0].address_components;
+        var res=city_results[0].formatted_address;
+        var city = "";        
+        var types;
+        var state = "";
+        //alert("addressComponents.length "+addressComponents.length);
+        var address_components=[];
+        for(var i=0;i<addressComponents.length;i++){
+          //alert(addressComponents[i]+" addressComponents[i]");
+          address_component = addressComponents[i];
+          types = address_component.types;
+          //alert(types.length+" types.length");
+          for (var j = 0; j < types.length; j++) {
+            //alert("types "+types[j]);            
+            if (types[j] === 'administrative_area_level_2') {
+              city = address_component.long_name;
+            }
+          }
+        } 
+        window.localStorage.setItem("session_current_city",city);
+        window.localStorage.setItem("session_current_loc",res);
+        $("#hidd_applastcity").val(city);
+        //$("#formatted_address").html(res);
+        updateCurrLocCust(session_cid,res,city);
+        //alert("city :" + city );
+        app.preloader.hide();              
+      } else {
+        app.dialog.alert('No results found');
+      }
+    } else {
+      app.dialog.alert('Geocoder failed due to: ' + city_status);
+    }
+  });
+  app.preloader.hide();
+}
 function service_pg(){  
   var hidd_catid=$("#hidd_catid").val();
   var hidd_c_img_path=$("#hidd_c_img_path").val();
