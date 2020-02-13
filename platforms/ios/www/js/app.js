@@ -1516,7 +1516,6 @@ function changeAddress(rowid,c_id,acpt_id,o_id,o_num,o_code){
           app.preloader.hide(); 
         }
       }
-
     });
   }
 }
@@ -1731,8 +1730,6 @@ $$(document).on('page:init', '.page[data-name="customer_service_types"]', functi
   var c_img_path = page.detail.route.params.cimg; 
   var catid = page.detail.route.params.cat_id; 
   var session_ccity = window.localStorage.getItem("session_ccity"); 
-  var session_cid = window.localStorage.getItem("session_cid"); 
-  getAppCurrentLastCity(session_cid);
   $("#hidd_catid").val(catid);
   $("#hidd_c_img_path").val(c_img_path);
   var c_img = c_img_path.replace(/-/g, '/');
@@ -1794,13 +1791,6 @@ $$(document).on('page:init', '.page[data-name="customer_service_types"]', functi
     alert("ELSE");
     session_ccity = session_ccity;
   }*/
-  var hidd_applastcity = $("#hidd_applastcity").val();
-  alert("!!!!!!!!!! hidd_applastcity "+hidd_applastcity+" ^^^^^^ session_ccity "+session_ccity);
-  if(hidd_applastcity=='' && hidd_applastcity== null){
-    session_ccity = session_ccity;
-  }else{
-    session_ccity = hidd_applastcity;
-  }
   $.ajax({
     type:'POST', 
     data:{'sid':sid,'session_ccity':session_ccity},
@@ -1860,18 +1850,6 @@ $$(document).on('page:init', '.page[data-name="customer_service_types"]', functi
     }
   });
 });
-function getAppCurrentLastCity(session_cid){
-  $.ajax({
-    type:'POST', 
-    data:{'session_cid':session_cid},
-    url:base_url+'APP/Appcontroller/getCustlastCity', 
-    success:function(city_res){
-      var lastct = $.parseJSON(city_res);
-      var c_current_city_app = lastct.c_current_city_app;
-      $("#hidd_applastcity").val(c_current_city_app);
-    }
-  });
-}
 function service_pg(){  
   var hidd_catid=$("#hidd_catid").val();
   var hidd_c_img_path=$("#hidd_c_img_path").val();
@@ -2070,10 +2048,115 @@ function curr_loc(){
   openLOC();
   navigator.geolocation.getCurrentPosition(onSuccess, onError,{ maximumAge: 3000, timeout: 5000, enableHighAccuracy: true });
 }
+function chnagelocation(){
+  mainView.router.navigate("/customer_loc/");
+}
 function currentCity(){
   //alert("in currentcity function");
   openLOC();
   navigator.geolocation.getCurrentPosition(onSuccessCity, onErrorCity,{ maximumAge: 3000, timeout: 5000, enableHighAccuracy: true });
+}
+function openLOC(){ 
+  cordova.plugins.diagnostic.isLocationEnabled(function(enabled){ //isLocationEnabled    
+    if(!enabled){
+      //cordova.plugins.diagnostic.switchToLocationSettings(onRequestSuccess,onRequestFailure);
+      cordova.plugins.diagnostic.switchToLocationSettings();
+      cordova.plugins.diagnostic.isLocationAuthorized(successCallback, errorCallback);
+       //mainView.loadPage("current-location.html");
+    }else{
+      //alert("Location service is ON");        
+      mainView.router.navigate("/customer_dash/");
+    }
+  }, function(error){
+    app.dialog.alert("The following error occurred: "+error);
+  });   
+}
+function successCallback(success){
+  //if(success){
+    mainView.router.navigate("/customer_dash/");
+  //}
+} 
+function errorCallback(error){  
+  //if(error){
+   alert(error.message);
+  //} 
+}
+function geolocate() {
+  var hidd_currlat = $("#hidd_currlat").val();
+  var hidd_currlon = $("#hidd_currlon").val();
+  var session_cid = window.localStorage.getItem("session_cid"); 
+  //var defaultBounds = new google.maps.LatLngBounds(new google.maps.LatLng(-33.8902, 151.1759), new google.maps.LatLng(-33.8474, 151.2631)); // STATIC //
+
+  var defaultBounds = new google.maps.LatLngBounds(new google.maps.LatLng(hidd_currlat, hidd_currlon));
+  //alert(defaultBounds);
+  var input = document.getElementById('search');
+  var options = {
+    bounds: defaultBounds,
+    types: ['geocode','establishment']
+  };
+  var autocomplete = new google.maps.places.Autocomplete(input,options);
+  autocomplete.addListener('place_changed', function() {
+  var place = autocomplete.getPlace();
+  var lat = place.geometry.location.lat();
+  var lng = place.geometry.location.lng();
+  //alert("LAT "+lat+" LNG "+lng);
+ // on 10-2-2020 start //
+  var ct_geocoder = new google.maps.Geocoder();
+  var ct_LatLong = new google.maps.LatLng(lat,lng);
+  //alert("HINA "+ct_LatLong);
+  ct_geocoder.geocode({'latLng': ct_LatLong}, function(city_res, city_sta) {
+    if (city_sta === 'OK') {
+      if (city_res[0]) {
+        var addressComponents = city_res[0].address_components;
+        var res=city_res[0].formatted_address;
+        var city = "";        
+        var types;
+        var state = "";
+        //alert("addressComponents.length "+addressComponents.length);
+        var address_components=[];
+        for(var i=0;i<addressComponents.length;i++){
+          //alert(addressComponents[i]+" addressComponents[i]");
+          address_component = addressComponents[i];
+          types = address_component.types;
+          //alert(types.length+" types.length");
+          for (var j = 0; j < types.length; j++) {
+            //alert("types "+types[j]);
+            if (types[j] === 'administrative_area_level_1') {
+              state = address_component.long_name;
+            }
+            if (types[j] === 'administrative_area_level_2') {
+              city = address_component.long_name;
+            }
+          }
+        }
+        window.localStorage.setItem("session_current_city",city);
+        window.localStorage.setItem("session_current_loc",res);
+        $("#formatted_address").html(res);
+        updateCurrLocCust(session_cid,res,city);
+        //alert("city :" + city );
+        app.preloader.hide();             
+      } else {
+        app.dialog.alert('No results found');
+      }
+    } else {
+      app.dialog.alert('Geocoder failed due to: ' + city_sta);
+    }
+  });
+  // on 10-2-2020 end //
+  //alert("place "+place);
+  console.log("in place "+place.name);
+  if (!place.geometry) {
+    //alert("Autocomplete's returned place contains no geometry");
+      return;
+  } 
+  // If the place has a geometry, then present it on a map.
+  if (place.geometry.viewport) {
+    //alert(" in place.geometry.viewport");
+    //map.fitBounds(place.geometry.viewport);
+  } else {
+    //alert("in place.geometry.location");
+  }
+  });
 }
 function onSuccessCity(position){
   var session_cid = window.localStorage.getItem("session_cid"); 
@@ -2085,16 +2168,9 @@ function onSuccessCity(position){
 
   var city_geocoder = new google.maps.Geocoder();
   var city_LatLong = new google.maps.LatLng(city_latitude,city_longitude);
-
-  //alert("city_LatLong "+city_LatLong);
   city_geocoder.geocode({'latLng': city_LatLong}, function(city_results, city_status) {
-    //alert("city_status "+city_status);
     if (city_status === 'OK') {
-      //$("#map-canvas").html(results+" ^^^^^^^^^^^^");
       if (city_results[0]) {
-        //alert(results[0].formatted_address);
-       // $("#currentcity").html(city_results[0].formatted_address);
-        //alert(city_results[0].formatted_address);
         var addressComponents = city_results[0].address_components;
         var res=city_results[0].formatted_address;
         var city = "";        
@@ -2122,7 +2198,7 @@ function onSuccessCity(position){
         $("#formatted_address").html(res);
         updateCurrLocCust(session_cid,res,city);
         //alert("city :" + city );
-        app.preloader.hide();             
+        app.preloader.hide();              
       } else {
         app.dialog.alert('No results found');
       }
@@ -2194,34 +2270,8 @@ function onSuccess(position){
 function onError(error){
   alert('code: '    + error.code    + '\n' + 'message: ' + error.message + '\n');
 }
-function openLOC(){ 
-  cordova.plugins.diagnostic.isLocationEnabled(function(enabled){ //isLocationEnabled    
-    if(!enabled){
-      //cordova.plugins.diagnostic.switchToLocationSettings(onRequestSuccess,onRequestFailure);
-      cordova.plugins.diagnostic.switchToLocationSettings();
-      cordova.plugins.diagnostic.isLocationAuthorized(successCallback, errorCallback);
-       //mainView.loadPage("current-location.html");
-    }else{
-      //alert("Location service is ON");        
-      mainView.router.navigate("/customer_dash/");
-    }
-  }, function(error){
-    app.dialog.alert("The following error occurred: "+error);
-  });   
-}
-function successCallback(success){
-  //if(success){
-    mainView.router.navigate("/customer_dash/");
-  //}
-} 
-function errorCallback(error){  
-  //if(error){
-   alert(error.message);
-  //} 
-}
-function chnagelocation(){
-  mainView.router.navigate("/customer_loc/");
-}
+
+
 var autocomplete;
 function geolocate111() {
   var input = document.getElementById('autocomplete');
@@ -2229,91 +2279,7 @@ function geolocate111() {
   autocomplete = new google.maps.places.Autocomplete(input);     
 }
 
-function geolocate() {
-  var hidd_currlat = $("#hidd_currlat").val();
-  var hidd_currlon = $("#hidd_currlon").val();
-  var session_cid = window.localStorage.getItem("session_cid"); 
-  //var defaultBounds = new google.maps.LatLngBounds(new google.maps.LatLng(-33.8902, 151.1759), new google.maps.LatLng(-33.8474, 151.2631)); // STATIC //
 
-  var defaultBounds = new google.maps.LatLngBounds(new google.maps.LatLng(hidd_currlat, hidd_currlon));
-  //alert(defaultBounds);
-  var input = document.getElementById('search');
-  var options = {
-    bounds: defaultBounds,
-    types: ['geocode','establishment']
-  };
-  var autocomplete = new google.maps.places.Autocomplete(input,options);
-  autocomplete.addListener('place_changed', function() {
-
-  var place = autocomplete.getPlace();
-  var lat = place.geometry.location.lat();
-  var lng = place.geometry.location.lng();
-  //alert("LAT "+lat+" LNG "+lng);
- // on 10-2-2020 start //
-  var ct_geocoder = new google.maps.Geocoder();
-  var ct_LatLong = new google.maps.LatLng(lat,lng);
-  //alert("HINA "+ct_LatLong);
-  ct_geocoder.geocode({'latLng': ct_LatLong}, function(city_res, city_sta) {
-    //alert("city_sta "+city_sta);
-    if (city_sta === 'OK') {
-      //$("#map-canvas").html(results+" ^^^^^^^^^^^^");
-      if (city_res[0]) {
-        //alert(city_res[0].formatted_address);
-       // $("#currentcity").html(city_res[0].formatted_address);
-
-        //alert(city_res[0].formatted_address);
-        var addressComponents = city_res[0].address_components;
-        var res=city_res[0].formatted_address;
-        var city = "";        
-        var types;
-        var state = "";
-        //alert("addressComponents.length "+addressComponents.length);
-        var address_components=[];
-        for(var i=0;i<addressComponents.length;i++){
-          //alert(addressComponents[i]+" addressComponents[i]");
-          address_component = addressComponents[i];
-          types = address_component.types;
-          //alert(types.length+" types.length");
-          for (var j = 0; j < types.length; j++) {
-            //alert("types "+types[j]);
-            if (types[j] === 'administrative_area_level_1') {
-              state = address_component.long_name;
-            }
-            if (types[j] === 'administrative_area_level_2') {
-              city = address_component.long_name;
-            }
-          }
-        }
-        window.localStorage.setItem("session_current_city",city);
-        window.localStorage.setItem("session_current_loc",res);
-        $("#formatted_address").html(res);
-        updateCurrLocCust(session_cid,res,city);
-        //alert("city :" + city );
-        app.preloader.hide();             
-      } else {
-        app.dialog.alert('No results found');
-      }
-    } else {
-      app.dialog.alert('Geocoder failed due to: ' + city_sta);
-    }
-  });
-// on 10-2-2020 end //
-  //alert("place "+place);
-  console.log("in place "+place.name);
-  if (!place.geometry) {
-    //alert("Autocomplete's returned place contains no geometry");
-      return;
-  } 
-  // If the place has a geometry, then present it on a map.
-  if (place.geometry.viewport) {
-    //alert(" in place.geometry.viewport");
-    //map.fitBounds(place.geometry.viewport);
-  } else {
-    //alert("in place.geometry.location");
-  }
-
-  });
-}
 
 /*function onRequestSuccess(success){
   alert("in onRequestSuccess");
