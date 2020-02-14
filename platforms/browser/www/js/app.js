@@ -262,9 +262,9 @@ $$(document).on('page:init', '.page[data-name="customer_dash"]', function (page)
   checkConnection();
   app.preloader.show();
   var session_cid = window.localStorage.getItem("session_cid");  
-  var session_cust_current_city = window.localStorage.getItem("session_cust_current_city");
+  var session_cust_current_city  = window.localStorage.getItem("session_cust_current_city");
   var session_cust_current_loc = window.localStorage.getItem("session_cust_current_loc");
-  var hidd_current_city = $("#hidd_current_city").val();
+  alert("session_cust_current_city "+session_cust_current_city+"********* "+session_cust_current_loc);
   swiper1 = new Swiper('.swiper-container_dash', {
     parallax: true,
     //autoHeight: true,
@@ -299,7 +299,7 @@ $$(document).on('page:init', '.page[data-name="customer_dash"]', function (page)
         var cat_id = ser_cat[i].c_id; 
         var c_name = ser_cat[i].c_name;
         var c_img_path = ser_cat[i].c_img_path;
-        cat_blocks+='<div class="col-33 text-center elevation_blocks elevation-9" onclick="getcatServices('+cat_id+','+"'"+c_img_path+"'"+','+"'"+hidd_current_city+"'"+')"><img src="'+base_url+c_img_path+'" class="block_img lazy lazy-fade-in" height="50" width="50"/><div class="fs-12">'+c_name+'</div></div>';
+        cat_blocks+='<div class="col-33 text-center elevation_blocks elevation-9" onclick="getcatServices('+cat_id+','+"'"+c_img_path+"'"+')"><img src="'+base_url+c_img_path+'" class="block_img lazy lazy-fade-in" height="50" width="50"/><div class="fs-12">'+c_name+'</div></div>';
       }
       $(".catblocks").html(cat_blocks);
     }
@@ -436,33 +436,6 @@ $$(document).on('page:init', '.page[data-name="customer_dash"]', function (page)
   }
   app.preloader.hide();
 });
-function getcatServices(cat_id,c_img_path,hidd_current_city){
-  alert("hidd_current_city is :"+hidd_current_city);
-  mainView.router.navigate("/customer_servicelist/");  
-  app.preloader.show();
-  $.ajax({
-    type:'POST', 
-    data:{'cat_id':cat_id},
-    url:base_url+'APP/Appcontroller/getServicelist',
-    success:function(serv_res){
-      $("#hidd_catid").val(cat_id);
-      $("#hidd_c_img_path").val(c_img_path);
-      var parseServ = $.parseJSON(serv_res);
-      var serv_list = parseServ.serv_list;
-      var list='';
-      for(var j=0;j<serv_list.length;j++){
-        var s_id = serv_list[j].s_id;
-        var s_name = serv_list[j].s_name;  
-        var s_img_path = serv_list[j].s_img_path;
-        var cimg = c_img_path.replace(/\//g, "-"); 
-        //alert(cimg); 
-        list+='<li><a href="/customer_service_types/'+s_id+'/'+s_name+'/'+cimg+'/'+cat_id+'/" class="item-link item-content"><div class="item-media"><img src="'+base_url+s_img_path+'" class="block_img lazy lazy-fade-in" height="60" width="60"/></div><div class="item-inner"><div class="item-title fs-12">'+s_name+'</div></div></a></li>';
-      }
-      $(".servList").html(list);
-      app.preloader.hide();
-    }
-  });
-}
 function getBookingbyStatus(button_active,divname){
   checkConnection();  
   app.preloader.show();
@@ -642,6 +615,229 @@ function getBookingbyStatus(button_active,divname){
     }
   });
 }
+function getcatServices(cat_id,c_img_path){
+  mainView.router.navigate("/customer_servicelist/");  
+  app.preloader.show();
+  $.ajax({
+    type:'POST', 
+    data:{'cat_id':cat_id},
+    url:base_url+'APP/Appcontroller/getServicelist',
+    success:function(serv_res){
+      $("#hidd_catid").val(cat_id);
+      $("#hidd_c_img_path").val(c_img_path);
+      var parseServ = $.parseJSON(serv_res);
+      var serv_list = parseServ.serv_list;
+      var list='';
+      for(var j=0;j<serv_list.length;j++){
+        var s_id = serv_list[j].s_id;
+        var s_name = serv_list[j].s_name;  
+        var s_img_path = serv_list[j].s_img_path;
+        var cimg = c_img_path.replace(/\//g, "-"); 
+        //alert(cimg); 
+        list+='<li><a href="/customer_service_types/'+s_id+'/'+s_name+'/'+cimg+'/'+cat_id+'/" class="item-link item-content"><div class="item-media"><img src="'+base_url+s_img_path+'" class="block_img lazy lazy-fade-in" height="60" width="60"/></div><div class="item-inner"><div class="item-title fs-12">'+s_name+'</div></div></a></li>';
+      }
+      $(".servList").html(list);
+      app.preloader.hide();
+    }
+  });
+}
+function service_pg(){  
+  var hidd_catid=$("#hidd_catid").val();
+  var hidd_c_img_path=$("#hidd_c_img_path").val();
+  //alert(hidd_catid+"======"+hidd_c_img_path);
+  getcatServices(hidd_catid,hidd_c_img_path);
+}
+$$(document).on('page:init', '.page[data-name="customer_service_types"]', function (page) {  
+  checkConnection();
+  //console.log(page.detail.route.params);
+  var sid = page.detail.route.params.sid; 
+  var sname = page.detail.route.params.sname;
+  var c_img_path = page.detail.route.params.cimg; 
+  var catid = page.detail.route.params.cat_id;
+  var session_cust_current_city  = window.localStorage.getItem("session_cust_current_city");
+  var session_cust_current_loc = window.localStorage.getItem("session_cust_current_loc");
+  var session_cid = window.localStorage.getItem("session_cid"); 
+  $("#hidd_catid").val(catid);
+  $("#hidd_c_img_path").val(c_img_path);
+  var c_img = c_img_path.replace(/-/g, '/');
+  $(".serv_title").html(sname);
+  app.preloader.show();
+  if(session_cid!='' && session_cid!=null){
+    session_cust_current_city = session_cust_current_city;
+  }else{
+    alert("OPEN GPS SERVICE AND GET CURRENT CITY");
+    openLOC();
+    navigator.geolocation.getCurrentPosition(function(position){
+      var longitude = position.coords.longitude;
+      var latitude = position.coords.latitude;
+      var session_cid = window.localStorage.getItem("session_cid"); 
+      $("#hidd_currlat").val(latitude);
+      $("#hidd_currlon").val(longitude);
+      var geocoder = new google.maps.Geocoder();
+      var LatLong = new google.maps.LatLng(latitude,longitude);
+      geocoder.geocode({'latLng': LatLong}, function(results, status) {
+      if (status === 'OK') {
+        if (results[0]) {
+          //alert(results[0].formatted_address);
+          var addressComponents = results[0].address_components;
+          var res = results[0].formatted_address;
+          var city = "";        
+          var types;
+          var state = "";
+          for(var i=0;i<addressComponents.length;i++){
+            //alert(addressComponents[i]+" addressComponents[i]");
+            address_component = addressComponents[i];
+            types = address_component.types;
+            //alert(types.length+" types.length");
+            for (var j = 0; j < types.length; j++) {
+              //alert("types "+types[j]);
+              if (types[j] === 'administrative_area_level_1') {
+                state = address_component.long_name;
+              }
+              if (types[j] === 'administrative_area_level_2') {
+                city = address_component.long_name;
+              }
+            }
+          }
+          $("#formatted_address").html(res);
+          window.localStorage.setItem("session_cust_current_city",city);
+          window.localStorage.setItem("session_cust_current_loc",res);
+          //updateCurrLocCust(session_cid,res,city);
+          session_cust_current_city = city;
+          app.preloader.hide();             
+        } else {
+          app.dialog.alert('No results found');
+        }
+      } else {
+        app.dialog.alert('Geocoder failed due to: ' + status);
+      }
+    });
+        app.preloader.hide();
+    },
+    function(err){
+      alert('code: '    + err.code    + '\n' + 'message: ' + err.message + '\n');
+    },{ maximumAge: 3000, timeout: 5000, enableHighAccuracy: true });
+  }
+
+
+  $.ajax({
+    type:'POST', 
+    data:{'sid':sid,'session_cust_current_city':session_cust_current_city},
+    url:base_url+'APP/Appcontroller/getJoblist',
+    success:function(job_res){
+      var jobparse = $.parseJSON(job_res);
+      var job_list = jobparse.job_list;
+      var jimg = jobparse.j_img;
+      var search = jobparse.search;
+      var job = search['jobs'];
+      console.log(job.length);
+      var jlist = '';
+      var slides = ''; 
+      if(job.length > 0 ){
+        $(".no-service").removeClass("display-block");
+        $(".no-service").addClass("display-none");
+        if(job.length==0){
+          jlist='<div class="block text-red fw-600 fs-12">No Provider Available In This Location</div>';
+        }else{
+          for(var i=0;i<job.length;i++){
+            var j_id = job[i].j_id;
+            var j_name = job[i].j_name;
+            var j_desc = job[i].j_desc;
+            var j_duration = job[i].j_duration;
+            var j_price = job[i].j_price;
+            var time_slot = job[i].time_slot;
+            var ji_id = job[i].ji_id;
+            //var j_img_path = jimg[0].j_img_path;
+            //alert(j_img_path);
+            //if(i==0){
+            //  var jimg = j_img_path.replace(/\//g, "-");
+            //  alert(jimg);
+            //}
+            ///slides+='<a class="slide" title="Image '+i+'" href="#"><span class="animate down" style="background-image: '+base_url+j_img_path+'"></span></a>';
+            slides='<div id="imageContainer"><img src="'+base_url+c_img+'" height="200" width="360"><div class="slider_txt">'+j_desc+'</div></div>'; 
+            jlist+='<li><a href="/customer_servicedet/'+j_id+'/'+j_name+'/'+j_price+'/'+sid+'/" class="item-link item-content"><div class="item-inner"><div class="item-title fs-12">'+j_name+'</div></div></a></li>'; 
+            $(".amazontxt").removeClass("display-none");
+            $(".amazontxt").addClass("display-block");
+            $(".jobList").html(jlist);
+          }
+        }
+      }else{
+        $(".no-service").removeClass("display-none");
+        $(".no-service").addClass("display-block");
+        jlist+='<div class="container4 text-center"><img src="img/no-service.png" width="80" class="op-5"></div><br/><div class="txt-amaz fs-16 text-center fw-600 p-20">No Services Found.</div>';
+        $(".amazontxt").removeClass("display-block");
+        $(".amazontxt").addClass("display-none");
+        $(".no-service").html(jlist);
+      }
+      $("#slides").html(slides);        
+    }
+  });
+
+  $.ajax({
+    type:'POST', 
+    data:{'sid':sid,'session_ccity':session_cust_current_city},
+    url:base_url+'APP/Appcontroller/getCustReviews', 
+    success:function(rev_res){
+      var rev = $.parseJSON(rev_res);
+      var review_rate = rev.review_rate;      
+      var partner_rev = review_rate.partner;
+      //console.log(partner_rev);
+      //console.log(partner_rev.length+"***************");
+      var rev_list='';
+      if(partner_rev.length==0){
+        rev_list='<div class="block text-red fw-600 fs-12">No Provider Available In This Location</div>';
+      }else{
+        for(var i=0;i<partner_rev.length;i++){
+          var p_name = partner_rev[i].p_name;
+          var rate = partner_rev[i].rate;
+          //alert(rate);
+          var rating = partner_rev[i].rating;
+          var p_addr1 = partner_rev[i].p_addr1;
+          var a_name = partner_rev[i].a_name;
+          var city_name  = partner_rev[i].city_name;
+          var p_phone = partner_rev[i].p_phone;
+          var p_email = partner_rev[i].p_email;
+          var rev2 = partner_rev[i].review2;
+          //console.log(rev2);
+          var add = p_addr1+", "+a_name+", "+city_name;
+          var sub_rate = '';
+          if(rate==undefined){
+            var rt='<span class="text-red fw-600 fs-12">No ratings.</span>';
+          }else{
+            var rt='<i class="f7-icons fs-16 rate_star mr-5">star_fill</i><span class="fs-14 text-grey">'+rate+'</span>';
+          }
+
+          rev_list+='<li class="accordion-item accordion-item-opened lightblue mb-5"><a href="#" class="item-content item-link"><div class="item-inner"><div class="item-title fs-12 text-capitalize"><span class="text-blue fw-600">'+p_name+'</span><br><i class="f7-icons fs-12 fw-600 text-grey">phone :</i> &nbsp;'+p_phone+'<br><i class="f7-icons fs-12 fw-600 text-grey">at_circle :</i> &nbsp;'+p_email+'</div><span class="float-right">'+rt+'</span></div></a><div class="accordion-item-content nobg"><div class="list no-hairlines-between"><ul>'; 
+          if(rev2.length > 0){
+            for(var j=0;j<rev2.length;j++){            
+              var c_name = rev2[j].c_name; 
+              var rates = rev2[j].rate+".0";
+              var review = rev2[j].review;
+              var date_time = rev2[j].date_time;
+              var res_dt = date_time.replace("`", " ");
+              var final_dt = res_dt.replace("`","");
+              sub_rate+=rates; 
+              if(c_name!=null){
+                c_name=c_name;
+              }else{
+                c_name='';
+              }    
+              rev_list+='<li class="list-border"><div class="item-content"><div class="item-media"><i class="f7-icons fs-24 text-grey">person_crop_circle_fill</i></div><div class="item-inner"><div class="item-title fs-14 text-grey fw-600">'+c_name+'<br/><i class="f7-icons fs-12 light-grey mr-5">calendar</i><span class="light-grey fs-12">'+final_dt+'</span></div><div class="item-after lh-12"><i class="f7-icons fs-14 subrate mr-5">star_fill</i><span class="fw-500">'+rates+'</span></div></div></div><span><img class="ml-20" src="img/double-quote-grey.png" height="10" width="10"></span>&nbsp;<div class="fs-12 light-grey rev_div">'+review+'</div></li>';
+            }
+          }else{
+            rev_list+='<li><div class="item-content"><div class="item-inner"><div class="item-title fs-14 text-red fw-500">Reviews not available.</div></div></li>';
+          }
+          rev_list+='</ul></div></div></li>';
+          
+          //rev_list+='<li class="accordion-item lightblue mb-5"><a href="#" class="item-content item-link"><div class="item-inner"><div class="item-title fs-12 text-capitalize"><span class="text-blue fw-600">'+p_name+'</span><br><i class="f7-icons fs-12 fw-600 text-grey">phone :</i> &nbsp;'+p_phone+'<br><i class="f7-icons fs-12 fw-600 text-grey">at_circle :</i> &nbsp;'+p_email+'</div><span class="float-right">'+rt+'</span></div></a><div class="accordion-item-content no-bg"><div class="list no-hairlines-between"><ul><li><div class="item-content"><div class="item-media"><i class="f7-icons fs-24 text-grey">person_crop_circle_fill</i></div><div class="item-inner"><div class="item-title">Ivan Petrov</div><div class="item-after">CEO</div></div></div></li></ul></div></div></li>'; 
+        }
+      }
+      $("#reviews").html(rev_list);
+      app.preloader.hide();
+    }
+  });
+  app.preloader.hide();
+});
 function getActivate(btn_tab){
   app.preloader.show();
   if(btn_tab==0){
@@ -1148,7 +1344,6 @@ function onSuccess(position){
         $("#formatted_address").html(res);
         window.localStorage.setItem("session_cust_current_city",city);
         window.localStorage.setItem("session_cust_current_loc",res);
-        $("#hidd_current_city").val(city);
         //updateCurrLocCust(session_cid,res,city);
         app.preloader.hide();             
       } else {
