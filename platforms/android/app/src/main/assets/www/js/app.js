@@ -1741,61 +1741,6 @@ $$(document).on('page:init', '.page[data-name="customer_service_types"]', functi
   //alert(sid+"-----"+sname);
   $(".serv_title").html(sname);
   app.preloader.show();
-  $.ajax({
-    type:'POST', 
-    data:{'sid':sid},
-    url:base_url+'APP/Appcontroller/getJoblist',
-    success:function(job_res){
-      var jobparse = $.parseJSON(job_res);
-      var job_list = jobparse.job_list;
-      var jimg = jobparse.j_img;
-      //console.log(jimg);
-      var jlist = '';
-      var slides = ''; 
-      if(job_list.length > 0 ){
-        $(".no-service").removeClass("display-block");
-        $(".no-service").addClass("display-none");
-        for(var i=0;i<job_list.length;i++){
-          var j_id = job_list[i].j_id;
-          var j_name = job_list[i].j_name;
-          var j_desc = job_list[i].j_desc;
-          var j_duration = job_list[i].j_duration;
-          var j_price = job_list[i].j_price;
-          var time_slot = job_list[i].time_slot;
-          var ji_id = job_list[i].ji_id;
-          //var j_img_path = jimg[0].j_img_path;
-          //alert(j_img_path);
-          //if(i==0){
-          //  var jimg = j_img_path.replace(/\//g, "-");
-          //  alert(jimg);
-          //}
-          ///slides+='<a class="slide" title="Image '+i+'" href="#"><span class="animate down" style="background-image: '+base_url+j_img_path+'"></span></a>';
-          slides='<div id="imageContainer"><img src="'+base_url+c_img+'" height="200" width="360"><div class="slider_txt">'+j_desc+'</div></div>'; 
-          jlist+='<li><a href="/customer_servicedet/'+j_id+'/'+j_name+'/'+j_price+'/'+sid+'/" class="item-link item-content"><div class="item-inner"><div class="item-title fs-12">'+j_name+'</div></div></a></li>'; 
-          $(".amazontxt").removeClass("display-none");
-          $(".amazontxt").addClass("display-block");
-          $(".jobList").html(jlist);
-        }
-      }else{
-        $(".no-service").removeClass("display-none");
-        $(".no-service").addClass("display-block");
-        jlist+='<div class="container4 text-center"><img src="img/no-service.png" width="80" class="op-5"></div><br/><div class="txt-amaz fs-16 text-center fw-600 p-20">No Services Found.</div>';
-        $(".amazontxt").removeClass("display-block");
-        $(".amazontxt").addClass("display-none");
-        $(".no-service").html(jlist);
-      }
-      $("#slides").html(slides);        
-    }
-  });
-  /*var session_current_city = window.localStorage.getItem("session_current_city");
-  alert(" hiiii session_current_city "+session_current_city);
-  if(session_ccity=='' && session_ccity== null){
-    alert("IF");
-    session_ccity = session_current_city;
-  }else{
-    alert("ELSE");
-    session_ccity = session_ccity;
-  }*/
   if(session_cid!='' && session_cid!=null){
     session_ccity = session_ccity;
   }else{
@@ -1856,6 +1801,67 @@ $$(document).on('page:init', '.page[data-name="customer_service_types"]', functi
     },{ maximumAge: 3000, timeout: 5000, enableHighAccuracy: true });
     
   }
+
+  $.ajax({
+    type:'POST', 
+    data:{'sid':sid,'session_ccity':session_ccity},
+    url:base_url+'APP/Appcontroller/getJoblist',
+    success:function(job_res){
+      var jobparse = $.parseJSON(job_res);
+      var job_list = jobparse.job_list;
+      var jimg = jobparse.j_img;
+      //console.log(jimg);
+      var jlist = '';
+      var slides = ''; 
+      if(job_list.length > 0 ){
+        $(".no-service").removeClass("display-block");
+        $(".no-service").addClass("display-none");
+        if(job_list.length==0){
+          jlist='<div class="block text-red fw-600 fs-12">No Provider Available In This Location</div>';
+        }else{
+          for(var i=0;i<job_list.length;i++){
+            var j_id = job_list[i].j_id;
+            var j_name = job_list[i].j_name;
+            var j_desc = job_list[i].j_desc;
+            var j_duration = job_list[i].j_duration;
+            var j_price = job_list[i].j_price;
+            var time_slot = job_list[i].time_slot;
+            var ji_id = job_list[i].ji_id;
+            //var j_img_path = jimg[0].j_img_path;
+            //alert(j_img_path);
+            //if(i==0){
+            //  var jimg = j_img_path.replace(/\//g, "-");
+            //  alert(jimg);
+            //}
+            ///slides+='<a class="slide" title="Image '+i+'" href="#"><span class="animate down" style="background-image: '+base_url+j_img_path+'"></span></a>';
+            slides='<div id="imageContainer"><img src="'+base_url+c_img+'" height="200" width="360"><div class="slider_txt">'+j_desc+'</div></div>'; 
+            jlist+='<li><a href="/customer_servicedet/'+j_id+'/'+j_name+'/'+j_price+'/'+sid+'/" class="item-link item-content"><div class="item-inner"><div class="item-title fs-12">'+j_name+'</div></div></a></li>'; 
+            $(".amazontxt").removeClass("display-none");
+            $(".amazontxt").addClass("display-block");
+            $(".jobList").html(jlist);
+          }
+        }
+      }else{
+        $(".no-service").removeClass("display-none");
+        $(".no-service").addClass("display-block");
+        jlist+='<div class="container4 text-center"><img src="img/no-service.png" width="80" class="op-5"></div><br/><div class="txt-amaz fs-16 text-center fw-600 p-20">No Services Found.</div>';
+        $(".amazontxt").removeClass("display-block");
+        $(".amazontxt").addClass("display-none");
+        $(".no-service").html(jlist);
+      }
+      $("#slides").html(slides);        
+    }
+  });
+  /*var session_current_city = window.localStorage.getItem("session_current_city");
+  alert(" hiiii session_current_city "+session_current_city);
+  if(session_ccity=='' && session_ccity== null){
+    alert("IF");
+    session_ccity = session_current_city;
+  }else{
+    alert("ELSE");
+    session_ccity = session_ccity;
+  }*/
+  
   $.ajax({
     type:'POST', 
     data:{'sid':sid,'session_ccity':session_ccity},
@@ -1868,7 +1874,7 @@ $$(document).on('page:init', '.page[data-name="customer_service_types"]', functi
       //console.log(partner_rev.length+"***************");
       var rev_list='';
       if(partner_rev.length==0){
-        rev_list='<div class="text-red fw-600 fs-12">No Provider Available In This Location</div>';
+        rev_list='<div class="block text-red fw-600 fs-12">No Provider Available In This Location</div>';
       }else{
         for(var i=0;i<partner_rev.length;i++){
           var p_name = partner_rev[i].p_name;
@@ -2290,6 +2296,7 @@ function updateCurrLocCust(session_cid,res,city){
     success:function(loc_res){
       var parseres = $.parseJSON(loc_res);
       var resmsg = parseres.msg;
+      alert(resmsg+" ::::::::::resmsg");
       if(resmsg=="loc_updated"){        
         mainView.router.navigate("/customer_dash/");
       }else if(resmsg=="not_updated"){
@@ -2906,7 +2913,7 @@ function logOut(){
   window.localStorage.removeItem("session_pcreated"); 
   window.localStorage.removeItem("session_pcity"); 
   window.localStorage.removeItem("session_pcityid"); 
-  window.localStorage.removeItem("session_cid"); 
+  //window.localStorage.removeItem("session_cid");  
   window.localStorage.removeItem("session_cname"); 
   window.localStorage.removeItem("session_cphone"); 
   window.localStorage.removeItem("session_cemail"); 
