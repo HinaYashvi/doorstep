@@ -2231,7 +2231,7 @@ function updateCurrLocCust(session_cid,res,city){
 }
 function onSuccess(position){
   app.preloader.show();
-  //alert("in function");
+  alert("in onSuccess function");
   /*alert('Latitude: '          + position.coords.latitude          + '\n' +
         'Longitude: '         + position.coords.longitude         + '\n' +
         'Altitude: '          + position.coords.altitude          + '\n' +
@@ -2252,7 +2252,7 @@ function onSuccess(position){
       //$("#map-canvas").html(results+" ^^^^^^^^^^^^");
       if (results[0]) {
         //alert(results[0].formatted_address);
-        var addressComponents = city_results[0].address_components;
+        var addressComponents = results[0].address_components;
         var res = results[0].formatted_address;
         var city = "";        
         var types;
