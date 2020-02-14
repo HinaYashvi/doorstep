@@ -256,6 +256,455 @@ function logincheck(){
   }
 }
 // ********************************** CUSTOMER FUNCTIONS ********************************** //
+var swiper1;
+$$(document).on('page:init', '.page[data-name="customer_dash"]', function (page) { 
+  //logOut(); 
+  checkConnection();
+  app.preloader.show();
+  var session_cid = window.localStorage.getItem("session_cid");  
+  var session_cust_current_city = window.localStorage.getItem("session_cust_current_city");
+  var session_cust_current_loc = window.localStorage.getItem("session_cust_current_loc");
+  var hidd_current_city = $("#hidd_current_city").val();
+  swiper1 = new Swiper('.swiper-container_dash', {
+    parallax: true,
+    //autoHeight: true,
+    setWrapperSize: true,
+    slidesPerView: 1,
+    spaceBetween: 15,
+    centeredSlides: true,
+    autoplay: {
+      delay: 3000,
+      disableOnInteraction: false,
+    },
+    /*navigation: {
+      nextEl: '.swiper-button-next',
+      prevEl: '.swiper-button-prev',
+    },*/
+    pagination: {
+      el: '.swiper-pagination',
+      clickable: true, 
+      dynamicBullets: true,
+    },
+    observer: true,
+    observeParents: true, 
+  });
+  $.ajax({
+    type:'POST', 
+    url:base_url+'APP/Appcontroller/getServiceCategory',
+    success:function(cat_result){
+      var cat = $.parseJSON(cat_result);
+      var ser_cat = cat.ser_cat;
+      var cat_blocks='';
+      for(var i=0;i<ser_cat.length;i++){
+        var cat_id = ser_cat[i].c_id; 
+        var c_name = ser_cat[i].c_name;
+        var c_img_path = ser_cat[i].c_img_path;
+        cat_blocks+='<div class="col-33 text-center elevation_blocks elevation-9" onclick="getcatServices('+cat_id+','+"'"+c_img_path+"'"+','+"'"+hidd_current_city+"'"+')"><img src="'+base_url+c_img_path+'" class="block_img lazy lazy-fade-in" height="50" width="50"/><div class="fs-12">'+c_name+'</div></div>';
+      }
+      $(".catblocks").html(cat_blocks);
+    }
+  });
+  var button_active=$(".button-active").val();
+  //alert(button_active+"button_active");
+  var divname="pen_orders";
+  //alert(session_cid);
+  if(session_cid!='' && session_cid!=null){ 
+    $(".center-screen").remove(); 
+    $(".booking_btns").removeClass("display-none");
+    $(".booking_btns").addClass("display-block"); 
+    $(".bookserbtn").removeClass("display-block");
+    $(".bookserbtn").addClass("display-none");
+    getBookingbyStatus(button_active,divname);
+  }else{
+    //console.log("ELSE");
+    $(".bookings_tot").remove();
+    $(".booking_btns").removeClass("display-block");
+    $(".booking_btns").addClass("display-none");
+    $(".bookserbtn").removeClass("display-none");
+    $(".bookserbtn").addClass("display-block");
+  }
+  if(session_cid!='' && session_cid!=null){  
+    $(".no_session_profile").removeClass("display-block");
+    $(".no_session_profile").addClass("display-none");
+    $(".prof_info").removeClass("display-none");
+    $(".prof_info").addClass("display-block");
+    $(".profile_div").removeClass("display-none");   
+    $(".profile_div").addClass("display-block");
+    $(".editprofbtn").removeClass("display-none");
+    $(".editprofbtn").addClass("display-block");
+    $(".no_sess_list").removeClass("display-block");
+    $(".no_sess_list").addClass("display-none");
+    $.ajax({
+      type:'POST', 
+      data:{'session_cid':session_cid},
+      url:base_url+'APP/Appcontroller/userProfile',
+      success:function(prof_result){
+        var prf = $.parseJSON(prof_result);
+        var profile = prf.profile;
+        //console.log("profile "+profile);
+        var cid = profile[0].c_id;
+        //alert(cid);
+        var nm_fltr = (profile[0].c_name.charAt(0));
+        $(".nmfltr").html(nm_fltr);
+        var c_name = profile[0].c_name;
+        var c_email = profile[0].c_email;
+        var c_phone = profile[0].c_phone;
+        //var c_addr = profile[0].c_addr;
+        var street_no = profile[0].street_no;
+        var street_name = profile[0].street_name;
+        var street_unit = profile[0].street_unit;
+        var pin = profile[0].pin;
+        var a_id = profile[0].a_id;
+        var city_id = profile[0].city_id;
+        var c_created_on = profile[0].c_created_on;
+        $(".cname").html(c_name);
+        $(".email_icon").html('<i class="f7-icons fs-18">envelope_fill</i>');
+        $(".cemail").html(c_email);
+
+        $(".phone_icon").html('<i class="f7-icons fs-18">phone_fill</i>');
+        $(".cphone").html(c_phone);
+
+        //$(".addr_icon").html();
+        //$(".caddr").html(c_addr);
+
+        if(street_no!=""){
+          $(".strno_icon").html('<i class="f7-icons fs-18">placemark</i>');
+          $(".cstno").html(street_no);
+          //$(".caddr").html(c_addr);
+        }else{
+          $(".street_no").remove();
+        }
+ 
+        if(street_name!=""){
+          $(".strnm_icon").html('<i class="f7-icons fs-18">placemark_fill</i>');
+          $(".cstnm").html(street_name);
+        }else{
+          $(".street_nm").remove();        
+        }
+
+        if(street_unit!=""){
+          $(".struniy_icon").html('<i class="f7-icons fs-18">map_pin_ellipse</i>');
+          $(".cstuny").html(street_unit);
+        }else{
+          $(".unit_str").remove();
+        }
+        if(pin!=""){
+          $(".pin_icon").html('<i class="f7-icons fs-18">map_pin</i>');
+          $(".cpincode").html(pin);
+        }else{
+          $(".pinico").remove();
+        }
+
+        $(".lock_icon").html('');
+        $(".changepass").html('<a href="/customer_changepass/" class="text-red fw-600 text-center">Change Password <i class="f7-icons fs-18">lock_fill</i></a>');
+
+        $.ajax({
+          type:'POST', 
+          data:{'a_id':a_id,'city_id':city_id},
+          url:base_url+'APP/Appcontroller/userAreaCity',
+          success:function(areacity){
+            var parsearea = $.parseJSON(areacity);
+            var area = parsearea.area;
+            var city = parsearea.city;
+            //console.log(area);
+            //console.log(city);
+            var carea = area[0].a_name;
+            //console.log("****"+carea);
+            var ccity = city[0].city_name;
+            $(".area_icon").html('<i class="f7-icons fs-18">map_pin_ellipse</i>');
+            $(".carea").html(carea);
+
+            $(".city_icon").html('<i class="f7-icons fs-18">location_circle_fill</i>');
+            $(".ccity").html(ccity);
+            app.preloader.hide();
+          }
+        });
+      }
+    });  
+  }else{
+    $(".prof_info").removeClass("display-block");
+    $(".prof_info").addClass("display-none"); 
+    $(".profile_div").removeClass("display-block");   
+    $(".profile_div").addClass("display-none");
+    $(".editprofbtn").removeClass("display-block");
+    $(".editprofbtn").addClass("display-none");
+    $(".no_session_profile").removeClass("display-none");
+    $(".no_session_profile").addClass("display-block");
+    $(".no_sess_list").removeClass("display-none");
+    $(".no_sess_list").addClass("display-block");
+    app.preloader.hide();
+  }
+  app.preloader.hide();
+});
+function getcatServices(cat_id,c_img_path,hidd_current_city){
+  alert("hidd_current_city is :"+hidd_current_city);
+  mainView.router.navigate("/customer_servicelist/");  
+  app.preloader.show();
+  $.ajax({
+    type:'POST', 
+    data:{'cat_id':cat_id},
+    url:base_url+'APP/Appcontroller/getServicelist',
+    success:function(serv_res){
+      $("#hidd_catid").val(cat_id);
+      $("#hidd_c_img_path").val(c_img_path);
+      var parseServ = $.parseJSON(serv_res);
+      var serv_list = parseServ.serv_list;
+      var list='';
+      for(var j=0;j<serv_list.length;j++){
+        var s_id = serv_list[j].s_id;
+        var s_name = serv_list[j].s_name;  
+        var s_img_path = serv_list[j].s_img_path;
+        var cimg = c_img_path.replace(/\//g, "-"); 
+        //alert(cimg); 
+        list+='<li><a href="/customer_service_types/'+s_id+'/'+s_name+'/'+cimg+'/'+cat_id+'/" class="item-link item-content"><div class="item-media"><img src="'+base_url+s_img_path+'" class="block_img lazy lazy-fade-in" height="60" width="60"/></div><div class="item-inner"><div class="item-title fs-12">'+s_name+'</div></div></a></li>';
+      }
+      $(".servList").html(list);
+      app.preloader.hide();
+    }
+  });
+}
+function getBookingbyStatus(button_active,divname){
+  checkConnection();  
+  app.preloader.show();
+  var session_cid = window.localStorage.getItem("session_cid");  
+  $.ajax({
+    type:'POST', 
+    data:{'session_cid':session_cid,'button_active':button_active},
+    url:base_url+'APP/Appcontroller/getMyBookings',
+    success:function(book_result){
+      var book_res = $.parseJSON(book_result);
+      var cust = book_res.cust;
+      var order = book_res.order;
+      var order_cnts = book_res.order_cnts;
+      var order_cnts_pen = book_res.order_cnts_pen;
+      var order_cnts_start = book_res.order_cnts_start;
+      var order_cnts_fin =book_res.order_cnts_fin;
+
+      //console.log(order_cnts_pen+"----"+order_cnts_start+"*****"+order_cnts_fin);
+      var c_id = cust.c_id;      
+      //console.log(order);
+      var ord_list=''; 
+      $(".booking_btns").removeClass("display-none");
+      $(".booking_btns").addClass("display-block"); 
+      $(".bookings_tot").html(order_cnts);
+      $(".pen_badge").html(order_cnts_pen);
+      $(".fin_badge").html(order_cnts_start);
+      $(".start_badge").html(order_cnts_fin);
+      if(order.length==0){
+        ord_list+='<div class="block fs-12 text-red fw-500 text-capitalize">No bookings available.</div>';
+      }else{
+        for(var i=0;i<order.length;i++){
+          var ord_no = order[i].o_num;
+          var o_code = order[i].order_code;
+          var order_status = order[i].order_status;
+          var s_name = order[i].s_name;
+          var j_name = order[i].j_name;
+          var p_name = order[i].p_name;
+          var date_time = order[i].date_time;
+          var rep_dt = date_time.replace("`"," ");
+          var finaldt = rep_dt.replace("`","");
+          var acpt_status = order[i].acpt_status;
+          var p_phone = order[i].p_phone;
+          var p_email = order[i].p_email;  
+          var request_day = order[i].request_day;   
+          var review_count = order[i].review_count;
+          var order_status = order[i].order_status;
+          var time = order[i].time;   
+          var part_reschedule_req = order[i].part_reschedule_req;
+          var acpt_id = order[i].acpt_id;
+          var o_id = order[i].o_id;
+          var address = order[i].address;
+          var change_address = order[i].change_address;
+          var change_add_status = order[i].change_add_status;
+          var btn_loc='';
+          var loc_apprv='';
+          //console.log("acpt_status "+acpt_status+"******* change_address "+change_address+"!!!!!!!!! change_add_status "+ change_add_status);
+
+          if(order_status==0){
+            var status_cls='pending'; 
+            var status_txt='Pending';
+            var reviewbtn='';
+            //$("#action_line_"+i).removeClass("display-block");
+            //$("#action_line_"+i).addClass("display-none");
+            if(part_reschedule_req==1){
+              //$("#action_line_"+i).removeClass("display-none");
+              //$("#action_line_"+i).addClass("display-block");
+              var req_res = '<span class="col-75 fw-600 fs-10 mt-2" ><i class="f7-icons fs-12 mr-5">arrow_clockwise</i>Requested for reschedule </span>';
+            }else if(part_reschedule_req!=1){
+              //$("#action_line_"+i).removeClass("display-block");
+              //$("#action_line_"+i).addClass("display-none");
+              var req_res='';
+            } 
+
+            if(acpt_status==0){
+              //console.log(i+"if -----"+acpt_status);
+              var patner_det='<span class="pending fs-10 mt-5">Not accepted yet</span>';
+              var thumb='';
+              //$("#action_line_"+i).removeClass("display-block");
+              //$("#action_line_"+i).addClass("display-none");
+              
+            }else if(acpt_status==1){              
+              var patner_det=status_txt+ ' By '+p_name+'<br/><i class="f7-icons fs-12 text-grey mr-5">phone_fill</i><span class="fs-10">'+p_phone+'</span><br/><i class="f7-icons fs-12 text-grey mr-5">envelope_fill</i><span class="fs-10">'+p_email+'</span>';
+              var thumb='<i class="f7-icons text-blue fs-14">hand_thumbsup_fill</i>';
+               
+              //alert(i+"-----"+change_add_status);
+              if(change_add_status==1){
+                //alert("if 1");
+                btn_loc+='<button class="col-50 seg-outline loc_btn p-2 nobg fs-11 display-block w-100 mr-5" id="seal_'+i+'"><i class="f7-icons fs-13 text-red mr-5">checkmark_seal_fill</i>Location approved</button>';
+                btn_loc+='';
+              }else if(change_add_status==2){
+                //alert("else if 2");
+                btn_loc+='<button class="col-50 seg-outline loc_btn p-2 nobg fs-11 display-block w-100 mr-5" id="seal_'+i+'"><i class="f7-icons fs-13 text-red mr-5">multiply_circle_fill</i>Change location request decline</button>';
+              }else if(change_add_status==0){
+                //alert("else if 0");
+                btn_loc+='<button class="col-33 button button-small button-fill loc_btn submitbtn fs-10 display-block" id="loc_btn_'+i+'" onclick="changeServiceLoc('+i+','+c_id+','+acpt_id+','+o_id+')"><i class="f7-icons fs-12 mr-5">placemark_fill</i>Location</button>';
+              }  
+
+
+              /*if((change_address!='' && change_add_status==1) || (address!='' && change_add_status!=1 && (change_address=='' || change_address==null))){
+                if((address!='' && change_add_status!=1 && (change_address=='' || change_address==null))){
+                  //console.log(i+"if"+change_add_status);
+                  btn_loc+='<button class="col-33 button button-small button-fill loc_btn submitbtn fs-10 display-block" id="loc_btn_'+i+'" onclick="changeServiceLoc('+i+','+c_id+','+acpt_id+','+o_id+')"><i class="f7-icons fs-12 mr-5">placemark_fill</i>Location</button>';
+                  loc_apprv+='';
+                }else{  
+                  //console.log(i+"else"+change_add_status);
+                  if(change_add_status==1){
+                    btn_loc+='<button class="col-33 button button-small button-fill loc_btn submitbtn fs-10 display-block" id="loc_btn_'+i+'" onclick="changeServiceLoc('+i+','+c_id+','+acpt_id+','+o_id+')"><i class="f7-icons fs-12 mr-5">placemark_fill</i>Location</button>';
+                    //btn_loc+='<button class="col-66 button button-small button-fill loc_btn submitbtn fs-10 display-block w-100 mr-5" id="seal_'+i+'"><i class="f7-icons fs-13 text-red mr-5">checkmark_seal_fill</i>Location approved</button>';
+                    loc_apprv+='<button class="col-50 seg-outline loc_btn p-2 nobg fs-11 display-block w-100 mr-5" id="seal_'+i+'"><i class="f7-icons fs-13 text-red mr-5">checkmark_seal_fill</i>Location approved</button>';
+                  }else if(change_add_status==0){
+                    //console.log("else -----"+change_add_status);
+                    btn_loc+='<span class="col-60 loc_btn fw-600 fs-10 display-block reqsent_'+i+'"><i class="f7-icons fs-13 mr-5">checkmark_alt</i>Location Request Sent </span>';
+                    loc_apprv+='';
+                  }
+                } 
+              }else if((change_address!='' && change_add_status==0) || (address!='' && change_add_status!=1 && (change_address=='' || change_address==null))){
+                //console.log("else if%%% -----"+change_add_status);
+                //btn_loc+='<button class="col-60 button button-small button-fill loc_btn submitbtn fs-10 display-block reqsent_'+i+'"><i class="f7-icons fs-13 mr-5">checkmark_alt</i>Location Request Sent </button>';
+                btn_loc+='<span class="col-60 loc_btn fw-600 fs-10 display-block reqsent_'+i+'"><i class="f7-icons fs-13 mr-5">checkmark_alt</i>Location Request Sent </span>';
+              }*/
+
+            }
+          }else if(order_status==1){
+            var status_cls='started';    
+            var status_txt='Started';
+            var reviewbtn='';
+            var patner_det=status_txt+ ' By '+p_name+'<br/><i class="f7-icons fs-12 text-grey mr-5">phone_fill</i><span class="fs-10">'+p_phone+'</span><br/><i class="f7-icons fs-12 text-grey mr-5">envelope_fill</i><span class="fs-10">'+p_email+'</span>';
+            var thumb='';
+          }else if(order_status==2){
+            var status_cls='finished';
+            var status_txt='Finished';
+            var thumb='';
+            var patner_det=status_txt+ ' By '+p_name+'<br/><i class="f7-icons fs-12 text-grey mr-5">phone_fill</i><span class="fs-10">'+p_phone+'</span><br/><i class="f7-icons fs-12 text-grey mr-5">envelope_fill</i><span class="fs-10">'+p_email+'</span>';
+            if(review_count==0){
+              var rate_form='<div class="rating_form_'+i+' list display-none w-100"><ul class="w-100"><li class="item-content item-input item-input-outline w-100 row"><div class="item-inner"><div class="item-title item-label l-0">Give rates<br/></div><div class="w-100 text-center"><div class="rating-widget"><!-- Rating Stars Box --><div class="rating-stars text-center"><ul id="stars" class="display-if"><input type="hidden" name="hidd_rate" id="hidd_rate" /><li class="star" title="Poor" data-value="1" id="star_'+i+'_1" onclick="ratestar(this,'+i+')"><i class="f7-icons lightgrey" id="fillstr_'+i+'_1">star_fill</i></li><li class="star" title="Fair" data-value="2" id="star_'+i+'_2" onclick="ratestar(this,'+i+')"><i class="f7-icons lightgrey" id="fillstr_'+i+'_2">star_fill</i></li><li class="star" title="Good" data-value="3" id="star_'+i+'_3" onclick="ratestar(this,'+i+')"><i class="f7-icons lightgrey" id="fillstr_'+i+'_3">star_fill</i></li><li class="star" title="Excellent" data-value="4" id="star_'+i+'_4" onclick="ratestar(this,'+i+')"><i class="f7-icons lightgrey" id="fillstr_'+i+'_4">star_fill</i></li><li class="star" title="WOW!!!"" data-value="5" id="star_'+i+'_5" onclick="ratestar(this,'+i+')"><i class="f7-icons lightgrey" id="fillstr_'+i+'_5">star_fill</i></li></ul></div></div></div></div><div class="item-inner"><div class="item-input-wrap"><input type="text" placeholder="Give a review" name="review_txt" id="reviewtxt_'+i+'" class="fs-12"><span class="input-clear-button"></span></div></div>         <button class="col-33 button fs-10 mb-5 button-small seg_btn" onclick="giverate('+i+','+c_id+','+o_id+','+acpt_id+')">Rate it!</button><button class="col-33 button button-outline fs-10 mr-15 mb-5 button-small seg-outline" onclick="showRatebtn('+i+')">Cancel</button></li></ul></div>';
+              var reviewbtn='<button class="col-33 button button-small button-fill fs-10 for_green display-block w-20" id="rate_'+i+'" onclick="showrateForm('+i+','+o_id+')"><i class="f7-icons fs-12 mr-5">star_fill</i>Rate</button>'+rate_form;
+            }else{
+              var rate_form='';
+              var reviewbtn=''; 
+            }
+          }
+          if(reviewbtn!=''){
+            var rev_btn=reviewbtn;
+          } else{
+            var rev_btn='';
+          }
+          /*if(acpt_status==0){
+            var thumb='';
+            var accept_status='<span class="pending fs-10 mt-5">Not accepted yet</span>';
+          }else{  
+            var thumb='<i class="f7-icons text-blue fs-14">hand_thumbsup_fill</i>';          
+            var accept_status=status_txt+ ' By '+p_name+'<br/><i class="f7-icons fs-12 text-grey mr-5">phone_fill</i><span class="fs-10">'+p_phone+'</span><br/><i class="f7-icons fs-12 text-grey mr-5">envelope_fill</i><span class="fs-10">'+p_email+'</span>';
+          } 
+          if(reviewbtn!=''){
+            var rev_btn=reviewbtn;
+          } else{
+            var rev_btn='';
+          }*/
+          /*var rate_form='<div class="rating_form_'+i+' list display-none w-100"><ul class="w-100"><li class="item-content item-input item-input-outline w-100 row"><div class="item-inner"><div class="item-title item-label l-0">Give rates<br/></div><div class="item-input-wrap"><section class="rating-widget"><!-- Rating Stars Box --><div class="rating-stars text-center"><ul id="stars"><li class="star" title="Poor" data-value="1"><i class="f7-icons">star</i></li><li class="star" title="Fair" data-value="2"><i class="f7-icons">star</i></li><li class="star" title="Good" data-value="3"><i class="f7-icons">star</i></li><li class="star" title="Excellent" data-value="4"><i class="f7-icons">star</i></li><li class="star" title="WOW!!!"" data-value="5"><i class="f7-icons">star</i></li></ul></div></section>               </div></div><button class="col-33 button fs-10 mb-5 button-small seg_btn" onclick="giverate('+i+','+c_id+','+o_id+')">Rate it!</button><button class="col-33 button button-outline fs-10 mr-15 mb-5 button-small seg-outline" onclick="showRatebtn('+i+')">Cancel</button></li></ul></div>';*/
+
+
+          var change_loc='<span id="btnLoc">'+btn_loc+'</span><div class="locchange_form_'+i+' list display-none w-100"><ul class="w-100"><li class="item-content item-input item-input-outline w-100 row"><div class="item-inner"><div class="item-title item-label l-0">Change Location<br/><span class="text-red fw-600 fs-9">NOTE : Address can be change if partner will accept your request.</span></div><div class="item-input-wrap"><input type="text" name="change_address" id="change_address_'+i+'" class="fs-12"><span class="input-clear-button"></span></div></div><button class="col-33 button fs-10 mb-5 button-small seg_btn" onclick="changeAddress('+i+','+c_id+','+acpt_id+','+o_id+','+"'"+ord_no+"'"+','+o_code+')">Change</button><button class="col-33 button button-outline fs-10 mr-15 mb-5 button-small seg-outline" onclick="showLocbtn('+i+')">Cancel</button></li></ul></div>';
+          ord_list+='<li class="accordion-item lightblue mb-5" id="li_'+i+'"><a href="#" class="item-content item-link"><div class="item-inner"><div class="item-title text-blue fw-500 fs-14"><span class="mr-5">'+ord_no+'</span><!--span class="text-red fw-500 fs-12">(code: '+o_code+')</span--></div><!--span class="float-right fs-10 fw-600 '+status_cls+'">'+status_txt+'</span--><span class="float-right fs-10 fw-600">'+thumb+'</span></div></a><div class="accordion-item-content nobg"><div class="block"><div class="row"><div class="col-50 mt-2 fs-12"><span class="fw-500">Order code: '+o_code+'</span><br/><span class="fw-600 text-blue bord-bot-blue">'+s_name+'</span><br/><span class="fs-10 fw-500"><i class="f7-icons fs-10 text-grey mr-5">circle_fill</i>'+j_name+'</span><br/><span class="fs-10 fw-500"><i class="f7-icons fs-10 text-grey mr-5">calendar_fill</i>'+finaldt+'<span class="text-capitalize badge fs-10 ml-5"> '+request_day+'</span></span><br/><span class="fs-10 fw-500"><i class="f7-icons fs-10 text-grey mr-5">timer_fill</i>'+time+'</span></div><div class="col-50 mt-2 fs-12"><span class="fw-500">'+patner_det+'</span></div></div></div>';
+          if(rev_btn!=''){
+            ord_list+='<div class="action_line" id="action_line_'+i+'"><div class="row"><span class="float-right w-100">'+rev_btn+'</span></div></div>';
+          }
+          if(btn_loc!=''){            
+            ord_list+='<div class="action_line" id="action_line_'+i+'"><div class="row"><span class="float-left leftdiv_'+i+'">'+change_loc+req_res+'</span>'+loc_apprv+'</div></div>';
+          }
+          ord_list+='</div></li>';
+      }
+
+      }  
+      $(".ordercls").html("");
+      $("#"+divname).html(ord_list);      
+      app.preloader.hide();
+    }
+  });
+}
+function getActivate(btn_tab){
+  app.preloader.show();
+  if(btn_tab==0){
+    var divname="pen_orders";
+    getBookingbyStatus(btn_tab,divname);
+    $(".pen_btn").removeClass("seg-outline");
+    $(".start_btn").removeClass("button-active");
+    $(".finish_btn").removeClass("button-active");    
+    $(".start_btn").removeClass("seg_btn");
+    $(".finish_btn").removeClass("seg_btn");
+    $(".start_btn").addClass("seg-outline");
+    $(".finish_btn").addClass("seg-outline");
+    $(".pen_btn").addClass("button-active");
+    $(".pen_btn").addClass("seg_btn");  
+
+    $("#pen_orders").removeClass("display-none");
+    $("#pen_orders").addClass("display-block");
+    $("#start_orders").removeClass("display-block");
+    $("#start_orders").addClass("display-none");
+    $("#finish_orders").removeClass("display-block");
+    $("#finish_orders").addClass("display-none");
+  }else if(btn_tab==1){ 
+    var divname="start_orders";
+    getBookingbyStatus(btn_tab,divname);
+    $(".start_btn").removeClass("seg-outline");
+    $(".pen_btn").removeClass("button-active");
+    $(".finish_btn").removeClass("button-active");
+    $(".pen_btn").removeClass("seg_btn");
+    $(".finish_btn").removeClass("seg_btn");
+    $(".pen_btn").addClass("seg-outline");
+    $(".finish_btn").addClass("seg-outline");
+    $(".start_btn").addClass("button-active");  
+    $(".start_btn").addClass("seg_btn");  
+
+    $("#start_orders").removeClass("display-none");
+    $("#start_orders").addClass("display-block");
+    $("#pen_orders").removeClass("display-block");
+    $("#pen_orders").addClass("display-none");
+    $("#finish_orders").removeClass("display-block");
+    $("#finish_orders").addClass("display-none");
+
+  }else if(btn_tab==2){
+    var divname="finish_orders";
+    getBookingbyStatus(btn_tab,divname);
+    $(".finish_btn").removeClass("seg-outline");
+    $(".start_btn").removeClass("button-active");
+    $(".pen_btn").removeClass("button-active");
+    $(".start_btn").removeClass("seg_btn");
+    $(".pen_btn").removeClass("seg_btn");
+    $(".start_btn").addClass("seg-outline");
+    $(".pen_btn").addClass("seg-outline");
+    $(".finish_btn").addClass("button-active");
+    $(".finish_btn").addClass("seg_btn"); 
+
+    $("#finish_orders").removeClass("display-none");
+    $("#finish_orders").addClass("display-block");
+    $("#pen_orders").removeClass("display-block");
+    $("#pen_orders").addClass("display-none");
+    $("#start_orders").removeClass("display-block");
+    $("#start_orders").addClass("display-none");
+  }
+  app.preloader.hide();
+}
 function register_cust(){
   checkConnection(); 
   var i_mode = device.platform;
@@ -409,6 +858,159 @@ function verifycust_otp(){
     }
   });  
 }
+$$(document).on('page:init', '.page[data-name="customer_editprof"]', function (page) { 
+  checkConnection(); 
+  app.preloader.show();
+  var session_cid = window.localStorage.getItem("session_cid");  
+  $.ajax({
+    type:'POST', 
+    data:{'session_cid':session_cid},
+    url:base_url+'APP/Appcontroller/userProfile',
+    success:function(prof_result){
+      var prf = $.parseJSON(prof_result);
+      var profile = prf.profile;
+      console.log(profile);
+      var cid = profile[0].c_id;
+      //alert(cid);
+      var nm_fltr = (profile[0].c_name.charAt(0));
+      $(".nmfltr").html(nm_fltr);
+      var c_id = profile[0].c_id;
+      var c_name = profile[0].c_name;
+      var c_email = profile[0].c_email;
+      var c_phone = profile[0].c_phone;
+      var c_strno = profile[0].street_no;
+      var c_sname = profile[0].street_name;
+      var c_sunit = profile[0].street_unit;
+      var c_pin = profile[0].pin;
+
+      //var c_addr = profile[0].c_addr;
+      var a_id = profile[0].a_id;
+      var city_id = profile[0].city_id;
+      $("#hidden_cid").val(c_id);
+      $("#cname").val(c_name);
+      $("#cemail").val(c_email);
+      $("#cphone").val(c_phone);
+      $("#str_no").val(c_strno);
+      $("#str_nm").val(c_sname);
+      $("#str_unit").val(c_sunit);
+      $("#str_pin").val(c_pin);
+
+      //$("#caddr").val(c_addr);
+      $.ajax({
+        type:'POST', 
+        data:{'a_id':a_id,'city_id':city_id},
+        url:base_url+'APP/Appcontroller/userAreaCity',
+        success:function(areacity){
+          var parsearea = $.parseJSON(areacity);
+          var area = parsearea.area;
+          var city = parsearea.city;
+          var carea = area[0].a_name;
+          var ccity = city[0].city_name;
+          $.ajax({
+            type:'POST', 
+            url:base_url+'APP/Appcontroller/AllActiveCityArea',
+            success:function(actv_city){
+              var cty = $.parseJSON(actv_city);
+              var act_city = cty.act_city;
+              var act_area = cty.act_area;
+              var all_city = '';
+              var all_area = '';
+              //var j;
+              for(var i=0;i<act_city.length;i++){
+                var cty_nm = act_city[i].city_name;
+                var cityid = act_city[i].city_id;
+                if(cityid == city_id){
+                  var sel='selected';
+                }else{
+                  var sel='';
+                }
+                all_city+='<option value='+cityid+' '+sel+'>'+cty_nm+'</option>';
+              }
+              $("#serving_city").html(all_city);
+            //}
+
+            for(var j=0;j<act_area.length;j++){
+              var a_nm = act_area[j].a_name;
+              var aid = act_area[j].a_id;
+              if(aid == a_id){
+                var sel_area='selected';
+              }else{
+                var sel_area='';
+              }
+              all_area+='<option value='+aid+' '+sel_area+'>'+a_nm+'</option>';
+            }
+            $("#serving_area").html(all_area);
+          }
+          }); 
+        }
+      });
+      app.preloader.hide();
+    }
+  });    
+});
+function edit_custprofile(){
+  //alert("in edit_custprofile");
+  checkConnection();
+  app.preloader.show();
+  var c_editprof_from = $(".edit_cprof").serialize();
+  //var hidd_proftab = $("#hidd_proftab").val();
+  //console.log(c_editprof_from);
+  $.ajax({ 
+    type:'POST', 
+    data:c_editprof_from,
+    url:base_url+'APP/Appcontroller/customer_edit',
+    success:function(cedit_res){
+      if(cedit_res=='updated'){
+        app.dialog.alert("Profile updated successfully!");
+        //mainView.router.navigate("/customer_dash/");
+        //$("#tab-3").addClass("tab-active");
+      }else if(cedit_res=='not'){
+        app.dialog.alert("Problem updating profile");
+        //mainView.router.navigate("/customer_dash/");
+        //$("#tab-3").addClass("tab-active");
+      }      
+      mainView.router.navigate("/customer_dash/");       
+      //$("#hidd_proftab").addClass("tab-active");
+      app.preloader.hide();
+    }
+  });  
+}
+function change_custpass(){
+  checkConnection();  
+  app.preloader.show();
+  var session_cid = window.localStorage.getItem("session_cid");
+  var edit_cpass = $(".edit_cpass").serialize();
+  $.ajax({
+    type:'POST', 
+    data:edit_cpass+"&session_cid="+session_cid,
+    url:base_url+'APP/Appcontroller/changeCust_pass',
+    success:function(pass){
+      var pwdparse = $.parseJSON(pass);
+      var p_change = pwdparse.p_change;
+      //console.log(pass); 
+      /*if(pass=='updated'){
+        app.dialog.alert("Password updated successfully!");
+      }*/
+      if(p_change=='wrongoldpwd'){
+        app.dialog.alert("Entered OldPassword is incorrect.");
+      }else if(p_change=='updated'){
+        app.dialog.alert("Password updated successfully!");
+      }else if(p_change=='newpwdnotmatch'){
+        app.dialog.alert("New and confirm password are not same!");
+      }  
+      //app.tab.show("#tab-3"); 
+      mainView.router.navigate("/customer_changepass/");
+      app.preloader.hide();  
+    }
+  });
+  $("#old_pass").val('');
+  $("#new_pass").val('');
+  $("#conf_newpass").val('');
+  $(".match-text").css("display",'none');
+  $(".unmatch-text").css("display",'none');
+  $("#warning-badge").addClass("display-none");
+  $("#success-badge").addClass("display-none");  
+}
 function change_day(obj){
   var day = obj.attr("data-day");
   //alert(day);
@@ -546,6 +1148,7 @@ function onSuccess(position){
         $("#formatted_address").html(res);
         window.localStorage.setItem("session_cust_current_city",city);
         window.localStorage.setItem("session_cust_current_loc",res);
+        $("#hidd_current_city").val(city);
         //updateCurrLocCust(session_cid,res,city);
         app.preloader.hide();             
       } else {
@@ -769,8 +1372,8 @@ function logOut(){
   window.localStorage.removeItem("session_ccreated"); 
   /*window.localStorage.removeItem("session_ccity");
   window.localStorage.removeItem("session_ccityid");*/
-  window.localStorage.removeItem("session_reg_custcity");
-  window.localStorage.removeItem("session_reg_custcityid");
+  //window.localStorage.removeItem("session_reg_custcity");
+  //window.localStorage.removeItem("session_reg_custcityid");
   window.localStorage.removeItem("session_current_city");
   window.localStorage.removeItem("session_current_loc");
   mainView.router.navigate("/login/");
