@@ -226,8 +226,10 @@ function logincheck(){
           window.localStorage.setItem("session_pphone",result.user_session[0].p_phone);
           window.localStorage.setItem("session_pemail",result.user_session[0].p_email);
           window.localStorage.setItem("session_pcreated",result.user_session[0].p_created_on);
-          window.localStorage.setItem("session_pcity",sess_city);
-          window.localStorage.setItem("session_pcityid",sess_cityid);          
+          /*window.localStorage.setItem("session_pcity",sess_city);
+          window.localStorage.setItem("session_pcityid",sess_cityid); */
+          window.localStorage.setItem("session_reg_partcity",sess_city);
+          window.localStorage.setItem("session_reg_partcityid",sess_cityid);         
         }else if(parse_authmsg=="c_success"){  
           //alert("customer_dash");
           mainView.router.navigate("/location_on/");
@@ -237,8 +239,10 @@ function logincheck(){
           window.localStorage.setItem("session_cphone",result.user_session[0].c_phone);
           window.localStorage.setItem("session_cemail",result.user_session[0].c_email);
           window.localStorage.setItem("session_ccreated",result.user_session[0].c_created_on);
-          window.localStorage.setItem("session_ccity",sess_city); 
-          window.localStorage.setItem("session_ccityid",sess_cityid);    
+          /*window.localStorage.setItem("session_ccity",sess_city); 
+          window.localStorage.setItem("session_ccityid",sess_cityid);*/
+          window.localStorage.setItem("session_reg_custcity",sess_city); 
+          window.localStorage.setItem("session_reg_custcityid",sess_cityid);    
         }else if(parse_authmsg=="Inc_pass"){
           //alert("Incorrect Password!");
           app.dialog.alert("Incorrect Password!");
@@ -467,6 +471,70 @@ function bookCustService(){
     } 
   }); 
 }
+function curr_loc(){
+  //alert("called");
+  openLOC();
+  navigator.geolocation.getCurrentPosition(onSuccess, onError,{ maximumAge: 3000, timeout: 5000, enableHighAccuracy: true });
+}
+function onSuccess(position){
+  app.preloader.show();
+  alert("in onSuccess function");
+  /*alert('Latitude: '          + position.coords.latitude          + '\n' +
+        'Longitude: '         + position.coords.longitude         + '\n' +
+        'Altitude: '          + position.coords.altitude          + '\n' +
+        'Accuracy: '          + position.coords.accuracy          + '\n' +
+        'Altitude Accuracy: ' + position.coords.altitudeAccuracy  + '\n' +
+        'Heading: '           + position.coords.heading           + '\n' +
+        'Speed: '             + position.coords.speed             + '\n' +
+        'Timestamp: '         + position.timestamp                + '\n');*/
+  var longitude = position.coords.longitude;
+  var latitude = position.coords.latitude;
+  var session_cid = window.localStorage.getItem("session_cid"); 
+  $("#hidd_currlat").val(latitude);
+  $("#hidd_currlon").val(longitude);
+  var geocoder = new google.maps.Geocoder();
+  var LatLong = new google.maps.LatLng(latitude,longitude);
+  geocoder.geocode({'latLng': LatLong}, function(results, status) {
+    if (status === 'OK') {
+      if (results[0]) {
+        //alert(results[0].formatted_address);
+        var addressComponents = results[0].address_components;
+        var res = results[0].formatted_address;
+        var city = "";        
+        var types;
+        var state = "";
+        for(var i=0;i<addressComponents.length;i++){
+          //alert(addressComponents[i]+" addressComponents[i]");
+          address_component = addressComponents[i];
+          types = address_component.types;
+          //alert(types.length+" types.length");
+          for (var j = 0; j < types.length; j++) {
+            //alert("types "+types[j]);
+            if (types[j] === 'administrative_area_level_1') {
+              state = address_component.long_name;
+            }
+            if (types[j] === 'administrative_area_level_2') {
+              city = address_component.long_name;
+            }
+          }
+        }
+        $("#formatted_address").html(res);
+        window.localStorage.setItem("session_cust_current_city",city);
+        window.localStorage.setItem("session_cust_current_loc",res);
+        //updateCurrLocCust(session_cid,res,city);
+        app.preloader.hide();             
+      } else {
+        app.dialog.alert('No results found');
+      }
+    } else {
+      app.dialog.alert('Geocoder failed due to: ' + status);
+    }
+  });
+  app.preloader.hide();
+}
+function onError(error){
+  alert('code: '    + error.code    + '\n' + 'message: ' + error.message + '\n');
+}
 // ********************************** PARTNER FUNCTIONS ********************************** //
 // ------------------------- DATA NAME : PARTNER DASHBOARD ------------------------- //
 $$(document).on('page:init', '.page[data-name="partner_dash"]', function (page) {  
@@ -669,8 +737,10 @@ function logOut(){
   window.localStorage.removeItem("session_cphone"); 
   window.localStorage.removeItem("session_cemail"); 
   window.localStorage.removeItem("session_ccreated"); 
-  window.localStorage.removeItem("session_ccity");
-  window.localStorage.removeItem("session_ccityid");
+  /*window.localStorage.removeItem("session_ccity");
+  window.localStorage.removeItem("session_ccityid");*/
+  window.localStorage.removeItem("session_reg_custcity");
+  window.localStorage.removeItem("session_reg_custcityid");
   window.localStorage.removeItem("session_current_city");
   window.localStorage.removeItem("session_current_loc");
   mainView.router.navigate("/login/");
