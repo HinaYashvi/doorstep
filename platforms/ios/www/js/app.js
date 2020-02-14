@@ -660,7 +660,7 @@ $$(document).on('page:init', '.page[data-name="customer_dash"]', function (page)
         }
     });
   }else{  
-    //currentCity();  // uncomment this for apk //
+    currentCity();  // uncomment this for apk //
   }
 
 
@@ -1730,6 +1730,7 @@ $$(document).on('page:init', '.page[data-name="customer_service_types"]', functi
   var c_img_path = page.detail.route.params.cimg; 
   var catid = page.detail.route.params.cat_id; 
   var session_ccity = window.localStorage.getItem("session_ccity"); 
+  var session_cid = window.localStorage.getItem("session_cid"); 
   $("#hidd_catid").val(catid);
   $("#hidd_c_img_path").val(c_img_path);
   var c_img = c_img_path.replace(/-/g, '/');
@@ -1791,6 +1792,11 @@ $$(document).on('page:init', '.page[data-name="customer_service_types"]', functi
     alert("ELSE");
     session_ccity = session_ccity;
   }*/
+  if(session_cid!='' && session_cid!=null){
+    session_ccity = session_ccity
+  }else{
+    alert("OPEN GPS SERVICE AND GET CURRENT CITY");
+  }
   $.ajax({
     type:'POST', 
     data:{'sid':sid,'session_ccity':session_ccity},
@@ -2231,7 +2237,7 @@ function updateCurrLocCust(session_cid,res,city){
 }
 function onSuccess(position){
   app.preloader.show();
-  //alert("in function");
+  alert("in onSuccess function");
   /*alert('Latitude: '          + position.coords.latitude          + '\n' +
         'Longitude: '         + position.coords.longitude         + '\n' +
         'Altitude: '          + position.coords.altitude          + '\n' +
@@ -2252,7 +2258,7 @@ function onSuccess(position){
       //$("#map-canvas").html(results+" ^^^^^^^^^^^^");
       if (results[0]) {
         //alert(results[0].formatted_address);
-        var addressComponents = city_results[0].address_components;
+        var addressComponents = results[0].address_components;
         var res = results[0].formatted_address;
         var city = "";        
         var types;
