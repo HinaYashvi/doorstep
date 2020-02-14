@@ -644,22 +644,26 @@ $$(document).on('page:init', '.page[data-name="customer_dash"]', function (page)
     observer: true,
     observeParents: true, 
   });  
-  alert("session_current_loc "+session_current_loc); 
-  if(session_current_loc!='' && session_current_loc!=null){
-    //alert("session_current_city ^^^ customer dashboard "+session_current_city);
-    $.ajax({
-      type:'POST', 
-        url:base_url+'APP/Appcontroller/getLastCurrLoc_cust',
-        data:{'session_cid':session_cid},
-        success:function(loc_res){        
-          var json_loc = $.parseJSON(loc_res);
-          var c_current_loc_app = json_loc.c_current_loc_app;
-          $("#formatted_address").html(c_current_loc_app);
-          window.localStorage.removeItem("session_current_loc");
-          window.localStorage.setItem("session_current_loc",c_current_loc_app);
-        }
-    });
-  }else{  
+  alert("session_current_loc "+session_current_loc +" session_cid "+session_cid); 
+  if(session_cid!='' && session_cid!=null){
+    if(session_current_loc!='' && session_current_loc!=null){
+      //alert("session_current_city ^^^ customer dashboard "+session_current_city);
+      $.ajax({
+        type:'POST', 
+          url:base_url+'APP/Appcontroller/getLastCurrLoc_cust',
+          data:{'session_cid':session_cid},
+          success:function(loc_res){        
+            var json_loc = $.parseJSON(loc_res);
+            var c_current_loc_app = json_loc.c_current_loc_app;
+            $("#formatted_address").html(c_current_loc_app);
+            window.localStorage.removeItem("session_current_loc");
+            window.localStorage.setItem("session_current_loc",c_current_loc_app);
+          }
+      });
+    }else{  
+      currentCity();  // uncomment this for apk //
+    }
+  }else{
     currentCity();  // uncomment this for apk //
   }
 
@@ -1793,9 +1797,64 @@ $$(document).on('page:init', '.page[data-name="customer_service_types"]', functi
     session_ccity = session_ccity;
   }*/
   if(session_cid!='' && session_cid!=null){
-    session_ccity = session_ccity
+    session_ccity = session_ccity;
   }else{
     alert("OPEN GPS SERVICE AND GET CURRENT CITY");
+    openLOC();
+    navigator.geolocation.getCurrentPosition(function(posit){
+      var session_cid = window.localStorage.getItem("session_cid"); 
+      //alert("in onSuccessCity");
+      app.preloader.show();
+      var city_longitude = posit.coords.longitude;
+      var city_latitude = posit.coords.latitude;
+      //alert(city_longitude+"******************"+city_latitude);
+
+      var city_geocoder = new google.maps.Geocoder();
+      var city_LatLong = new google.maps.LatLng(city_latitude,city_longitude);
+      city_geocoder.geocode({'latLng': city_LatLong}, function(city_results, city_status) {
+      if (city_status === 'OK') {
+        if (city_results[0]) {
+          var addressComponents = city_results[0].address_components;
+          var res=city_results[0].formatted_address;
+          var city = "";        
+          var types;
+          var state = "";
+          //alert("addressComponents.length "+addressComponents.length);
+          var address_components=[];
+          for(var i=0;i<addressComponents.length;i++){
+            //alert(addressComponents[i]+" addressComponents[i]");
+            address_component = addressComponents[i];
+            types = address_component.types;
+            //alert(types.length+" types.length");
+            for (var j = 0; j < types.length; j++) {
+              //alert("types "+types[j]);
+              if (types[j] === 'administrative_area_level_1') {
+                state = address_component.long_name;
+              }
+              if (types[j] === 'administrative_area_level_2') {
+                city = address_component.long_name;
+              }
+            }
+          } 
+          window.localStorage.setItem("session_current_city",city);
+          window.localStorage.setItem("session_current_loc",res);
+          $("#formatted_address").html(res);
+          updateCurrLocCust(session_cid,res,city);
+          alert("city IS :" + city );
+          app.preloader.hide();              
+        } else {
+          app.dialog.alert('No results found');
+        }
+      } else {
+        app.dialog.alert('Geocoder failed due to: ' + city_status);
+      }
+      session_ccity = city;
+    });
+    app.preloader.hide();
+    }, function(err){
+      alert('code: '    + err.code    + '\n' + 'message: ' + err.message + '\n');
+    },{ maximumAge: 3000, timeout: 5000, enableHighAccuracy: true });
+    
   }
   $.ajax({
     type:'POST', 
@@ -2070,7 +2129,7 @@ function openLOC(){
       cordova.plugins.diagnostic.isLocationAuthorized(successCallback, errorCallback);
        //mainView.loadPage("current-location.html");
     }else{
-      //alert("Location service is ON");        
+      alert("Location service is ON");        
       mainView.router.navigate("/customer_dash/");
     }
   }, function(error){
