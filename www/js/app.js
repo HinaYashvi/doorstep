@@ -1865,50 +1865,55 @@ $$(document).on('page:init', '.page[data-name="customer_service_types"]', functi
       var review_rate = rev.review_rate;      
       var partner_rev = review_rate.partner;
       //console.log(partner_rev);
+      //console.log(partner_rev.length+"***************");
       var rev_list='';
-      for(var i=0;i<partner_rev.length;i++){
-        var p_name = partner_rev[i].p_name;
-        var rate = partner_rev[i].rate;
-        //alert(rate);
-        var rating = partner_rev[i].rating;
-        var p_addr1 = partner_rev[i].p_addr1;
-        var a_name = partner_rev[i].a_name;
-        var city_name  = partner_rev[i].city_name;
-        var p_phone = partner_rev[i].p_phone;
-        var p_email = partner_rev[i].p_email;
-        var rev2 = partner_rev[i].review2;
-        //console.log(rev2);
-        var add = p_addr1+", "+a_name+", "+city_name;
-        var sub_rate = '';
-        if(rate==undefined){
-          var rt='<span class="text-red fw-600 fs-12">No ratings.</span>';
-        }else{
-          var rt='<i class="f7-icons fs-16 rate_star mr-5">star_fill</i><span class="fs-14 text-grey">'+rate+'</span>';
-        }
-
-        rev_list+='<li class="accordion-item accordion-item-opened lightblue mb-5"><a href="#" class="item-content item-link"><div class="item-inner"><div class="item-title fs-12 text-capitalize"><span class="text-blue fw-600">'+p_name+'</span><br><i class="f7-icons fs-12 fw-600 text-grey">phone :</i> &nbsp;'+p_phone+'<br><i class="f7-icons fs-12 fw-600 text-grey">at_circle :</i> &nbsp;'+p_email+'</div><span class="float-right">'+rt+'</span></div></a><div class="accordion-item-content nobg"><div class="list no-hairlines-between"><ul>'; 
-        if(rev2.length > 0){
-          for(var j=0;j<rev2.length;j++){            
-            var c_name = rev2[j].c_name; 
-            var rates = rev2[j].rate+".0";
-            var review = rev2[j].review;
-            var date_time = rev2[j].date_time;
-            var res_dt = date_time.replace("`", " ");
-            var final_dt = res_dt.replace("`","");
-            sub_rate+=rates; 
-            if(c_name!=null){
-              c_name=c_name;
-            }else{
-              c_name='';
-            }    
-            rev_list+='<li class="list-border"><div class="item-content"><div class="item-media"><i class="f7-icons fs-24 text-grey">person_crop_circle_fill</i></div><div class="item-inner"><div class="item-title fs-14 text-grey fw-600">'+c_name+'<br/><i class="f7-icons fs-12 light-grey mr-5">calendar</i><span class="light-grey fs-12">'+final_dt+'</span></div><div class="item-after lh-12"><i class="f7-icons fs-14 subrate mr-5">star_fill</i><span class="fw-500">'+rates+'</span></div></div></div><span><img class="ml-20" src="img/double-quote-grey.png" height="10" width="10"></span>&nbsp;<div class="fs-12 light-grey rev_div">'+review+'</div></li>';
+      if(partner_rev.length==0){
+        rev_list='<div class="text-red fw-600 fs-12">No Provider Available In This Location</div>';
+      }else{
+        for(var i=0;i<partner_rev.length;i++){
+          var p_name = partner_rev[i].p_name;
+          var rate = partner_rev[i].rate;
+          //alert(rate);
+          var rating = partner_rev[i].rating;
+          var p_addr1 = partner_rev[i].p_addr1;
+          var a_name = partner_rev[i].a_name;
+          var city_name  = partner_rev[i].city_name;
+          var p_phone = partner_rev[i].p_phone;
+          var p_email = partner_rev[i].p_email;
+          var rev2 = partner_rev[i].review2;
+          //console.log(rev2);
+          var add = p_addr1+", "+a_name+", "+city_name;
+          var sub_rate = '';
+          if(rate==undefined){
+            var rt='<span class="text-red fw-600 fs-12">No ratings.</span>';
+          }else{
+            var rt='<i class="f7-icons fs-16 rate_star mr-5">star_fill</i><span class="fs-14 text-grey">'+rate+'</span>';
           }
-        }else{
-          rev_list+='<li><div class="item-content"><div class="item-inner"><div class="item-title fs-14 text-red fw-500">Reviews not available.</div></div></li>';
+
+          rev_list+='<li class="accordion-item accordion-item-opened lightblue mb-5"><a href="#" class="item-content item-link"><div class="item-inner"><div class="item-title fs-12 text-capitalize"><span class="text-blue fw-600">'+p_name+'</span><br><i class="f7-icons fs-12 fw-600 text-grey">phone :</i> &nbsp;'+p_phone+'<br><i class="f7-icons fs-12 fw-600 text-grey">at_circle :</i> &nbsp;'+p_email+'</div><span class="float-right">'+rt+'</span></div></a><div class="accordion-item-content nobg"><div class="list no-hairlines-between"><ul>'; 
+          if(rev2.length > 0){
+            for(var j=0;j<rev2.length;j++){            
+              var c_name = rev2[j].c_name; 
+              var rates = rev2[j].rate+".0";
+              var review = rev2[j].review;
+              var date_time = rev2[j].date_time;
+              var res_dt = date_time.replace("`", " ");
+              var final_dt = res_dt.replace("`","");
+              sub_rate+=rates; 
+              if(c_name!=null){
+                c_name=c_name;
+              }else{
+                c_name='';
+              }    
+              rev_list+='<li class="list-border"><div class="item-content"><div class="item-media"><i class="f7-icons fs-24 text-grey">person_crop_circle_fill</i></div><div class="item-inner"><div class="item-title fs-14 text-grey fw-600">'+c_name+'<br/><i class="f7-icons fs-12 light-grey mr-5">calendar</i><span class="light-grey fs-12">'+final_dt+'</span></div><div class="item-after lh-12"><i class="f7-icons fs-14 subrate mr-5">star_fill</i><span class="fw-500">'+rates+'</span></div></div></div><span><img class="ml-20" src="img/double-quote-grey.png" height="10" width="10"></span>&nbsp;<div class="fs-12 light-grey rev_div">'+review+'</div></li>';
+            }
+          }else{
+            rev_list+='<li><div class="item-content"><div class="item-inner"><div class="item-title fs-14 text-red fw-500">Reviews not available.</div></div></li>';
+          }
+          rev_list+='</ul></div></div></li>';
+          
+          //rev_list+='<li class="accordion-item lightblue mb-5"><a href="#" class="item-content item-link"><div class="item-inner"><div class="item-title fs-12 text-capitalize"><span class="text-blue fw-600">'+p_name+'</span><br><i class="f7-icons fs-12 fw-600 text-grey">phone :</i> &nbsp;'+p_phone+'<br><i class="f7-icons fs-12 fw-600 text-grey">at_circle :</i> &nbsp;'+p_email+'</div><span class="float-right">'+rt+'</span></div></a><div class="accordion-item-content no-bg"><div class="list no-hairlines-between"><ul><li><div class="item-content"><div class="item-media"><i class="f7-icons fs-24 text-grey">person_crop_circle_fill</i></div><div class="item-inner"><div class="item-title">Ivan Petrov</div><div class="item-after">CEO</div></div></div></li></ul></div></div></li>'; 
         }
-        rev_list+='</ul></div></div></li>';
-        
-        //rev_list+='<li class="accordion-item lightblue mb-5"><a href="#" class="item-content item-link"><div class="item-inner"><div class="item-title fs-12 text-capitalize"><span class="text-blue fw-600">'+p_name+'</span><br><i class="f7-icons fs-12 fw-600 text-grey">phone :</i> &nbsp;'+p_phone+'<br><i class="f7-icons fs-12 fw-600 text-grey">at_circle :</i> &nbsp;'+p_email+'</div><span class="float-right">'+rt+'</span></div></a><div class="accordion-item-content no-bg"><div class="list no-hairlines-between"><ul><li><div class="item-content"><div class="item-media"><i class="f7-icons fs-24 text-grey">person_crop_circle_fill</i></div><div class="item-inner"><div class="item-title">Ivan Petrov</div><div class="item-after">CEO</div></div></div></li></ul></div></div></li>'; 
       }
       $("#reviews").html(rev_list);
       app.preloader.hide();
