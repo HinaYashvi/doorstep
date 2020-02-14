@@ -643,31 +643,25 @@ $$(document).on('page:init', '.page[data-name="customer_dash"]', function (page)
     },
     observer: true,
     observeParents: true, 
-  });
-  alert("customer dashboard session_cid "+session_cid); 
+  });  
   alert("session_current_loc "+session_current_loc); 
-  //if(session_cid!='' && session_cid!=null){
-    if(session_current_loc!='' && session_current_loc!=null){
-      //alert("session_current_city ^^^ customer dashboard "+session_current_city);
-      $.ajax({
-        type:'POST', 
-          url:base_url+'APP/Appcontroller/getLastCurrLoc_cust',
-          data:{'session_cid':session_cid},
-          success:function(loc_res){        
-            var json_loc = $.parseJSON(loc_res);
-            var c_current_loc_app = json_loc.c_current_loc_app;
-            $("#formatted_address").html(c_current_loc_app);
-            window.localStorage.removeItem("session_current_loc");
-            window.localStorage.setItem("session_current_loc",c_current_loc_app);
-          }
-      });
-    }else{  
-      currentCity();  // uncomment this for apk //
-    }
-  //}else{
-  //  alert("FORFULLY OPEN LOCATION");
+  if(session_current_loc!='' && session_current_loc!=null){
+    //alert("session_current_city ^^^ customer dashboard "+session_current_city);
+    $.ajax({
+      type:'POST', 
+        url:base_url+'APP/Appcontroller/getLastCurrLoc_cust',
+        data:{'session_cid':session_cid},
+        success:function(loc_res){        
+          var json_loc = $.parseJSON(loc_res);
+          var c_current_loc_app = json_loc.c_current_loc_app;
+          $("#formatted_address").html(c_current_loc_app);
+          window.localStorage.removeItem("session_current_loc");
+          window.localStorage.setItem("session_current_loc",c_current_loc_app);
+        }
+    });
+  }else{  
     //currentCity();  // uncomment this for apk //
-  //}
+  }
 
 
   //navigator.geolocation.getCurrentPosition(onSuccess, onError);
@@ -1735,8 +1729,7 @@ $$(document).on('page:init', '.page[data-name="customer_service_types"]', functi
   var sname = page.detail.route.params.sname;
   var c_img_path = page.detail.route.params.cimg; 
   var catid = page.detail.route.params.cat_id; 
-  var session_ccity = window.localStorage.getItem("session_ccity");
-  var session_cid = window.localStorage.getItem("session_cid"); 
+  var session_ccity = window.localStorage.getItem("session_ccity"); 
   $("#hidd_catid").val(catid);
   $("#hidd_c_img_path").val(c_img_path);
   var c_img = c_img_path.replace(/-/g, '/');
@@ -1789,75 +1782,15 @@ $$(document).on('page:init', '.page[data-name="customer_service_types"]', functi
       $("#slides").html(slides);        
     }
   });
-  /*
-  
-  var session_current_city = window.localStorage.getItem("session_current_city");
-  if(session_current_city!='' && session_current_city!=null){
+  /*var session_current_city = window.localStorage.getItem("session_current_city");
+  alert(" hiiii session_current_city "+session_current_city);
+  if(session_ccity=='' && session_ccity== null){
+    alert("IF");
     session_ccity = session_current_city;
   }else{
+    alert("ELSE");
     session_ccity = session_ccity;
   }*/
-  if(session_cid!='' && session_cid!=null){
-    session_ccity = session_ccity;
-  }else{
-    openLOC();
-  navigator.geolocation.getCurrentPosition(function(pos){
-    var session_cid = window.localStorage.getItem("session_cid"); 
-  //alert("in onSuccessCity");
-  app.preloader.show();
-  alert("customer not in session");
-  var city_longitude = pos.coords.longitude;
-  var city_latitude = pos.coords.latitude;
-  //alert(city_longitude+"******************"+city_latitude);
-
-  var city_geocoder = new google.maps.Geocoder();
-  var city_LatLong = new google.maps.LatLng(city_latitude,city_longitude);
-  city_geocoder.geocode({'latLng': city_LatLong}, function(city_results, city_status) {
-    if (city_status === 'OK') {
-      if (city_results[0]) {
-        var addressComponents = city_results[0].address_components;
-        var res=city_results[0].formatted_address;
-        var city = "";        
-        var types;
-        var state = "";
-        //alert("addressComponents.length "+addressComponents.length);
-        var address_components=[];
-        for(var i=0;i<addressComponents.length;i++){
-          //alert(addressComponents[i]+" addressComponents[i]");
-          address_component = addressComponents[i];
-          types = address_component.types;
-          //alert(types.length+" types.length");
-          for (var j = 0; j < types.length; j++) {
-            //alert("types "+types[j]);
-            if (types[j] === 'administrative_area_level_1') {
-              state = address_component.long_name;
-            }
-            if (types[j] === 'administrative_area_level_2') {
-              city = address_component.long_name;
-            }
-          }
-        } 
-        window.localStorage.setItem("session_current_city",city);
-        window.localStorage.setItem("session_current_loc",res);
-        $("#formatted_address").html(res);
-        updateCurrLocCust(session_cid,res,city);
-        alert("city :" + city );
-        app.preloader.hide();              
-      } else {
-        app.dialog.alert('No results found');
-      }
-    } else {
-      app.dialog.alert('Geocoder failed due to: ' + city_status);
-    }
-  });
-  app.preloader.hide();
-  session_ccity = city;
-  }, function(err){
-    alert('code: '    + err.code    + '\n' + 'message: ' + err.message + '\n');
-  } ,{ maximumAge: 3000, timeout: 5000, enableHighAccuracy: true });
-   // alert("session_ccity -------- no CITY");
-    // get current city //
-  }
   $.ajax({
     type:'POST', 
     data:{'sid':sid,'session_ccity':session_ccity},
@@ -2111,16 +2044,15 @@ function change_day(obj){
   timeSlotTabs(jobid,day);
 }
 function curr_loc(){
-  alert("called curr_loc");
+  //alert("called");
   openLOC();
   navigator.geolocation.getCurrentPosition(onSuccess, onError,{ maximumAge: 3000, timeout: 5000, enableHighAccuracy: true });
 }
 function chnagelocation(){
-  alert("IN chnagelocation function");
   mainView.router.navigate("/customer_loc/");
 }
 function currentCity(){
-  alert("in currentcity function");
+  //alert("in currentcity function");
   openLOC();
   navigator.geolocation.getCurrentPosition(onSuccessCity, onErrorCity,{ maximumAge: 3000, timeout: 5000, enableHighAccuracy: true });
 }
@@ -2132,7 +2064,7 @@ function openLOC(){
       cordova.plugins.diagnostic.isLocationAuthorized(successCallback, errorCallback);
        //mainView.loadPage("current-location.html");
     }else{
-      alert("Location service is ON");        
+      //alert("Location service is ON");        
       mainView.router.navigate("/customer_dash/");
     }
   }, function(error){
@@ -2212,7 +2144,7 @@ function geolocate() {
   });
   // on 10-2-2020 end //
   //alert("place "+place);
-  //console.log("in place "+place.name);
+  console.log("in place "+place.name);
   if (!place.geometry) {
     //alert("Autocomplete's returned place contains no geometry");
       return;
@@ -2310,11 +2242,9 @@ function onSuccess(position){
         'Timestamp: '         + position.timestamp                + '\n');*/
   var longitude = position.coords.longitude;
   var latitude = position.coords.latitude;
-
+  var session_cid = window.localStorage.getItem("session_cid"); 
   $("#hidd_currlat").val(latitude);
   $("#hidd_currlon").val(longitude);
-
-
   var geocoder = new google.maps.Geocoder();
   var LatLong = new google.maps.LatLng(latitude,longitude);
   geocoder.geocode({'latLng': LatLong}, function(results, status) {
@@ -2322,9 +2252,30 @@ function onSuccess(position){
       //$("#map-canvas").html(results+" ^^^^^^^^^^^^");
       if (results[0]) {
         //alert(results[0].formatted_address);
+        var addressComponents = city_results[0].address_components;
         var res = results[0].formatted_address;
+        var city = "";        
+        var types;
+        var state = "";
+        for(var i=0;i<addressComponents.length;i++){
+          //alert(addressComponents[i]+" addressComponents[i]");
+          address_component = addressComponents[i];
+          types = address_component.types;
+          //alert(types.length+" types.length");
+          for (var j = 0; j < types.length; j++) {
+            //alert("types "+types[j]);
+            if (types[j] === 'administrative_area_level_1') {
+              state = address_component.long_name;
+            }
+            if (types[j] === 'administrative_area_level_2') {
+              city = address_component.long_name;
+            }
+          }
+        }
         $("#formatted_address").html(res);
+        window.localStorage.setItem("session_current_city",city);
         window.localStorage.setItem("session_current_loc",res);
+        updateCurrLocCust(session_cid,res,city);
         app.preloader.hide();             
       } else {
         app.dialog.alert('No results found');
@@ -2338,8 +2289,6 @@ function onSuccess(position){
 function onError(error){
   alert('code: '    + error.code    + '\n' + 'message: ' + error.message + '\n');
 }
-
-
 var autocomplete;
 function geolocate111() {
   var input = document.getElementById('autocomplete');
@@ -2511,13 +2460,13 @@ $$(document).on('page:init', '.page[data-name="partner_shopping_cart"]', functio
       console.log(popularprd);
       var new_prods = '';
       var popular_prods = '';
-      var jqstep = '';
+      //var jqstep = '';
       //new_prods+='<div class="stepper stepper-small stepper-fill stepper-init color-orange"><div class="stepper-button-minus"></div><div class="stepper-input-wrap"><input type="text" value="0" min="0" max="20" step="1" readonly></div><div class="stepper-button-plus"></div></div>';
       for(var i=0;i<newarival.length;i++){
         var p_img_path = newarival[i].p_img_path;
         var p_name = newarival[i].p_name;
         var p_price = newarival[i].p_price;
-         jqstep+="<div class='stepper stepper-small stepper-init'> <div class='stepper-button-minus'></div> <div class='stepper-input-wrap'> <input type='text' value='0' min='0' max='100' step='1' readonly> </div> <div class='stepper-button-plus'></div> </div>";
+         //jqstep+="<div class='stepper stepper-small stepper-init'> <div class='stepper-button-minus'></div> <div class='stepper-input-wrap'> <input type='text' value='0' min='0' max='100' step='1' readonly> </div> <div class='stepper-button-plus'></div> </div>";
         /*var stepper = app.stepper.create({
           el: '.stepper',
           on: {
@@ -2526,16 +2475,18 @@ $$(document).on('page:init', '.page[data-name="partner_shopping_cart"]', functio
             }
           }
         });*/
-        new_prods+='<li class="col-50 elevation-19 mb-10"><img src="'+base_url+p_img_path+'" class="prod_img lazy lazy-fade-in demo-lazy" /><div class="text-center text-grey fw-600">'+p_name+'</div><div class="text-center text-grey fw-600"><i class="f7-icons fs-18">money_dollar</i>'+p_price+'</div><div class="text-center"><div class="jqstepper_'+i+'"></div></div></li>';
+        var triangle='<div id="triangle-topleft-dev"><span class="impfont fw-700 r-3"><i class="f7-icons fs-18">cart</i></span></div>';
+        new_prods+='<li class="col-50 elevation-19 mb-10">'+triangle+'<img src="'+base_url+p_img_path+'" class="prod_img lazy lazy-fade-in demo-lazy" /><div class="text-center text-grey fw-600">'+p_name+'</div><div class="text-center text-grey fw-600"><i class="f7-icons fs-18">money_dollar</i>'+p_price+'</div><div class="text-center"><!--div class="jqstepper_'+i+'"></div--><div class="stepper stepper-init stepper-fill color-red"><div class="stepper-button-minus"></div><div class="stepper-input-wrap"><input type="text" value="0" min="0" max="100" step="1" readonly></div><div class="stepper-button-plus"></div></div></div></li>';
+        var stepper = app.stepper.get('.stepper');
         //console.log(jqstep);
         //stepper.open();
-       $(".jqstepper_"+i).html(jqstep);
+       //$(".jqstepper_"+i).html(jqstep);
       }
       for(var j=0;j<popularprd.length;j++){
         var pop_img_path = popularprd[j].p_img_path;
         var pop_name = popularprd[j].p_name;
         var pop_price = popularprd[j].p_price;
-        popular_prods+='<li class="col-50 elevation-19 mb-10"><img src="'+base_url+pop_img_path+'" class="prod_img lazy lazy-fade-in demo-lazy" /><div class="text-center text-grey fw-600">'+pop_name+'</div><div class="text-center text-grey fw-600"><i class="f7-icons fs-18">money_dollar</i>'+pop_price+'</div></li>';
+        popular_prods+='<li class="col-50 elevation-19 mb-10">'+triangle+'<img src="'+base_url+pop_img_path+'" class="prod_img lazy lazy-fade-in demo-lazy" /><div class="text-center text-grey fw-600">'+pop_name+'</div><div class="text-center text-grey fw-600"><i class="f7-icons fs-18">money_dollar</i>'+pop_price+'</div></li>';
       }
      //$(".jqstepper_"+i).html(jqstep);
       $("#new_arrivals").html(new_prods);

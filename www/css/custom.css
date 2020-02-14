@@ -546,6 +546,29 @@ div.container4 img {
   width: 100%;
   
 }
+.left_pan{
+  background:#232F3E!important;
+}
+#triangle-topleft-dev {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 0;
+    height: 0;
+    display: block;
+    border-left: 50px solid transparent;
+    border-bottom: 50px solid transparent;
+    /* border-top: 30px solid #e77e23; */
+    border-top: 50px solid #27334A;
+}
+.impfont{
+    color: #ffffff!important;
+    transform: rotate(45deg);
+    font-size: 2px!important;
+    position: absolute;
+    top: -42px;
+    right: 5px;
+}
 img.demo-lazy {
   width: 100%;
   height: 200px;
