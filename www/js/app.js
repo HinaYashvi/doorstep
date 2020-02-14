@@ -476,6 +476,31 @@ function curr_loc(){
   openLOC();
   navigator.geolocation.getCurrentPosition(onSuccess, onError,{ maximumAge: 3000, timeout: 5000, enableHighAccuracy: true });
 }
+function openLOC(){ 
+  cordova.plugins.diagnostic.isLocationEnabled(function(enabled){ //isLocationEnabled    
+    if(!enabled){
+      //cordova.plugins.diagnostic.switchToLocationSettings(onRequestSuccess,onRequestFailure);
+      cordova.plugins.diagnostic.switchToLocationSettings();
+      cordova.plugins.diagnostic.isLocationAuthorized(successCallback, errorCallback);
+       //mainView.loadPage("current-location.html");
+    }else{
+      alert("Location service is ON");        
+      mainView.router.navigate("/customer_dash/");
+    }
+  }, function(error){
+    app.dialog.alert("The following error occurred: "+error);
+  });   
+}
+function successCallback(success){
+  //if(success){
+    mainView.router.navigate("/customer_dash/");
+  //}
+} 
+function errorCallback(error){  
+  //if(error){
+   alert(error.message);
+  //} 
+}
 function onSuccess(position){
   app.preloader.show();
   alert("in onSuccess function");
@@ -534,6 +559,11 @@ function onSuccess(position){
 }
 function onError(error){
   alert('code: '    + error.code    + '\n' + 'message: ' + error.message + '\n');
+}
+function clicked_me(){
+  var active_tab = $(".tab-active").attr('id');
+  $("#hidd_proftab").val(active_tab);
+  //alert("tab-active "+active_tab); 
 }
 // ********************************** PARTNER FUNCTIONS ********************************** //
 // ------------------------- DATA NAME : PARTNER DASHBOARD ------------------------- //
