@@ -730,47 +730,54 @@ $$(document).on('page:init', '.page[data-name="customer_service_types"]', functi
       var jimg = jobparse.j_img;
       var search = jobparse.search;
       var job = search['jobs'];
+      var partner = search['partner'];
       console.log(job.length);
+      console.log(partner);
       var jlist = '';
       var slides = ''; 
-      if(job.length > 0 ){
-        $(".no-service").removeClass("display-block");
-        $(".no-service").addClass("display-none");
-        if(job.length==0){
-          jlist='<div class="block text-red fw-600 fs-12">No Provider Available In This Location</div>';
-        }else{
-          for(var i=0;i<job.length;i++){
-            var j_id = job[i].j_id;
-            var j_name = job[i].j_name;
-            var j_desc = job[i].j_desc;
-            var j_duration = job[i].j_duration;
-            var j_price = job[i].j_price;
-            var time_slot = job[i].time_slot;
-            var ji_id = job[i].ji_id;
-            //var j_img_path = jimg[0].j_img_path;
-            //alert(j_img_path);
-            //if(i==0){
-            //  var jimg = j_img_path.replace(/\//g, "-");
-            //  alert(jimg);
-            //}
-            ///slides+='<a class="slide" title="Image '+i+'" href="#"><span class="animate down" style="background-image: '+base_url+j_img_path+'"></span></a>';
-            slides='<div id="imageContainer"><img src="'+base_url+c_img+'" height="200" width="360"><div class="slider_txt">'+j_desc+'</div></div>'; 
-            jlist+='<li><a href="/customer_servicedet/'+j_id+'/'+j_name+'/'+j_price+'/'+sid+'/" class="item-link item-content"><div class="item-inner"><div class="item-title fs-12">'+j_name+'</div></div></a></li>'; 
-            $(".amazontxt").removeClass("display-none");
-            $(".amazontxt").addClass("display-block");
-            $(".jobList").html(jlist);
-          }
-        }
+      if(partner.length==0){
+        jlist='<div class="block text-red fw-600 fs-12">No Provider Available In This Location</div>';
       }else{
-        $(".no-service").removeClass("display-none");
-        $(".no-service").addClass("display-block");
-        jlist+='<div class="container4 text-center"><img src="img/no-service.png" width="80" class="op-5"></div><br/><div class="txt-amaz fs-16 text-center fw-600 p-20">No Services Found.</div>';
-        $(".amazontxt").removeClass("display-block");
-        $(".amazontxt").addClass("display-none");
-        $(".no-service").html(jlist);
-      }
+        alert("ELSE");
+        if(job.length > 0 ){
+          $(".no-service").removeClass("display-block");
+          $(".no-service").addClass("display-none");
+          if(job.length==0){
+            jlist='<div class="block text-red fw-600 fs-12">No Provider Available In This Location</div>';
+          }else{
+            for(var i=0;i<job.length;i++){
+              var j_id = job[i].j_id;
+              var j_name = job[i].j_name;
+              var j_desc = job[i].j_desc;
+              var j_duration = job[i].j_duration;
+              var j_price = job[i].j_price;
+              var time_slot = job[i].time_slot;
+              var ji_id = job[i].ji_id;
+              //var j_img_path = jimg[0].j_img_path;
+              //alert(j_img_path);
+              //if(i==0){
+              //  var jimg = j_img_path.replace(/\//g, "-");
+              //  alert(jimg);
+              //}
+              ///slides+='<a class="slide" title="Image '+i+'" href="#"><span class="animate down" style="background-image: '+base_url+j_img_path+'"></span></a>';
+              slides='<div id="imageContainer"><img src="'+base_url+c_img+'" height="200" width="360"><div class="slider_txt">'+j_desc+'</div></div>'; 
+              jlist+='<li><a href="/customer_servicedet/'+j_id+'/'+j_name+'/'+j_price+'/'+sid+'/" class="item-link item-content"><div class="item-inner"><div class="item-title fs-12">'+j_name+'</div></div></a></li>'; 
+              $(".amazontxt").removeClass("display-none");
+              $(".amazontxt").addClass("display-block");
+              $(".jobList").html(jlist);
+            }
+          }
+        }else{
+          $(".no-service").removeClass("display-none");
+          $(".no-service").addClass("display-block");
+          jlist+='<div class="container4 text-center"><img src="img/no-service.png" width="80" class="op-5"></div><br/><div class="txt-amaz fs-16 text-center fw-600 p-20">No Services Found.</div>';
+          $(".amazontxt").removeClass("display-block");
+          $(".amazontxt").addClass("display-none");
+          $(".no-service").html(jlist);
+        }
       $("#slides").html(slides);        
     }
+  }
   });
 
   $.ajax({
@@ -838,6 +845,9 @@ $$(document).on('page:init', '.page[data-name="customer_service_types"]', functi
   });
   app.preloader.hide();
 });
+function chnagelocation(){
+  mainView.router.navigate("/customer_loc/");
+}
 function getActivate(btn_tab){
   app.preloader.show();
   if(btn_tab==0){
@@ -1357,6 +1367,83 @@ function onSuccess(position){
 }
 function onError(error){
   alert('code: '    + error.code    + '\n' + 'message: ' + error.message + '\n');
+}
+function geolocate() {
+  var hidd_currlat = $("#hidd_currlat").val();
+  var hidd_currlon = $("#hidd_currlon").val();
+  var session_cid = window.localStorage.getItem("session_cid"); 
+  //var defaultBounds = new google.maps.LatLngBounds(new google.maps.LatLng(-33.8902, 151.1759), new google.maps.LatLng(-33.8474, 151.2631)); // STATIC //
+
+  var defaultBounds = new google.maps.LatLngBounds(new google.maps.LatLng(hidd_currlat, hidd_currlon));
+  //alert(defaultBounds);
+  var input = document.getElementById('search');
+  var options = {
+    bounds: defaultBounds,
+    types: ['geocode','establishment']
+  };
+  var autocomplete = new google.maps.places.Autocomplete(input,options);
+  autocomplete.addListener('place_changed', function() {
+  var place = autocomplete.getPlace();
+  var lat = place.geometry.location.lat();
+  var lng = place.geometry.location.lng();
+  //alert("LAT "+lat+" LNG "+lng);
+ // on 10-2-2020 start //
+  var ct_geocoder = new google.maps.Geocoder();
+  var ct_LatLong = new google.maps.LatLng(lat,lng);
+  //alert("HINA "+ct_LatLong);
+  ct_geocoder.geocode({'latLng': ct_LatLong}, function(city_res, city_sta) {
+    if (city_sta === 'OK') {
+      if (city_res[0]) {
+        var addressComponents = city_res[0].address_components;
+        var res=city_res[0].formatted_address;
+        var city = "";        
+        var types;
+        var state = "";
+        //alert("addressComponents.length "+addressComponents.length);
+        var address_components=[];
+        for(var i=0;i<addressComponents.length;i++){
+          //alert(addressComponents[i]+" addressComponents[i]");
+          address_component = addressComponents[i];
+          types = address_component.types;
+          //alert(types.length+" types.length");
+          for (var j = 0; j < types.length; j++) {
+            //alert("types "+types[j]);
+            if (types[j] === 'administrative_area_level_1') {
+              state = address_component.long_name;
+            }
+            if (types[j] === 'administrative_area_level_2') {
+              city = address_component.long_name;
+            }
+          }
+        }
+        $("#formatted_address").html(res);
+        window.localStorage.setItem("session_cust_current_city",city);
+        window.localStorage.setItem("session_cust_current_loc",res);        
+        //updateCurrLocCust(session_cid,res,city);
+        //alert("city :" + city );
+        app.preloader.hide();             
+      } else {
+        app.dialog.alert('No results found');
+      }
+    } else {
+      app.dialog.alert('Geocoder failed due to: ' + city_sta);
+    }
+  });
+  // on 10-2-2020 end //
+  //alert("place "+place);
+  console.log("in place "+place.name);
+  if (!place.geometry) {
+    //alert("Autocomplete's returned place contains no geometry");
+      return;
+  } 
+  // If the place has a geometry, then present it on a map.
+  if (place.geometry.viewport) {
+    //alert(" in place.geometry.viewport");
+    //map.fitBounds(place.geometry.viewport);
+  } else {
+    //alert("in place.geometry.location");
+  }
+  });
 }
 function clicked_me(){
   var active_tab = $(".tab-active").attr('id');
