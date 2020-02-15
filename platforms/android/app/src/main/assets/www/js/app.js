@@ -1371,11 +1371,13 @@ function onError(error){
 function geolocate() {
   var hidd_currlat = $("#hidd_currlat").val();
   var hidd_currlon = $("#hidd_currlon").val();
+
+  alert("hidd_currlat "+hidd_currlat+" ^^^ hidd_currlon "+hidd_currlon);
   var session_cid = window.localStorage.getItem("session_cid"); 
   //var defaultBounds = new google.maps.LatLngBounds(new google.maps.LatLng(-33.8902, 151.1759), new google.maps.LatLng(-33.8474, 151.2631)); // STATIC //
 
   var defaultBounds = new google.maps.LatLngBounds(new google.maps.LatLng(hidd_currlat, hidd_currlon));
-  //alert(defaultBounds);
+  alert(defaultBounds);
   var input = document.getElementById('search');
   var options = {
     bounds: defaultBounds,
@@ -1390,7 +1392,7 @@ function geolocate() {
  // on 10-2-2020 start //
   var ct_geocoder = new google.maps.Geocoder();
   var ct_LatLong = new google.maps.LatLng(lat,lng);
-  //alert("HINA "+ct_LatLong);
+  alert("HINA "+ct_LatLong);
   ct_geocoder.geocode({'latLng': ct_LatLong}, function(city_res, city_sta) {
     if (city_sta === 'OK') {
       if (city_res[0]) {
