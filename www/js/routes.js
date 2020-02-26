@@ -36,9 +36,72 @@ var routes = [
     },
   },
   {
+    path: '/partner_editprof/',
+    url: './partner/partner_editprof.html',
+    name: 'partner_editprof',
+    options: {
+      animate: true,
+    },
+  },
+  {
+    path: '/partner_changepass/',
+    url: './partner/partner_changepass.html',
+    name: 'partner_changepass',
+    options: {
+      animate: true,
+    },
+  },  
+  {
+    path: '/partner_profile/',
+    url: './partner/partner_profile.html',
+    name: 'partner_profile',
+    options: {
+      animate: true,
+    },
+  },
+  {
     path: '/partner_dash/',
     url: './partner/partner_dash.html',
     name: 'partner_dash',
+    options: {
+      animate: true,
+    },
+  },
+  {
+    path: '/partner_orders/',
+    url: './partner/partner_orders.html',
+    name: 'partner_orders',
+    options: {
+      animate: true,
+    },
+  },
+  {
+    path: '/partner_mycart/',
+    url: './partner/partner_mycart.html',
+    name: 'partner_mycart',
+    options: {
+      animate: true,
+    },
+  },{
+    path: '/partner_reviews/',
+    url: './partner/partner_reviews.html',
+    name: 'partner_reviews',
+    options: {
+      animate: true,
+    },
+  },
+  {
+    path: '/partner_payment/',
+    url: './partner/partner_payment.html',
+    name: 'partner_payment',
+    options: {
+      animate: true,
+    },
+  },
+  {
+    path: '/partner_buy_credit/',
+    url: './partner/partner_buy_credit.html',
+    name: 'partner_buy_credit',
     options: {
       animate: true,
     },

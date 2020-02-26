@@ -1,0 +1,68 @@
+<div data-name="partner_changepass" class="page navbar-fixed toolbar-fixed">	
+	<div class="navbar">
+		<div class="navbar-bg"></div>
+		<div class="navbar-inner navbg">
+			<div class="left"><a href="#" class="link back text-white"><i class="f7-icons">arrow_left</i></a></div>
+				<div class="title text-white text-capitalize">change password</div>
+			<div class="right"></div>
+		</div>
+	</div> 
+
+	<div class="page-content"> 
+		<form name="edit_ppass" id="edit_ppass" class="edit_ppass">
+		   	<div class="list no-hairlines-md">
+				<ul>
+					<li class="item-content item-input item-input-focused"> 
+					  <div class="item-media">
+					    <i class="f7-icons">lock_circle</i>
+					  </div>
+					  <div class="item-inner">
+					    <div class="item-title item-floating-label">Old Password</div>
+					    <div class="item-input-wrap">
+					      <input type="text" placeholder="Old Password" id="old_pass" name="old_pass">
+					      <span class="input-clear-button"></span>
+					    </div>
+					  </div>
+					</li>
+
+					<li class="item-content item-input item-input-focused"> 
+					  <div class="item-media">
+					    <i class="f7-icons">lock_shield</i>
+					  </div>
+					  <div class="item-inner">
+					    <div class="item-title item-floating-label">New Password</div>
+					    <div class="item-input-wrap">
+					      <input type="text" placeholder="New Password" id="new_pass" name="new_pass" onblur="pass_length(this.value)">
+					      <span class="input-clear-button"></span>
+					    </div>
+					  </div>
+					</li>
+
+					<li class="item-content item-input item-input-focused"> 
+					  <div class="item-media">
+					    <i class="f7-icons">lock_shield_fill</i>
+					  </div>
+					  <div class="item-inner">
+					    <div class="item-title item-floating-label">Confirm Password</div>
+					    <div class="item-input-wrap">
+					      <input type="text" placeholder="Confirm Password" id="conf_newpass" name="conf_newpass" onblur="pass_length(this.value)">
+					      <span class="input-clear-button"></span>
+					    </div>
+					  </div>
+					</li> 
+
+					<div id="success-badge" class="display-none pl-20 w-60 block"><span class="badge match-text ml-5" id="success-bg"></span></div>
+                  	<div id="warning-badge" class="display-none pl-20 w-60 block"><span class="badge color-red unmatch-text ml-5" ></span></div>
+
+
+				</ul>
+				<div class="block">
+		          <div class="col"><a class="button submitbtn no-radius mb-10" 
+		          onclick="change_partnerpass()">Change Password</a></div> 
+		          <div class="col"><a class="button submitbtn-outline fs-12 no-radius back" href="#" 
+		          >back</a></div>      
+		        </div>
+			</div>
+		</form>
+	</div>
+</div>

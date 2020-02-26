@@ -34,6 +34,42 @@
 
 <body>
 <div id="app">
+  <div class="panel panel-left panel-cover panel-resizable left_pan">
+    <div class="block">          
+          <!--p><center><img id="user_pic" height="100" width="100" class="img-circle"></center></p-->
+          <p ><center id="userDiv"></center></p>
+          <p ><center id="userName"></center></p>
+          <div ><center id="userMo"></center></div>
+          <div ><center id="userDept"></center></div>       
+        </div>    
+        <div id="borderDiv"></div>  
+        <div class="block">
+          <p><a class="text-white fs-14" href="/partner_shopping_cart/"><i class="f7-icons fs-16 mr-15">cart_fill</i>Shop</a></p>
+          <p><a class="text-white fs-14" href="/partner_buy_credit/"><i class="f7-icons fs-16 mr-15">money_dollar</i>Buy Credit</a></p>
+
+          <p><a class="text-white fs-14" href="/partner_orders/"><i class="f7-icons fs-16 mr-15">info_circle_fill</i>Customer Orders</a></p>
+
+          <p><a class="text-white fs-14" href="/partner_reviews/"><i class="f7-icons fs-16 mr-15">quote_bubble_fill</i>Reviews</a></p>
+
+          <p><a class="text-white fs-14" href="/partner_profile/" ><i class="f7-icons fs-16 mr-15">person_alt</i>Profile</a></p>
+
+          <p><a class="text-white fs-14" href="#" onclick="logOut()"><i class="f7-icons fs-16 mr-15">power</i>Logout</a></p>
+
+
+          
+
+          <!--div class="list links-list no-hairlines-between">
+              <ul class="panel_menus">
+                <li class="navbg"><a class="item-link font-12 lh-30 text-capitalize " href="/partner_shopping_cart/" ><i class="fa fa-power-off mr-10 font-14"></i>Shop</a></li>
+
+                <li class="navbg"><a class="item-link font-12 lh-30 text-capitalize " href="/partner_shopping_cart/" ><i class="fa fa-power-off mr-10 font-14"></i>Buy Credit</a></li>
+
+                <li class="navbg"><a class="item-link font-12 lh-30 text-capitalize " href="#" onclick="logOut()"><i class="fa fa-power-off mr-10 font-14"></i>Logout</a></li>
+              </ul>
+          </div-->          
+        </div>
+    </div>
+
   <div class="statusbar"></div>
   <div class="view view-main view-init" data-url="/">
     <div class="page no-navbar no-swipeback" data-name="index">
@@ -75,9 +111,12 @@
 <script type="text/javascript" src="js/framework7.bundle.min.js"></script>
 <script type="text/javascript" src="js/jquery.min.js"></script>
 <script type="text/javascript" src="js/routes.js"></script>
+
 <script type="text/javascript" src="js/app.js"></script>
+<script type="text/javascript" src="js/doorstepdb.js"></script>
 <script type="text/javascript" src="js/swiper.min.js"></script> 
 <script async defer src="https://maps.googleapis.com/maps/api/js?libraries=places&key=AIzaSyAdbMPmV9BqtRFcHEHCoe1fgpU2mEA1UnM"></script>
+
 <script type="text/javascript">
   //console.log(Framework7.prototype.device);
   if(Framework7.prototype.device.android) { 

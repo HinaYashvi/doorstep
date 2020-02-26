@@ -1,0 +1,32 @@
+<div data-name="partner_mycart" class="page navbar-fixed toolbar-fixed">
+	<!-- Fixed/Dynamic Navbar -->
+	<div class="navbar">		
+		<div class="navbar-inner navbg">
+			<div class="left"><a href="#" class="link back text-white"><i class="f7-icons">arrow_left</i></a></div>
+			<div class="title">My Cart</div>
+			<div class="right">
+	      		<a class="link emptycart display-block" onclick="emptycart()"><i class="f7-icons text-white fs-18">trash_fill</i></a>
+	      	</div>
+		</div>
+	</div>
+
+	<div class="toolbar tabbar toolbar-bottom tooltab" id='addcart'>   
+        <div class="toolbar-inner">
+         <input type="hidden" name="hidd_payble" id="hidd_payble">	
+          <a href="" class="link text-white"><span class="tabbar-label total "></span></a>
+          <a href="" onClick='checkqty()' class="link text-white"><span class="tabbar-label text-uppercase">checkout</span></a>
+       </div>
+  	</div>
+
+  	<div class="page-content">
+  		<div class="row">
+  			<div class="col-50"></div>
+    		<div class="col-50 creditDivcart"></div>
+  		</div>
+    	<div class="block">
+      		<div class="list">
+      			<ul class="mycart"></div>
+      		</div>                   
+    	</div>   
+  	</div>
+</div>

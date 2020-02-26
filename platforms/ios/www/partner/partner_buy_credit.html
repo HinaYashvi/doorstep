@@ -1,0 +1,43 @@
+<div data-name="partner_buy_credit" class="page navbar-fixed toolbar-fixed">
+	<!-- Fixed/Dynamic Navbar -->
+	<div class="navbar">		
+		<div class="navbar-inner navbg">
+			<div class="left"><a href="#" class="link back text-white"><i class="f7-icons">arrow_left</i></a></div>
+			<div class="title">Buy Credit</div>
+			<div class="right">
+	      		<!--a class="link emptycart display-block" onclick="emptycart()"><i class="f7-icons text-white fs-18">trash_fill</i></a-->
+	      	</div>
+		</div>
+	</div>
+
+  	<div class="page-content">
+  		<div class="block">
+  			<div class="master_credit text-red fw-600"></div>
+  			<div class="credit_info text-amaz fw-600"></div>
+  		</div>
+  		<form class="creditamtForm" id="creditamtForm">   
+  			<input type="hidden" name="hidd_pid" id="hidd_pid">
+  			<input type="hidden" name="hidd_pamt" id="hidd_pamt">
+	  		<div class="list">
+	  			<ul>
+				    <li class="item-content item-input item-input-outline">
+				      <div class="item-inner">
+				        <div class="item-title item-floating-label">Amount</div>
+				        <div class="item-input-wrap">
+				          <input type="text" placeholder="Enter Amount" name="credit_amt" id="credit_amt">
+				          <span class="input-clear-button"></span>
+				        </div>
+				      </div>
+				    </li>
+				</ul>
+
+				<div class="block">
+		          <div class="col"><a class="button submitbtn no-radius mb-10" 
+		          onclick="savepartnerCredit()">Save</a></div> 
+		          <div class="col"><a class="button submitbtn-outline fs-12 no-radius back" href="#" 
+		          >back</a></div>      
+		        </div>
+	  		</div>
+	  	</form>
+  	</div>
+</div>

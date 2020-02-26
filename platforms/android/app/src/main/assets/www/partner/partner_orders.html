@@ -1,0 +1,27 @@
+<div data-name="partner_orders" class="page dash_bg navbar-fixed toolbar-fixed">
+  <div class="page-content tab" id="tab-2">    
+    <div class="navbar">
+      <div class="navbar-bg"></div>
+      <div class="navbar-inner sliding navbg">
+        <div class="left">
+          <a class="link back text-white">
+            <i class="f7-icons">arrow_left</i>
+          </a>
+        </div>
+        <div class="title">Customer Orders</div>
+        <div class="right"></div>
+      </div>
+    </div>
+
+    <div class="block booking_btns display-block">
+      <p class="segmented segmented-raised">
+        <button class="button button-active fs-12 seg_btn new_btn" value="0" onclick="part_getCustOrders(this.value)">New<span class="ml-5 badge pen_badge"></span></button>
+        <button class="button fs-12 seg-outline accept_btn" value="1" onclick="part_getCustOrders(this.value)">Accepted<span class="ml-5 badge start_badge"></span></button>
+      </p>
+    </div>
+    <div class="list accordion-list">
+      <ul id="new_orders" class="display-block ordercls"></ul>
+      <ul id="accepted_orders" class="display-none ordercls"></ul>
+    </div>        
+  </div> 
+</div>

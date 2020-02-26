@@ -1,0 +1,162 @@
+<div data-name="partner_editprof" class="page navbar-fixed toolbar-fixed">	
+	<div class="navbar">
+		
+		<div class="navbar-inner navbg">
+			<div class="left"><a href="#" class="link back text-white"><i class="f7-icons">arrow_left</i></a></div>
+				<div class="title text-white text-capitalize">Edit profile</div>
+			<div class="right"></div>
+		</div>
+	</div>
+
+	<div class="page-content"> 
+	<form name="edit_pprof" id="edit_pprof" class="edit_pprof">
+		<input type="hidden" name="hidden_pid" id="hidden_pid">
+	   	<div class="list no-hairlines-md">
+			<ul>
+				<li class="item-content item-input item-input-focused"> 
+				  <div class="item-media">
+				    <i class="f7-icons">person_circle_fill</i>
+				  </div>
+				  <div class="item-inner">
+				    <div class="item-title item-floating-label">Name</div>
+				    <div class="item-input-wrap">
+				      <input type="text" placeholder="Name" id="pname" name="pname">
+				      <span class="input-clear-button"></span>
+				    </div>
+				  </div>
+				</li>
+ 
+
+				<li class="item-content item-input item-input-focused"> 
+				  <div class="item-media">
+				    <i class="f7-icons">envelope_fill</i>
+				  </div>
+				  <div class="item-inner">
+				    <div class="item-title item-floating-label">Email</div>
+				    <div class="item-input-wrap">
+				      <input type="text" placeholder="Email" id="pemail" name="pemail">
+				      <span class="input-clear-button"></span>
+				    </div>
+				  </div>
+				</li>
+
+				<li class="item-content item-input item-input-focused"> 
+				  <div class="item-media">
+				    <i class="f7-icons">phone_circle_fill</i>
+				  </div>
+				  <div class="item-inner">
+				    <div class="item-title item-floating-label">Phone</div>
+				    <div class="item-input-wrap">
+				      <input type="text" placeholder="Phone" id="pphone" name="pphone">
+				      <span class="input-clear-button"></span>
+				    </div>
+				  </div>
+				</li>
+
+				<li class="item-content item-input item-input-focused"> 
+				  <div class="item-media">
+				    <i class="f7-icons">placemark</i>
+				  </div>
+				  <div class="item-inner">
+				    <div class="item-title item-floating-label">Street No</div>
+				    <div class="item-input-wrap">
+				      <input type="text" placeholder="Street No" id="pstr_no" name="pstr_no">
+				      <span class="input-clear-button"></span>
+				    </div>
+				  </div>
+				</li>
+
+				<li class="item-content item-input item-input-focused"> 
+				  <div class="item-media">
+				    <i class="f7-icons">placemark_fill</i>
+				  </div>
+				  <div class="item-inner">
+				    <div class="item-title item-floating-label">Street Name</div>
+				    <div class="item-input-wrap">
+				      <input type="text" placeholder="Street Name" id="pstr_nm" name="pstr_nm">
+				      <span class="input-clear-button"></span>
+				    </div>
+				  </div>
+				</li>
+
+				<li class="item-content item-input item-input-focused"> 
+				  <div class="item-media">
+				    <i class="f7-icons">map_pin_ellipse</i>
+				  </div>
+				  <div class="item-inner">
+				    <div class="item-title item-floating-label">Street Unit</div>
+				    <div class="item-input-wrap">
+				      <input type="text" placeholder="Street Unit" id="pstr_unit" name="pstr_unit">
+				      <span class="input-clear-button"></span>
+				    </div>
+				  </div>
+				</li>
+
+				<li class="item-content item-input item-input-focused"> 
+				  <div class="item-media">
+				    <i class="f7-icons">map_pin</i>
+				  </div>
+				  <div class="item-inner">
+				    <div class="item-title item-floating-label">Pincode</div>
+				    <div class="item-input-wrap">
+				      <input type="text" placeholder="Pincode" id="pstr_pin" name="pstr_pin">
+				      <span class="input-clear-button"></span>
+				    </div>
+				  </div>
+				</li>
+
+
+				<!--li class="item-content item-input item-input-focused"> 
+				  <div class="item-media">
+				    <i class="f7-icons">placemark_fill</i>
+				  </div>
+				  <div class="item-inner">
+				    <div class="item-title item-floating-label">Address</div>
+				    <div class="item-input-wrap">
+				      <input type="text" placeholder="Address" id="caddr" name="caddr">
+				      <span class="input-clear-button"></span>
+				    </div>
+				  </div>
+				</li-->
+
+
+				<li class="item-content item-input item-input-focused"> 
+				  <div class="item-media">
+				    <i class="f7-icons">location_circle_fill</i>
+				  </div>
+				  <div class="item-inner">
+				    <div class="item-title item-floating-label">City</div>
+				    <div class="item-input-wrap">
+				      <select placeholder="City" id="pserving_city" name="pserving_city" onchange="getservingArea(this.value)">
+				      </select>
+				      <span class="input-clear-button"></span>
+				    </div>
+				  </div>
+				</li>
+
+				<li class="item-content item-input item-input-focused"> 
+				  <div class="item-media">
+				    <i class="f7-icons">map_pin_ellipse</i>
+				  </div>
+				  <div class="item-inner">
+				    <div class="item-title item-floating-label">Suburb</div>
+				    <div class="item-input-wrap">
+				      <select placeholder="Area" id="pserving_area" name="pserving_area">
+				      </select>
+				      <span class="input-clear-button"></span>
+				    </div>
+				  </div>
+				</li>
+			</ul>
+
+			<div class="block">
+	          <div class="col"><a class="button submitbtn no-radius mb-10" 
+	          onclick="edit_partnerprofile()">Save</a></div> 
+	          <div class="col"><a class="button submitbtn-outline fs-12 no-radius back" href="#" 
+	          >back</a></div>      
+	        </div>
+
+		</div>
+	</form>
+	</div>
+</div>
