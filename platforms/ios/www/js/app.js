@@ -162,7 +162,7 @@ $(document).on('page:init', '.page[data-name="index"]', function (e) {
     var clickedSlide = swiper.clickedSlide;
     alert("clickedSlide "+clickedSlide);*/
 
-    //alert(totalSlides+"-----last_slide "+last_slide+" last_slide1 "+last_slide1); 
+    //alert(totalSlides+"-----last_slide "+last_slide); 
     if(totalSlides == last_slide){      
       //$(".lastslide").html('<a class="link text-white text-uppercase" href="/login/">got it</a>');
       $(".gotit").show();
@@ -472,6 +472,113 @@ $$(document).on('page:init', '.page[data-name="customer_dash"]', function (page)
   }
   app.preloader.hide();
 });
+/*function getBookingbyStatus(button_active,divname){
+  checkConnection();  
+  app.preloader.show();
+  var session_cid = window.localStorage.getItem("session_cid");  
+  $.ajax({
+    type:'POST', 
+    data:{'session_cid':session_cid,'button_active':button_active},
+    url:base_url+'APP/Appcontroller/getMyBookings',
+    success:function(book_result){
+      var book_res = $.parseJSON(book_result);
+      var cust = book_res.cust;
+      var order = book_res.order;
+      var order_cnts = book_res.order_cnts;
+      var order_cnts_pen = book_res.order_cnts_pen;
+      var order_cnts_start = book_res.order_cnts_start;
+      var order_cnts_fin =book_res.order_cnts_fin;
+      
+      console.log(cust);
+      console.log(order);
+      console.log(order_cnts);
+      console.log(order_cnts_pen);
+      console.log(order_cnts_start);
+      console.log(order_cnts_fin); 
+      var c_id = cust.c_id; 
+      var ord_list=''; 
+      $(".booking_btns").removeClass("display-none");
+      $(".booking_btns").addClass("display-block"); 
+      $(".bookings_tot").html(order_cnts);
+      $(".pen_badge").html(order_cnts_pen);
+      $(".fin_badge").html(order_cnts_start);
+      $(".start_badge").html(order_cnts_fin); 
+      if(order.length==0){
+        ord_list+='<div class="block fs-12 text-red fw-500 text-capitalize">No bookings available.</div>';
+      }else{
+        var z=0;
+        for(var i=0;i<order.length;i++){
+          var ord_no = order[i].o_num;
+          var o_code = order[i].order_code;
+          var order_status = order[i].order_status;
+          var s_name = order[i].s_name;
+          var j_name = order[i].j_name;
+          var p_name = order[i].p_name;
+          var date_time = order[i].date_time;
+          var rep_dt = date_time.replace("`"," ");
+          var finaldt = rep_dt.replace("`","");
+          var acpt_status = order[i].acpt_status;
+          var p_phone = order[i].p_phone;
+          var p_email = order[i].p_email;  
+          var request_day = order[i].request_day;   
+          var review_count = order[i].review_count;
+          var order_status = order[i].order_status;
+          var time = order[i].time;   
+          var part_reschedule_req = order[i].part_reschedule_req;
+          var acpt_id = order[i].acpt_id;
+          var o_id = order[i].o_id;
+          var address = order[i].address;
+          var change_address = order[i].change_address;
+          var change_add_status = order[i].change_add_status;
+          var review_status = order[i].review_status;
+
+          var street_no = order[i].street_no;
+          var street_name = order[i].street_name;
+          var street_unit = order[i].street_unit;
+          var pin = order[i].pin;
+          var a_name = order[i].a_name;
+
+          if(order_status==0){
+            var status_cls='pending'; 
+            var status_txt='Pending';
+            var review='';
+            var rate_form='';
+          }else if(order_status==1){
+            var status_cls='started';    
+            var status_txt='Started';
+            var review='';
+            var rate_form='';
+          }else{
+            var status_cls='finished';
+            var status_txt='Finished';
+            var rate_form='<div class="rating_form_'+i+' list display-none w-100"><ul class="w-100"><li class="item-content item-input item-input-outline w-100 row"><div class="item-inner"><div class="item-title item-label l-0">Give rates<br/></div><div class="w-100 text-center"><div class="rating-widget"><!-- Rating Stars Box --><div class="rating-stars text-center"><ul id="stars" class="display-if"><input type="hidden" name="hidd_rate" id="hidd_rate" /><li class="star" title="Poor" data-value="1" id="star_'+i+'_1" onclick="ratestar(this,'+i+')"><i class="f7-icons lightgrey" id="fillstr_'+i+'_1">star_fill</i></li><li class="star" title="Fair" data-value="2" id="star_'+i+'_2" onclick="ratestar(this,'+i+')"><i class="f7-icons lightgrey" id="fillstr_'+i+'_2">star_fill</i></li><li class="star" title="Good" data-value="3" id="star_'+i+'_3" onclick="ratestar(this,'+i+')"><i class="f7-icons lightgrey" id="fillstr_'+i+'_3">star_fill</i></li><li class="star" title="Excellent" data-value="4" id="star_'+i+'_4" onclick="ratestar(this,'+i+')"><i class="f7-icons lightgrey" id="fillstr_'+i+'_4">star_fill</i></li><li class="star" title="WOW!!!"" data-value="5" id="star_'+i+'_5" onclick="ratestar(this,'+i+')"><i class="f7-icons lightgrey" id="fillstr_'+i+'_5">star_fill</i></li></ul></div></div></div></div><div class="item-inner"><div class="item-input-wrap"><input type="text" placeholder="Give a review" name="review_txt" id="reviewtxt_'+i+'" class="fs-12"><span class="input-clear-button"></span></div></div>         <button class="col-33 button fs-10 mb-5 button-small seg_btn" onclick="giverate('+i+','+c_id+','+o_id+','+acpt_id+')">Rate it!</button><button class="col-33 button button-outline fs-10 mr-15 mb-5 button-small seg-outline" onclick="showRatebtn('+i+')">Cancel</button></li></ul></div>';
+            if(review_status==0){
+              if(z!=0){
+                var review='<button class="col-33 button button-small button-fill fs-10 for_green display-block w-20" id="rate_'+i+'" onclick="showrateForm('+i+','+o_id+')"><i class="f7-icons fs-12 mr-5">star_fill</i>Rate</button>'+rate_form;
+              }else{
+                var review='';
+              }
+            }else if(review_status==2){
+              var review='<button class="col-33 button button-small button-fill fs-10 for_green display-block w-20" id="rate_'+i+'" onclick="showrateForm('+i+','+o_id+')"><i class="f7-icons fs-12 mr-5">star_fill</i>Rate</button>'+rate_form;
+            }else{
+              var review='';
+            }
+          }
+
+          ord_list+='<li class="accordion-item lightblue mb-5" id="li_'+i+'"><a href="#" class="item-content item-link"><div class="item-inner"><div class="item-title text-blue fw-500 fs-14"><span class="mr-5">'+ord_no+'</span></div><span class="float-right fs-10 fw-600">thumb</span></div></a><div class="accordion-item-content nobg"><div class="block"><div class="row"><div class="col-50 mt-2 fs-12"><span class="fw-500">Order code: '+o_code+'</span><br/><span class="fw-600 text-blue bord-bot-blue">'+s_name+'</span><br/><span class="fs-10 fw-500"><i class="f7-icons fs-10 text-grey mr-5">circle_fill</i>'+j_name+'</span><br/><span class="fs-10 fw-500"><i class="f7-icons fs-10 text-grey mr-5">calendar_fill</i>'+finaldt+'<span class="text-capitalize badge fs-10 ml-5"> '+request_day+'</span></span><br/><span class="fs-10 fw-500"><i class="f7-icons fs-10 text-grey mr-5">timer_fill</i>'+time+'</span></div><div class="col-50 mt-2 fs-12"><span class="fw-500">'+patner_det+'</span></div><div><a class="button dynamic-popup txt-amaz fs-12 fw-600" href="#" onclick="openpopup('+"'"+ord_no+"'"+','+"'"+o_code+"'"+','+"'"+street_no+"'"+','+"'"+street_name+"'"+','+"'"+street_unit+"'"+','+"'"+pin+"'"+','+"'"+a_name+"'"+')">Address Details</a></div></div></div>';
+
+          ord_list+='<div class="action_line" id="action_line_'+i+'"><div class="row"><span class="float-right w-100">'+review+'</span></div></div>';
+
+          ord_list+='</li>';
+          z++;
+        }
+      }      
+      $(".ordercls").html("");
+      $("#"+divname).html(ord_list);
+      app.preloader.hide();
+    }
+  });
+}*/
 function getBookingbyStatus(button_active,divname){
   checkConnection();  
   app.preloader.show();
@@ -502,6 +609,7 @@ function getBookingbyStatus(button_active,divname){
       if(order.length==0){
         ord_list+='<div class="block fs-12 text-red fw-500 text-capitalize">No bookings available.</div>';
       }else{
+        var z=0;
         for(var i=0;i<order.length;i++){
           var ord_no = order[i].o_num;
           var o_code = order[i].order_code;
@@ -517,6 +625,7 @@ function getBookingbyStatus(button_active,divname){
           var p_email = order[i].p_email;  
           var request_day = order[i].request_day;   
           var review_count = order[i].review_count;
+          var review_status = order[i].review_status;
           var order_status = order[i].order_status;
           var time = order[i].time;   
           var part_reschedule_req = order[i].part_reschedule_req;
@@ -525,7 +634,7 @@ function getBookingbyStatus(button_active,divname){
           var address = order[i].address;
           var change_address = order[i].change_address;
           var change_add_status = order[i].change_add_status;
-
+          var part_ord_cancel = order[i].part_ord_cancel;
           var street_no = order[i].street_no;
           var street_name = order[i].street_name;
           var street_unit = order[i].street_unit;
@@ -566,7 +675,7 @@ function getBookingbyStatus(button_active,divname){
               //alert(i+"-----"+change_add_status);
               if(change_add_status==1){
                 //alert("if 1");
-                btn_loc+='<button class="col-50 seg-outline loc_btn p-2 nobg fs-11 display-block w-100 mr-5" id="seal_'+i+'"><i class="f7-icons fs-13 text-red mr-5">checkmark_seal_fill</i>Location approved</button>';
+                btn_loc+='<button class="row col-66 seg-outline loc_btn p-2 nobg fs-11 display-block mr-5" id="seal_'+i+'"><i class="f7-icons fs-13 text-red mr-5">checkmark_seal_fill</i>Change location request accepted</button>';
                 btn_loc+='';
               }else if(change_add_status==2){
                 //alert("else if 2");
@@ -608,17 +717,29 @@ function getBookingbyStatus(button_active,divname){
             var patner_det=status_txt+ ' By '+p_name+'<br/><i class="f7-icons fs-12 text-grey mr-5">phone_fill</i><span class="fs-10">'+p_phone+'</span><br/><i class="f7-icons fs-12 text-grey mr-5">envelope_fill</i><span class="fs-10">'+p_email+'</span>';
             var thumb='';
           }else if(order_status==2){
+            var rate_form='<div class="rating_form_'+i+' list display-none w-100"><ul class="w-100"><li class="item-content item-input item-input-outline w-100 row"><div class="item-inner"><div class="item-title item-label l-0">Give rates<br/></div><div class="w-100 text-center"><div class="rating-widget"><!-- Rating Stars Box --><div class="rating-stars text-center"><ul id="stars" class="display-if"><input type="hidden" name="hidd_rate" id="hidd_rate" /><li class="star" title="Poor" data-value="1" id="star_'+i+'_1" onclick="ratestar(this,'+i+')"><i class="f7-icons lightgrey" id="fillstr_'+i+'_1">star_fill</i></li><li class="star" title="Fair" data-value="2" id="star_'+i+'_2" onclick="ratestar(this,'+i+')"><i class="f7-icons lightgrey" id="fillstr_'+i+'_2">star_fill</i></li><li class="star" title="Good" data-value="3" id="star_'+i+'_3" onclick="ratestar(this,'+i+')"><i class="f7-icons lightgrey" id="fillstr_'+i+'_3">star_fill</i></li><li class="star" title="Excellent" data-value="4" id="star_'+i+'_4" onclick="ratestar(this,'+i+')"><i class="f7-icons lightgrey" id="fillstr_'+i+'_4">star_fill</i></li><li class="star" title="WOW!!!"" data-value="5" id="star_'+i+'_5" onclick="ratestar(this,'+i+')"><i class="f7-icons lightgrey" id="fillstr_'+i+'_5">star_fill</i></li></ul></div></div></div></div><div class="item-inner"><div class="item-input-wrap"><input type="text" placeholder="Give a review" name="review_txt" id="reviewtxt_'+i+'" class="fs-12"><span class="input-clear-button"></span></div></div>         <button class="col-33 button fs-10 mb-5 button-small seg_btn" onclick="giverate('+i+','+c_id+','+o_id+','+acpt_id+')">Rate it!</button><button class="col-33 button button-outline fs-10 mr-15 mb-5 button-small seg-outline" onclick="showRatebtn('+i+')">Cancel</button></li></ul></div>';
             var status_cls='finished';
             var status_txt='Finished';
             var thumb='';
             var patner_det=status_txt+ ' By '+p_name+'<br/><i class="f7-icons fs-12 text-grey mr-5">phone_fill</i><span class="fs-10">'+p_phone+'</span><br/><i class="f7-icons fs-12 text-grey mr-5">envelope_fill</i><span class="fs-10">'+p_email+'</span>';
-            if(review_count==0){
-              var rate_form='<div class="rating_form_'+i+' list display-none w-100"><ul class="w-100"><li class="item-content item-input item-input-outline w-100 row"><div class="item-inner"><div class="item-title item-label l-0">Give rates<br/></div><div class="w-100 text-center"><div class="rating-widget"><!-- Rating Stars Box --><div class="rating-stars text-center"><ul id="stars" class="display-if"><input type="hidden" name="hidd_rate" id="hidd_rate" /><li class="star" title="Poor" data-value="1" id="star_'+i+'_1" onclick="ratestar(this,'+i+')"><i class="f7-icons lightgrey" id="fillstr_'+i+'_1">star_fill</i></li><li class="star" title="Fair" data-value="2" id="star_'+i+'_2" onclick="ratestar(this,'+i+')"><i class="f7-icons lightgrey" id="fillstr_'+i+'_2">star_fill</i></li><li class="star" title="Good" data-value="3" id="star_'+i+'_3" onclick="ratestar(this,'+i+')"><i class="f7-icons lightgrey" id="fillstr_'+i+'_3">star_fill</i></li><li class="star" title="Excellent" data-value="4" id="star_'+i+'_4" onclick="ratestar(this,'+i+')"><i class="f7-icons lightgrey" id="fillstr_'+i+'_4">star_fill</i></li><li class="star" title="WOW!!!"" data-value="5" id="star_'+i+'_5" onclick="ratestar(this,'+i+')"><i class="f7-icons lightgrey" id="fillstr_'+i+'_5">star_fill</i></li></ul></div></div></div></div><div class="item-inner"><div class="item-input-wrap"><input type="text" placeholder="Give a review" name="review_txt" id="reviewtxt_'+i+'" class="fs-12"><span class="input-clear-button"></span></div></div>         <button class="col-33 button fs-10 mb-5 button-small seg_btn" onclick="giverate('+i+','+c_id+','+o_id+','+acpt_id+')">Rate it!</button><button class="col-33 button button-outline fs-10 mr-15 mb-5 button-small seg-outline" onclick="showRatebtn('+i+')">Cancel</button></li></ul></div>';
+            if(review_status==0){
+              if(z!=0){
+                var reviewbtn='<button class="col-33 button button-small button-fill fs-10 for_green display-block w-20" id="rate_'+i+'" onclick="showrateForm('+i+','+o_id+')"><i class="f7-icons fs-12 mr-5">star_fill</i>Rate</button>'+rate_form;
+              }else{
+                var reviewbtn='';
+              }
+            }else if(review_status==2){
               var reviewbtn='<button class="col-33 button button-small button-fill fs-10 for_green display-block w-20" id="rate_'+i+'" onclick="showrateForm('+i+','+o_id+')"><i class="f7-icons fs-12 mr-5">star_fill</i>Rate</button>'+rate_form;
             }else{
-              var rate_form='';
-              var reviewbtn=''; 
+              var reviewbtn='';
             }
+            //if(review_count==0){
+              
+              //var reviewbtn='<button class="col-33 button button-small button-fill fs-10 for_green display-block w-20" id="rate_'+i+'" onclick="showrateForm('+i+','+o_id+')"><i class="f7-icons fs-12 mr-5">star_fill</i>Rate</button>'+rate_form;
+            //}else{
+            //  var rate_form='';
+            //  var reviewbtn=''; 
+            //}
           }
           if(reviewbtn!=''){
             var rev_btn=reviewbtn;
@@ -646,10 +767,15 @@ function getBookingbyStatus(button_active,divname){
           if(rev_btn!=''){
             ord_list+='<div class="action_line" id="action_line_'+i+'"><div class="row"><span class="float-right w-100">'+rev_btn+'</span></div></div>';
           }
-          if(btn_loc!=''){            
-            ord_list+='<div class="action_line" id="action_line_'+i+'"><div class="row"><span class="float-left leftdiv_'+i+'">'+change_loc+req_res+'</span>'+loc_apprv+'</div></div>';
+          if(btn_loc!=''){  
+            if(part_ord_cancel==0){          
+              ord_list+='<div class="action_line" id="action_line_'+i+'"><div class="row"><span class="float-left leftdiv_'+i+'">'+change_loc+req_res+'</span>'+loc_apprv+'</div></div>';
+            }else{
+              ord_list+='<div class="action_line bg-danger" id="action_line_'+i+'"><div class="row"><span class="float-left leftdiv_'+i+'">This order is cancelled</div></div>';
+            }
           }
           ord_list+='</div></li>';
+          z++;
       }
 
       }  
@@ -1338,7 +1464,7 @@ $$(document).on('page:init', '.page[data-name="customer_service_types"]', functi
       if(partner.length==0){
         jlist='<div class="block text-red fw-600 fs-12">No Provider Available In This Location</div>';
       }else{
-        alert("ELSE");
+        //alert("ELSE");
         if(job.length > 0 ){
           $(".no-service").removeClass("display-block");
           $(".no-service").addClass("display-none");
@@ -1588,6 +1714,37 @@ function getActivate(btn_tab){
     $("#start_orders").addClass("display-none");
   }
   app.preloader.hide();
+}
+function discontinue_doorstep(){
+  var session_pid = window.localStorage.getItem("session_pid");
+   app.dialog.prompt('Request for discontinue', function (disconti) {    
+    if(disconti){
+      if(disconti==''){
+        app.dialog.alert("OOPS! you need to write something.");
+      }else{
+        $.ajax({
+          type:'POST',
+          dataType:'json', 
+          data:{'disconti':disconti,'session_pid':session_pid},
+          url:base_url+'APP/Appcontroller/rd',
+          success:function(res){
+            var status = res.status;
+            if(status=='Success'){
+              app.dialog.alert("Your request is accepted soon");
+            }else{
+              app.dialog.alert("Something went wrong!");              
+            }
+          }
+        });
+      }
+    }else{
+      var toastBottom = app.toast.create({
+        text: 'OOPS! you need to write something.',
+        closeTimeout: 2000,
+      });
+      toastBottom.open();
+    }    
+  });
 }
 function register_cust(){
   checkConnection(); 
@@ -2122,6 +2279,8 @@ function timeSlotTabs(j_id,hidd_day){
       }
       
       var jobid=$("#jobid").val();
+      alert("******* session_current_city "+session_current_city);
+      alert("******* session_ccity "+session_ccity);
       bookdiv+='<li class="item-content item-input item-input-focused"><div class="item-inner"><div class="">Current City: <span class="badge">'+session_current_city+'</span></div><div class="text-capitalize">Your City: <div class="chip chip-outline color-orange"><span class="chip-label fw-600">'+session_ccity+'<span></div></div></div></li>   <li class="item-content item-input item-input-focused"><div class="item-inner"><div class="item-title item-floating-label">Name</div><div class="item-input-wrap"><input type="text" name="c_name" value="'+cst_name+'"><span class="input-clear-button"></span></div></div></li><li class="item-content item-input item-input-focused"><div class="item-inner"><div class="item-title item-floating-label">Phone</div><div class="item-input-wrap"><input type="text" name="c_phone" value='+c_phn+'><span class="input-clear-button"></span></div></div></li><li class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Gender</div><div class="item-input-wrap input-dropdown-wrap"><select name="c_area" id="c_area" onchange="check_service(this.value,'+jobid+')"><option value="">---SELECT AREA---</option>';
         for(var i=0;i<area.length;i++){
           var a_id=area[i].a_id;
@@ -2162,7 +2321,7 @@ function openLOC(){
       cordova.plugins.diagnostic.isLocationAuthorized(successCallback, errorCallback);
        //mainView.loadPage("current-location.html");
     }else{
-      alert("Location service is ON");        
+      //alert("Location service is ON");        
       mainView.router.navigate("/customer_dash/");
     }
   }, function(error){
@@ -2181,7 +2340,7 @@ function errorCallback(error){
 }
 function onSuccess(position){
   app.preloader.show();
-  alert("in onSuccess function");
+  //alert("in onSuccess function");
   /*alert('Latitude: '          + position.coords.latitude          + '\n' +
         'Longitude: '         + position.coords.longitude         + '\n' +
         'Altitude: '          + position.coords.altitude          + '\n' +
@@ -2345,6 +2504,7 @@ $$(document).on('page:init', '.page[data-name="partner_profile"]', function (pag
     success:function(prof){
       var prf = $.parseJSON(prof);
       var profile = prf.part;
+      var service_info = prf.service_info;
       console.log("profile "+profile);
       var pid = profile[0].p_id;
       //alert(pid);
@@ -2415,6 +2575,8 @@ $$(document).on('page:init', '.page[data-name="partner_profile"]', function (pag
 
       $(".lock_icon").html('');
       $(".changepass").html('<a href="/partner_changepass/" class="text-red fw-600 text-center">Change Password <i class="f7-icons fs-18">lock_fill</i></a>');
+
+      $(".serviedets").html('<div class="list"><ul><li class="accordion-item lightblue mb-5"><a class="item-content item-link" href="#"><div class="item-inner"><div class="item-title text-blue fs-14 fw-500"><span class="txt-amaz">Partnership details</span> </div></div></a><div class="accordion-item-content nobg elevation-5"><div class="block"><p><span class="ml-2 fw-600 txt-amaz">Selected Category</span> : <span>'+service_info.cat+'</span></p><p><span class="ml-2 fw-600 txt-amaz">Selected Services</span> : <span>'+service_info.ser[0].s_name+',</span></p><p><span class="ml-2 fw-600 txt-amaz">Selected Jobs</span> : <span>'+service_info.job[0].j_name+',</span></p></div></div></li></ul></div>'); 
 
     }
   });  

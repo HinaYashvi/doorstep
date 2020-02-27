@@ -461,9 +461,15 @@ div.container4 img {
   background-color: #516bf0;
 }
 .pname{
-  top: 29%!important;
+  /*top: 29%!important;
   position: absolute!important;
-  margin-left: 43%!important;
+  margin-left: 43%!important;*/
+
+  top: 80%;
+  position: relative;
+  color: #fff;
+  padding-left: 12%;
+
 }
 .top-15{
   top: 15%!important;
