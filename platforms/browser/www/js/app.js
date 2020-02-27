@@ -1391,7 +1391,7 @@ $$(document).on('page:init', '.page[data-name="customer_service_types"]', functi
   if(session_cid!='' && session_cid!=null){
     session_cust_current_city = session_cust_current_city;
   }else{
-    alert("OPEN GPS SERVICE AND GET CURRENT CITY");
+    //alert("OPEN GPS SERVICE AND GET CURRENT CITY");
     openLOC();
     navigator.geolocation.getCurrentPosition(function(position){
       var longitude = position.coords.longitude;
@@ -1614,8 +1614,10 @@ function onSuccessCity(position){
             }
           }
         } 
-        window.localStorage.setItem("session_current_city",city);
-        window.localStorage.setItem("session_current_loc",res);
+        /*window.localStorage.setItem("session_current_city",city);
+        window.localStorage.setItem("session_current_loc",res);*/ // cmnt on 27/2/2020 //
+        window.localStorage.setItem("session_cust_current_city",city);
+        window.localStorage.setItem("session_cust_current_loc",res);
         $("#formatted_address").html(res);
         updateCurrLocCust(session_cid,res,city);
         //alert("city :" + city );
@@ -2185,7 +2187,8 @@ $$(document).on('page:init', '.page[data-name="customer_servicedet"]', function 
   checkConnection();
   //console.log(page.detail.route.params);
   var session_cid = window.localStorage.getItem("session_cid"); 
-  var session_ccityid = window.localStorage.getItem("session_ccityid");
+  //var session_ccityid = window.localStorage.getItem("session_ccityid"); // 27-2-2020 //
+  var session_ccityid = window.localStorage.getItem("session_reg_custcityid"); // 27-2-2020 //
   var j_id = page.detail.route.params.j_id; 
   var sid = page.detail.route.params.sid;
   var job_name = page.detail.route.params.j_name; 
@@ -2201,9 +2204,11 @@ $$(document).on('page:init', '.page[data-name="customer_servicedet"]', function 
 function timeSlotTabs(j_id,hidd_day){
   checkConnection();
   var session_cid = window.localStorage.getItem("session_cid"); 
-  var session_current_city = window.localStorage.getItem("session_current_city");
+  //var session_current_city = window.localStorage.getItem("session_current_city"); // 27-2-2020 //
+  var session_current_city = window.localStorage.getItem("session_cust_current_city"); // 27-2-2020 //
   var session_ccity = window.localStorage.getItem("session_ccity");
-  var session_ccityid = window.localStorage.getItem("session_ccityid");
+  //var session_ccityid = window.localStorage.getItem("session_ccityid");
+  var session_ccityid = window.localStorage.getItem("session_reg_custcityid");
   //alert(hidd_day);
   var d = new Date();
   var tm =Math.floor(d.getTime()/1000);
