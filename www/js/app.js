@@ -53,8 +53,10 @@ var mainView = app.views.create('.view-main');
 document.addEventListener("deviceready", checkStorage, false); 
 document.addEventListener("deviceready", onDeviceReady, false);
 document.addEventListener("backbutton", onBackKeyDown, false);
+document.addEventListener("resume", onResume, false);
 window.setInterval(function(){
    checkConnection();
+   //onResume()
    var totalcartqty=parseInt(window.localStorage.getItem("totalcartqty"));
    //console.log(totalcartqty);
     if (totalcartqty>0) {
@@ -64,7 +66,90 @@ window.setInterval(function(){
        $('.totalcartqty').html(totalcartqty);
        window.localStorage.setItem("totalcartqty", totalcartqty);
     }
-}, 2000);
+}, 5000);
+
+function onResume() { 
+  //console.log("Handle the resume event");
+  var session_cid = window.localStorage.getItem("session_cid");
+  if(session_cid){
+    if(session_cid!=''){
+      $.ajax({
+        type:"POST",
+        dataType:"json",  
+        data:{'session_cid':session_cid},
+        url: base_url+'APP/Appcontroller/checkForreview', 
+        success: function(result){ 
+          var status = result.status;
+          var modal = result.modal;
+          //console.log(status+"!!!!!!!! "+modal);
+          var o_id = result.o_id;
+          var c_id = result.c_id;
+          var p_id = result.p_id;
+          var ser_id = result.ser_id;
+          var job_id = result.job_id;
+          var city_id = result.city_id;
+          var area_id = result.area_id;
+          var j_name = result.j_name;
+          var p_name = result.p_name;          
+          //var rate_form='';
+          if(status=='success'){ 
+            if(modal=='true'){
+            var span = document.createElement("div");
+            span.innerHTML = '<div class="rating_form list w-100"><form id="ratelast"><ul class="w-100"><li class="item-content item-input item-input-outline w-100 row"><div class="item-inner"><div class="item-title item-label fw-600 mb-5 l-0">Give rates<br/></div><div class="w-100 text-center"><div class="rating-widget"><!-- Rating Stars Box --><div class="rating-stars text-center"><ul id="stars" class="display-if pl-0"><input type="hidden" name="hidd_rate_home" id="hidd_rate_home" /><input type="hidden" name="o_id" id="o_id" value="'+o_id+'" /><input type="hidden" name="c_id" id="c_id" value="'+c_id+'" /><input type="hidden" name="p_id" id="p_id" value="'+p_id+'" /><input type="hidden" name="ser_id" id="ser_id" value="'+ser_id+'" /><input type="hidden" name="job_id" id="job_id" value="'+job_id+'" /><input type="hidden" name="city_id" id="city_id" value="'+city_id+'" /><input type="hidden" name="area_id" id="area_id" value="'+area_id+'" /><li class="star" title="Poor" data-value="1" id="star_1" onclick="ratestar_home(this)"><i class="f7-icons lightgrey" id="fillstrhome_1">star_fill</i></li><li class="star" title="Fair" data-value="2" id="star_2" onclick="ratestar_home(this)"><i class="f7-icons lightgrey" id="fillstrhome_2">star_fill</i></li><li class="star" title="Good" data-value="3" id="star_3" onclick="ratestar_home(this)"><i class="f7-icons lightgrey" id="fillstrhome_3">star_fill</i></li><li class="star" title="Excellent" data-value="4" id="star_4" onclick="ratestar_home(this)"><i class="f7-icons lightgrey" id="fillstrhome_4">star_fill</i></li><li class="star" title="WOW!!!" data-value="5" id="star_5" onclick="ratestar_home(this)"><i class="f7-icons lightgrey" id="fillstrhome_5">star_fill</i></li></ul></div></div></div></div><div class="item-inner"><div class="item-input-wrap"><input type="text" placeholder="Give a review" name="review_txt" id="reviewtxt" class="fs-12"><span class="input-clear-button"></span></div></div>         <button class="col-33 button fs-10 mb-5 button-small seg_btn" type="button" onclick="return giveratelastservice('+c_id+','+o_id+')">Save</button><button class="col-33 button button-outline fs-10 mr-15 mb-5 button-small seg-outline" type="button" onclick="close_me()">Rate later</button></li></ul></form></div>';
+              swal({
+                title:"How's your last service?",
+                text:'Your last service '+j_name+' was completed by '+p_name+'.'+' \n Your Feedback will be helpful!',
+                content: span,                 
+                buttons: false,                          
+              }); 
+              //$(".swal-overlay").addClass("swal-overlay--show-modal"); 
+              $(".swal-footer").addClass("text-center");
+            }
+          }
+        }
+      });
+    }
+  }
+}
+function close_me(){
+  swal.close();
+}
+function giveratelastservice(c_id,o_id){
+  var review_txt=$('input[name="review_txt"]').val();
+  var hidd_rate_home=$('input[name="hidd_rate_home"]').val();
+  if(review_txt==''){
+    app.dialog.alert("Enter review");
+    return false;
+  }else if(hidd_rate_home==''){
+    app.dialog.alert("Please select the stars");
+    return false;
+  }else{  
+    var ratelast = $("#ratelast").serialize();
+    console.log(ratelast);
+    $.ajax({
+      type:'POST',
+      url: base_url+'APP/Appcontroller/LastserviceRating', 
+      data:ratelast,
+      dataType:'json', 
+      success: function(result){
+      var status = result.status;
+      var rate = result.rate; 
+      alert(status+"-------"+rate);
+        if(status=='success'){
+          /*if(rate=='null'){
+            app.dialog.alert("Please select the stars");
+            return false;
+          }else{*/
+            app.dialog.alert("Thankyou for your feedback");
+            swal.close(); 
+            return false; 
+          //}
+        }
+      }
+
+    });
+  }
+}
 // ------------------ C H E C K  I N T E R N E T  C O N N E C T I O N ------------------ //
 function checkConnection(){  
   var networkState = navigator.connection.type;
@@ -73,7 +158,9 @@ function checkConnection(){
   }
 }
 // ----------------------- D E V I C E  R E A D Y ------------------------ //
-function onDeviceReady(){}
+function onDeviceReady(){
+  onResume();
+}
 // ---------------------------- C H E C K  S T O R A G E ---------------------------- //
 function checkStorage(){
   checkConnection();  
@@ -89,7 +176,8 @@ function checkStorage(){
                 navigator.app.exitApp();
           });  
       }
-  }});*/
+    }
+  });*/
   var session_pid = window.localStorage.getItem("session_pid");
   var session_cid = window.localStorage.getItem("session_cid");
   //console.log(session_pid+"-----"+session_cid);
@@ -295,6 +383,7 @@ var swiper1;
 $$(document).on('page:init', '.page[data-name="customer_dash"]', function (page) { 
   //logOut(); 
   checkConnection();
+  onResume();
   app.preloader.show();
   var session_cid = window.localStorage.getItem("session_cid");  
   var session_cust_current_city  = window.localStorage.getItem("session_cust_current_city");
@@ -581,6 +670,7 @@ $$(document).on('page:init', '.page[data-name="customer_dash"]', function (page)
 }*/
 function getBookingbyStatus(button_active,divname){
   checkConnection();  
+  onResume();
   app.preloader.show();
   var session_cid = window.localStorage.getItem("session_cid");  
   $.ajax({
@@ -717,7 +807,7 @@ function getBookingbyStatus(button_active,divname){
             var patner_det=status_txt+ ' By '+p_name+'<br/><i class="f7-icons fs-12 text-grey mr-5">phone_fill</i><span class="fs-10">'+p_phone+'</span><br/><i class="f7-icons fs-12 text-grey mr-5">envelope_fill</i><span class="fs-10">'+p_email+'</span>';
             var thumb='';
           }else if(order_status==2){
-            var rate_form='<div class="rating_form_'+i+' list display-none w-100"><ul class="w-100"><li class="item-content item-input item-input-outline w-100 row"><div class="item-inner"><div class="item-title item-label l-0">Give rates<br/></div><div class="w-100 text-center"><div class="rating-widget"><!-- Rating Stars Box --><div class="rating-stars text-center"><ul id="stars" class="display-if"><input type="hidden" name="hidd_rate" id="hidd_rate" /><li class="star" title="Poor" data-value="1" id="star_'+i+'_1" onclick="ratestar(this,'+i+')"><i class="f7-icons lightgrey" id="fillstr_'+i+'_1">star_fill</i></li><li class="star" title="Fair" data-value="2" id="star_'+i+'_2" onclick="ratestar(this,'+i+')"><i class="f7-icons lightgrey" id="fillstr_'+i+'_2">star_fill</i></li><li class="star" title="Good" data-value="3" id="star_'+i+'_3" onclick="ratestar(this,'+i+')"><i class="f7-icons lightgrey" id="fillstr_'+i+'_3">star_fill</i></li><li class="star" title="Excellent" data-value="4" id="star_'+i+'_4" onclick="ratestar(this,'+i+')"><i class="f7-icons lightgrey" id="fillstr_'+i+'_4">star_fill</i></li><li class="star" title="WOW!!!"" data-value="5" id="star_'+i+'_5" onclick="ratestar(this,'+i+')"><i class="f7-icons lightgrey" id="fillstr_'+i+'_5">star_fill</i></li></ul></div></div></div></div><div class="item-inner"><div class="item-input-wrap"><input type="text" placeholder="Give a review" name="review_txt" id="reviewtxt_'+i+'" class="fs-12"><span class="input-clear-button"></span></div></div>         <button class="col-33 button fs-10 mb-5 button-small seg_btn" onclick="giverate('+i+','+c_id+','+o_id+','+acpt_id+')">Rate it!</button><button class="col-33 button button-outline fs-10 mr-15 mb-5 button-small seg-outline" onclick="showRatebtn('+i+')">Cancel</button></li></ul></div>';
+            var rate_form='<div class="rating_form_'+i+' list display-none w-100"><ul class="w-100"><li class="item-content item-input item-input-outline w-100 row"><div class="item-inner"><div class="item-title text-center fw-600 mb-5 item-label l-0">Give rates<br/></div><div class="w-100 text-center"><div class="rating-widget"><!-- Rating Stars Box --><div class="rating-stars text-center"><ul id="stars" class="display-if"><input type="hidden" name="hidd_rate" id="hidd_rate" /><li class="star" title="Poor" data-value="1" id="star_'+i+'_1" onclick="ratestar(this,'+i+')"><i class="f7-icons lightgrey" id="fillstr_'+i+'_1">star_fill</i></li><li class="star" title="Fair" data-value="2" id="star_'+i+'_2" onclick="ratestar(this,'+i+')"><i class="f7-icons lightgrey" id="fillstr_'+i+'_2">star_fill</i></li><li class="star" title="Good" data-value="3" id="star_'+i+'_3" onclick="ratestar(this,'+i+')"><i class="f7-icons lightgrey" id="fillstr_'+i+'_3">star_fill</i></li><li class="star" title="Excellent" data-value="4" id="star_'+i+'_4" onclick="ratestar(this,'+i+')"><i class="f7-icons lightgrey" id="fillstr_'+i+'_4">star_fill</i></li><li class="star" title="WOW!!!"" data-value="5" id="star_'+i+'_5" onclick="ratestar(this,'+i+')"><i class="f7-icons lightgrey" id="fillstr_'+i+'_5">star_fill</i></li></ul></div></div></div></div><div class="item-inner"><div class="item-input-wrap"><input type="text" placeholder="Give a review" name="review_txt" id="reviewtxt_'+i+'" class="fs-12"><span class="input-clear-button"></span></div></div>         <button class="col-33 button fs-10 mb-5 button-small seg_btn" onclick="giverate('+i+','+c_id+','+o_id+','+acpt_id+')">Rate it!</button><button class="col-33 button button-outline fs-10 mr-15 mb-5 button-small seg-outline" onclick="showRatebtn('+i+')">Cancel</button></li></ul></div>';
             var status_cls='finished';
             var status_txt='Finished';
             var thumb='';
@@ -762,7 +852,7 @@ function getBookingbyStatus(button_active,divname){
 
 
           var change_loc='<span id="btnLoc">'+btn_loc+'</span><div class="locchange_form_'+i+' list display-none w-100"><ul class="w-100"><li class="item-content item-input item-input-outline w-100 row"><div class="item-inner"><div class="item-title item-label l-0">Change Location<br/><span class="text-red fw-600 fs-9">NOTE : Address can be change if partner will accept your request.</span></div><div class="item-input-wrap"><input type="text" name="change_address" id="change_address_'+i+'" class="fs-12"><span class="input-clear-button"></span></div></div><button class="col-33 button fs-10 mb-5 button-small seg_btn" onclick="changeAddress('+i+','+c_id+','+acpt_id+','+o_id+','+"'"+ord_no+"'"+','+o_code+')">Change</button><button class="col-33 button button-outline fs-10 mr-15 mb-5 button-small seg-outline" onclick="showLocbtn('+i+')">Cancel</button></li></ul></div>';
-          ord_list+='<li class="accordion-item lightblue mb-5" id="li_'+i+'"><a href="#" class="item-content item-link"><div class="item-inner"><div class="item-title text-blue fw-500 fs-14"><span class="mr-5">'+ord_no+'</span><!--span class="text-red fw-500 fs-12">(code: '+o_code+')</span--></div><!--span class="float-right fs-10 fw-600 '+status_cls+'">'+status_txt+'</span--><span class="float-right fs-10 fw-600">'+thumb+'</span></div></a><div class="accordion-item-content nobg"><div class="block"><div class="row"><div class="col-50 mt-2 fs-12"><span class="fw-500">Order code: '+o_code+'</span><br/><span class="fw-600 text-blue bord-bot-blue">'+s_name+'</span><br/><span class="fs-10 fw-500"><i class="f7-icons fs-10 text-grey mr-5">circle_fill</i>'+j_name+'</span><br/><span class="fs-10 fw-500"><i class="f7-icons fs-10 text-grey mr-5">calendar_fill</i>'+finaldt+'<span class="text-capitalize badge fs-10 ml-5"> '+request_day+'</span></span><br/><span class="fs-10 fw-500"><i class="f7-icons fs-10 text-grey mr-5">timer_fill</i>'+time+'</span></div><div class="col-50 mt-2 fs-12"><span class="fw-500">'+patner_det+'</span></div><div><a class="button dynamic-popup txt-amaz fs-12 fw-600" href="#" onclick="openpopup('+"'"+ord_no+"'"+','+"'"+o_code+"'"+','+"'"+street_no+"'"+','+"'"+street_name+"'"+','+"'"+street_unit+"'"+','+"'"+pin+"'"+','+"'"+a_name+"'"+')">Address Details</a></div></div></div>';
+          ord_list+='<li class="accordion-item lightblue mb-5 elevation-1" id="li_'+i+'"><a href="#" class="item-content item-link"><div class="item-inner"><div class="item-title text-blue fw-500 fs-14"><span class="mr-5">'+ord_no+'</span><!--span class="text-red fw-500 fs-12">(code: '+o_code+')</span--></div><!--span class="float-right fs-10 fw-600 '+status_cls+'">'+status_txt+'</span--><span class="float-right fs-10 fw-600">'+thumb+'</span></div></a><div class="accordion-item-content nobg"><div class="block"><div class="row"><div class="col-50 mt-2 fs-12"><span class="fw-500">Order code: '+o_code+'</span><br/><span class="fw-600 text-blue bord-bot-blue">'+s_name+'</span><br/><span class="fs-10 fw-500"><i class="f7-icons fs-10 text-grey mr-5">circle_fill</i>'+j_name+'</span><br/><span class="fs-10 fw-500"><i class="f7-icons fs-10 text-grey mr-5">calendar_fill</i>'+finaldt+'<span class="text-capitalize badge fs-10 ml-5"> '+request_day+'</span></span><br/><span class="fs-10 fw-500"><i class="f7-icons fs-10 text-grey mr-5">timer_fill</i>'+time+'</span></div><div class="col-50 mt-2 fs-12"><span class="fw-500">'+patner_det+'</span></div><div><a class="button dynamic-popup txt-amaz fs-12 fw-600" href="#" onclick="openpopup('+"'"+ord_no+"'"+','+"'"+o_code+"'"+','+"'"+street_no+"'"+','+"'"+street_name+"'"+','+"'"+street_unit+"'"+','+"'"+pin+"'"+','+"'"+a_name+"'"+')">Address Details</a></div></div></div>'; 
           
           if(rev_btn!=''){
             ord_list+='<div class="action_line" id="action_line_'+i+'"><div class="row"><span class="float-right w-100">'+rev_btn+'</span></div></div>';
@@ -1100,9 +1190,18 @@ $$(document).on('page:init', '.page[data-name="partner_orders"]', function (page
   var session_pid = window.localStorage.getItem("session_pid");
   var button_active=$(".button-active").val();
   var divname="new_orders"; 
-  getOrders(button_active,divname,0);
+  getOrders(button_active,divname,0);   
+  /*var $ptrContent = $$('.ptr-content');
+  $ptrContent.on('ptr:refresh', function (e) {
+    // Emulate 2s loading
+    setTimeout(function () { 
+      getOrders(button_active,divname,0); 
+      app.ptr.done(); // or e.detail();
+    }, 2000);
+  }); */ 
   app.preloader.hide();
 });
+
 function getOrders(button_active,divname,act_tab){
   checkConnection();  
   app.preloader.show();
@@ -1111,7 +1210,7 @@ function getOrders(button_active,divname,act_tab){
     var url=base_url+'APP/Appcontroller/getNewBookings';
   }else if(button_active==1){
     var url=base_url+'APP/Appcontroller/getAcceptedBookings';
-  }
+  } 
   $.ajax({
     type:'POST', 
     dataType:'json',    
@@ -1122,6 +1221,8 @@ function getOrders(button_active,divname,act_tab){
       var accept_cnts = book_result.accept_cnts;
       var new_cnts = book_result.new_cnts;
       var html = book_result.html;
+      var html2 = book_result.html2;
+      //console.log(html2+"----");
       if(act_tab==0){  
         $(".pen_badge").html(status_order.length);
         $(".start_badge").html(accept_cnts);
@@ -1136,7 +1237,14 @@ function getOrders(button_active,divname,act_tab){
       }else{
         $(".ordercls").html("");
         $("#"+divname).html(html);
+        if(html==''){
+          //console.log(html.length);
+          $(".ordercls").html("");
+          $("#"+divname).html('<div class="block fs-12 text-red fw-500 text-capitalize">No bookings available.</div>');
+          $(".pen_badge").html(html.length);
+        }
       }
+
       app.preloader.hide(); 
     } 
 
@@ -1207,35 +1315,74 @@ function giverate(i,c_id,o_id,acpt_id){
     });
   }
 } 
+function ratestar_home(val){
+  var click_rate_home=$(val).attr('data-value');
+  var click_id_home=$(val).attr('id');
+  var click_cls_home=$("#fillstrhome_"+click_rate_home).attr('class');
+  //console.log(click_cls_home+"***"+click_id_home+"^^^^^"+click_rate_home);
+  var onStar_home = parseInt($(val).data('value'), 10);
+  $("#hidd_rate_home").val(onStar_home);
+  var hov_len_home=$(".hover").length;
+  $(".star i").addClass("lightgrey");
+  $(val).parent().children('li.star').each(function(e){
+    var j=e+1;
+    //console.log(e+"------"+click_rate_home)   
+    if(e < click_rate_home){
+      //console.log("if "+e);
+      $("#fillstrhome_"+j).removeClass("lightgrey");
+      $("#fillstrhome_"+j).addClass("hover");     
+    }else{
+      //console.log("else "+e);
+      $("#fillstrhome_"+j).removeClass("hover");
+      $("#fillstrhome_"+j).addClass("lightgrey");
+    }
+    //console.log(click_rate_home+"------"+click_cls_home+"*********"+hov_len_home);
+    if(click_rate_home==1 && click_cls_home=='f7-icons hover active-state' && hov_len_home==1){  
+        $("#fillstrhome_"+click_rate_home).removeClass("hover");
+        $("#fillstrhome_"+click_rate_home).addClass("lightgrey");  
+    }
+  });
+}
 function ratestar(val,rowid){
+  //console.log(rowid+"####"+val);
   var click_rate=$(val).attr('data-value');
   var click_id=$(val).attr('id');
   var click_cls=$("#fillstr_"+rowid+"_"+click_rate).attr('class');  
-  //console.log(click_cls+"***"+click_id);
+  //console.log(click_cls+"***"+click_id+"^^^^^"+click_rate);
   var onStar = parseInt($(val).data('value'), 10);
   $("#hidd_rate").val(onStar);
-    $(val).parent().children('li.star').each(function(e){
+  var hov_len=$(".hover").length;
+  //alert($(".hover").length+"^^^^^^^^^^^^^^^^^^^^^");
+  $(".star i").addClass("lightgrey");
+    $(val).parent().children('li.star').each(function(e){ 
       var j=e+1;
-      if(click_cls=='f7-icons lightgrey'){
-        //console.log("if click_cls "+click_cls);
-        $("#fillstr_"+rowid+"_"+click_rate).removeClass("lightgrey");
-        $("#fillstr_"+rowid+"_"+click_rate).addClass("hover");
-      }else if(click_cls=='f7-icons hover'){
-        console.log("else click_cls "+click_cls);
-        $("#fillstr_"+rowid+"_"+click_rate).removeClass("hover");
-        $("#fillstr_"+rowid+"_"+click_rate).addClass("lightgrey");
-      }
-      
       if(e < click_rate){
+        //console.log("j = "+j+'====='+rowid);
         $("#fillstr_"+rowid+"_"+j).removeClass("lightgrey");
         $("#fillstr_"+rowid+"_"+j).addClass("hover");
-        //console.log(val.textContent+"-----"+e);
-        
+        //console.log(val.textContent+"-----"+e);        
       }else{
+        //console.log("else j = "+j+'====='+rowid);
         $("#fillstr_"+rowid+"_"+j).removeClass("hover");
         $("#fillstr_"+rowid+"_"+j).addClass("lightgrey");
       }
-  }); 
+      if(click_rate==1 && click_cls=='f7-icons hover' && hov_len==1){  
+        $("#fillstr_"+rowid+"_"+click_rate).removeClass("hover");
+        $("#fillstr_"+rowid+"_"+click_rate).addClass("lightgrey");    
+        //if(click_cls=='f7-icons lightgrey'){        
+          //console.log("if click_cls "+click_cls);
+          //$("#fillstr_"+rowid+"_"+click_rate).removeClass("lightgrey");
+          //$("#fillstr_"+rowid+"_"+click_rate).addClass("hover");
+          
+        //}/*else if(click_cls=='f7-icons hover'){
+          
+         // console.log("else click_cls "+click_cls);
+        //  $("#fillstr_"+rowid+"_"+click_rate).removeClass("hover");
+         // $("#fillstr_"+rowid+"_"+click_rate).addClass("lightgrey");
+       // }    */
+      }   
+      
+  });  
 }
 function showRatebtn(rowid){
   $(".rating_form_"+rowid).removeClass("display-block");
@@ -1344,6 +1491,7 @@ function changeAddress(rowid,c_id,acpt_id,o_id,o_num,o_code){
 function getcatServices(cat_id,c_img_path){
   mainView.router.navigate("/customer_servicelist/");  
   app.preloader.show();
+  onResume();
   $.ajax({
     type:'POST', 
     data:{'cat_id':cat_id},
@@ -1490,7 +1638,9 @@ $$(document).on('page:init', '.page[data-name="customer_service_types"]', functi
               jlist+='<li><a href="/customer_servicedet/'+j_id+'/'+j_name+'/'+j_price+'/'+sid+'/" class="item-link item-content"><div class="item-inner"><div class="item-title fs-12">'+j_name+'</div></div></a></li>'; 
               $(".amazontxt").removeClass("display-none");
               $(".amazontxt").addClass("display-block");
-              $(".jobList").html(jlist);
+              if(session_cid!=null && session_cid!=undefined){
+               $(".jobList").html(jlist);
+              }
             }
           }
         }else{
@@ -1859,11 +2009,12 @@ function resendOTP_customer(){
       var sent_json = json.sent;
       if(sent_json==1){
         var toastIcon = app.toast.create({
-          text: 'Please check your registered mobile number '+hidd_mob+' to receive the resended OTP',
+          text:'Please check your registered mobile number '+hidd_mob+' to receive the resended OTP',
           position: 'center',
           closeTimeout: 10000,
         });        
         toastIcon.open();
+        OTPtimer_cust(hidd_cid);
         app.preloader.hide();
       }        
     } 
@@ -1887,6 +2038,9 @@ function verifycust_otp(){
         app.dialog.alert(v_msg);
         app.preloader.hide(); 
         mainView.router.navigate('/login/');
+      }else if(status=="otp_exp"){
+        app.dialog.alert(v_msg);
+        app.preloader.hide(); 
       }else if(status=="Inactive"){        
         var toastIcon = app.toast.create({
         icon: app.theme === 'ios' ? '<i class="f7-icons">multiply</i>' : '<i class="f7-icons">multiply</i>',
@@ -1909,6 +2063,7 @@ $$(document).on('page:init', '.page[data-name="customer_otpverify"]', function (
   $("#hidd_mob").val(mobile_no);
   $("#hidd_cid").val(cid);
   $(".otp_txt").html('Your mobile number is already registered with Doorstep.Please enter and verify the OTP sent to your registered mobile number '+mobile_no+' by doorstep.');
+  OTPtimer_cust(cid);
 });
 function customer_exists(mobile_no){
   if(mobile_no!=''){
@@ -1947,6 +2102,7 @@ function customer_exists(mobile_no){
 }
 $$(document).on('page:init', '.page[data-name="customer_editprof"]', function (page) { 
   checkConnection(); 
+  onResume();
   app.preloader.show();
   var session_cid = window.localStorage.getItem("session_cid");  
   $.ajax({
@@ -2038,6 +2194,7 @@ $$(document).on('page:init', '.page[data-name="customer_editprof"]', function (p
 $$(document).on('page:init', '.page[data-name="customer_changepass"]', function (page) { 
   //logOut(); 
   checkConnection();
+  onResume();
   app.preloader.show();
   $("#conf_newpass").keyup(validate);  
   app.preloader.hide();
@@ -2234,6 +2391,8 @@ function timeSlotTabs(j_id,hidd_day){
       var c_reg = cust.city_name;
 
       var area = jobdet.area;
+      var discount = jobdet.discount;
+      //console.log("discount "+discount);
 
       //console.log(job_det);      
       var job_slide = '';
@@ -2284,8 +2443,8 @@ function timeSlotTabs(j_id,hidd_day){
       }
       
       var jobid=$("#jobid").val();
-      alert("******* session_current_city "+session_current_city);
-      alert("******* session_ccity "+session_ccity);
+      //alert("******* session_current_city "+session_current_city);
+      //alert("******* session_ccity "+session_ccity);
       bookdiv+='<li class="item-content item-input item-input-focused"><div class="item-inner"><div class="">Current City: <span class="badge">'+session_current_city+'</span></div><div class="text-capitalize">Your City: <div class="chip chip-outline color-orange"><span class="chip-label fw-600">'+session_ccity+'<span></div></div></div></li>   <li class="item-content item-input item-input-focused"><div class="item-inner"><div class="item-title item-floating-label">Name</div><div class="item-input-wrap"><input type="text" name="c_name" value="'+cst_name+'"><span class="input-clear-button"></span></div></div></li><li class="item-content item-input item-input-focused"><div class="item-inner"><div class="item-title item-floating-label">Phone</div><div class="item-input-wrap"><input type="text" name="c_phone" value='+c_phn+'><span class="input-clear-button"></span></div></div></li><li class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Gender</div><div class="item-input-wrap input-dropdown-wrap"><select name="c_area" id="c_area" onchange="check_service(this.value,'+jobid+')"><option value="">---SELECT AREA---</option>';
         for(var i=0;i<area.length;i++){
           var a_id=area[i].a_id;
@@ -2293,10 +2452,14 @@ function timeSlotTabs(j_id,hidd_day){
           //alert(a_name);
           bookdiv+='<option value='+a_id+'>'+a_name+'</option>';
         } 
-
-      bookdiv+='</select></div></div></li><li class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Address</div><div class="item-input-wrap"><textarea placeholder="Please enter the address as per selected city and area." name="address" id="address"></textarea></div></div></li>';
+ 
+      bookdiv+='</select></div></div></li><li class="item-content item-input item-input-focused"><div class="item-inner"><div class="item-title item-floating-label">Street No</div><div class="item-input-wrap"><input type="text" name="strt_no" id="strt_no"><span class="input-clear-button"></span></div></div></li><li class="item-content item-input item-input-focused"><div class="item-inner"><div class="item-title item-floating-label">Street Name</div><div class="item-input-wrap"><input type="text" name="strt_name" id="strt_name"><span class="input-clear-button"></span></div></div></li><li class="item-content item-input item-input-focused"><div class="item-inner"><div class="item-title item-floating-label">Street Unit</div><div class="item-input-wrap"><input type="text" name="strt_unit" id="strt_unit"><span class="input-clear-button"></span></div></div></li><li class="item-content item-input item-input-focused"><div class="item-inner"><div class="item-title item-floating-label">PIN</div><div class="item-input-wrap"><input type="text" name="pin" id="pin"><span class="input-clear-button"></span></div></div></li><!--li class="item-content item-input"><div class="item-inner"><div class="item-title item-label">Address</div><div class="item-input-wrap"><textarea placeholder="Please enter the address as per selected city and area." name="address" id="address"></textarea></div></div></li-->';
       if(slot.length!=0){
-        bookdiv+='<div class="block"><div class="col"><a class="button submitbtn no-radius mb-10" onclick="bookCustService()">Pay <i class="f7-icons fs-16">money_dollar</i> '+j_price+'</a></div></div>';
+        var discount_cnt = discount.length;
+        if(discount_cnt > 0 ){
+          bookdiv+='<input type="hidden" name="disc_price" id="disc_price" /><input type="hidden" name="dis_id" value="'+discount[0].dis_id+'" /> <div class="block"><div class="col"><label class="checkbox" ><input type="checkbox" id="dis"  value="1" name="dis_check" onchange="checkme('+j_price+',this)"><i class="icon-checkbox"></i></label><span class="ml-5">You are eligible to get 10% discount, Check to apply</span> </div></div>';
+        }
+        bookdiv+='<div class="block"><div class="col"><a class="button submitbtn no-radius mb-10" onclick="bookCustService()">Pay <i class="f7-icons fs-16">money_dollar</i><span class="finale_price"> '+j_price+'</span></a></div></div>';
       }
 
       $("#bookser_div").html(bookdiv);
@@ -2312,6 +2475,27 @@ function timeSlotTabs(j_id,hidd_day){
       app.preloader.hide();
     }
   }); 
+}
+function checkme(j_price,chk){
+  console.log(chk);
+  //if(chk.checked){
+  if($(chk).is(":checked")) {
+    var returnVal = chk.checked;
+    //alert(returnVal);
+    $(chk).prop("checked", "checked");
+  }
+  $('#dis').val(chk.checked);
+  //if($(chk).is(":checked")) {
+  if (returnVal) { 
+    var amt = j_price*10/100;
+    var amt = j_price-amt;
+    $('#disc_price').val(amt);
+    $('.finale_price').html(amt);
+  } else {
+    var amt = j_price;
+    $('#disc_price').val(amt);
+    $('.finale_price').html(amt);
+  }
 }
 function curr_loc(){
   //alert("called");
@@ -2484,6 +2668,7 @@ function geolocate() {
   });
 }
 function clicked_me(){
+  onResume();
   var active_tab = $(".tab-active").attr('id');
   $("#hidd_proftab").val(active_tab);
   //alert("tab-active "+active_tab); 
@@ -2493,7 +2678,10 @@ function clicked_me(){
 $$(document).on('page:init', '.page[data-name="partner_dash"]', function (page) {  
   checkConnection();
   app.preloader.show();
-  getPartnerData(); 
+  setInterval(function(){
+    //console.log("called");
+    getPartnerData(); 
+  },2000);
   app.preloader.hide();
   //logOut();     
 });
@@ -2510,7 +2698,7 @@ $$(document).on('page:init', '.page[data-name="partner_profile"]', function (pag
       var prf = $.parseJSON(prof);
       var profile = prf.part;
       var service_info = prf.service_info;
-      console.log("profile "+profile);
+      //console.log("profile "+profile);
       var pid = profile[0].p_id;
       //alert(pid);
       var nm_fltr = (profile[0].p_name.charAt(0));
@@ -2867,6 +3055,9 @@ function verify_otp(){
         app.dialog.alert(v_msg);
         app.preloader.hide();  
         mainView.router.navigate('/login/');
+      }else if(status=="otp_exp"){
+        app.dialog.alert(v_msg);
+        app.preloader.hide(); 
       }else if(status=="Inactive"){        
         var toastIcon = app.toast.create({
         icon: app.theme === 'ios' ? '<i class="f7-icons">multiply</i>' : '<i class="f7-icons">multiply</i>',
@@ -2926,11 +3117,22 @@ function getPartnerData(){
       var p_credit_amount = partner[0].amount;
       var credits = parse_part.credits;
       var neword_cnt = parse_part.neword_cnt;
+      var html = parse_part.html;
+      //console.log(html);
+      //alert(html.length);
       //console.log(partner); 
       //console.log(credits);
       //console.log(neword_cnt);
       $(".creditDiv").html("<div class='chip seg-outline'><div class='chip-label credits text-uppercase fs-10 fw-600'>credits : "+credits+" ($ "+p_credit_amount+".00)</div></div>");
-      $(".partner_ordcnt").html(neword_cnt.length);
+      
+      //console.log("badge");
+      if(html==''){
+        $(".partner_ordcnt").html(html.length);
+      }else{
+        $(".partner_ordcnt").html(neword_cnt.length);
+      }
+      
+      //$(".partner_ordcnt").html(neword_cnt.length);
     }
   });
   app.preloader.hide();
@@ -3145,7 +3347,90 @@ $$(document).on('page:init', '.page[data-name="partner_otpverify"]', function (p
   $("#hidd_mob").val(mobile_no);
   $("#hidd_pid").val(pid);
   $(".otp_txt").html('Your mobile number is already registered with Doorstep.Please enter and verify the OTP sent to your registered mobile number '+mobile_no+' by doorstep.');
+  OTPtimer(pid);    
 });
+function OTPtimer(pid){
+  var timer2 = "10:01";
+  //var timer2 = "00:10"; // for demo //
+  var interval = setInterval(function() {
+    var timer = timer2.split(':');
+    //by parsing integer, I avoid all extra string processing
+    var minutes = parseInt(timer[0], 10);
+    var seconds = parseInt(timer[1], 10);
+    --seconds;
+    minutes = (seconds < 0) ? --minutes : minutes;
+    seconds = (seconds < 0) ? 59 : seconds;
+    seconds = (seconds < 10) ? '0' + seconds : seconds;
+    //minutes = (minutes < 10) ?  minutes : minutes;
+    $('.countdown').html(minutes + ':' + seconds);
+    if (minutes < 0) clearInterval(interval);
+    //check if both minutes and seconds are 0
+    if ((seconds <= 0) && (minutes <= 0)) clearInterval(interval);
+    timer2 = minutes + ':' + seconds;
+    if(timer2=='0:00'){
+      $(".resndotp").removeClass("display-none");
+      $(".resndotp").addClass("display-block");
+      resetOTPandTime_part(pid);
+    }else{
+      $(".resndotp").removeClass("display-block");
+      $(".resndotp").addClass("display-none");
+    }
+    //console.log(timer2+" timer2");
+  }, 1000); 
+}
+function OTPtimer_cust(cid){
+  var timer2 = "10:01";
+  //var timer2 = "00:10"; // for demo //
+  var interval = setInterval(function() {
+    var timer = timer2.split(':');
+    //by parsing integer, I avoid all extra string processing
+    var minutes = parseInt(timer[0], 10);
+    var seconds = parseInt(timer[1], 10);
+    --seconds;
+    minutes = (seconds < 0) ? --minutes : minutes;
+    seconds = (seconds < 0) ? 59 : seconds;
+    seconds = (seconds < 10) ? '0' + seconds : seconds;
+    //minutes = (minutes < 10) ?  minutes : minutes;
+    $('.countdown').html(minutes + ':' + seconds);
+    if (minutes < 0) clearInterval(interval);
+    //check if both minutes and seconds are 0
+    if ((seconds <= 0) && (minutes <= 0)) clearInterval(interval);
+    timer2 = minutes + ':' + seconds;
+    if(timer2=='0:00'){
+      $(".resndotp").removeClass("display-none");
+      $(".resndotp").addClass("display-block");
+      resetOTPandTime_cust(cid);
+    }else{
+      $(".resndotp").removeClass("display-block");
+      $(".resndotp").addClass("display-none");
+    }
+    //console.log(timer2+" timer2");
+  }, 1000); 
+}
+function resetOTPandTime_part(pid){
+  checkConnection();
+  app.preloader.show();
+  $.ajax({
+    type:'POST', 
+    url:base_url+'APP/Appcontroller/partresetOTP',
+    data:{'pid':pid},
+    success:function(rev){
+      app.preloader.hide();
+    }
+  })
+}
+function resetOTPandTime_cust(cid){
+  checkConnection();
+  app.preloader.show();
+  $.ajax({
+    type:'POST', 
+    url:base_url+'APP/Appcontroller/custresetOTP',
+    data:{'cid':cid},
+    success:function(rev){
+      app.preloader.hide();
+    }
+  })
+}
 $$(document).on('page:init', '.page[data-name="partner_reviews"]', function (page) {  
   checkConnection();
   var session_pid = window.localStorage.getItem("session_pid"); 
@@ -3219,11 +3504,12 @@ function resendOTP_partner(){
       var sent_json = json.sent;
       if(sent_json==1){
         var toastIcon = app.toast.create({
-          text: 'Please check your registered mobile number '+hidd_mob+' to receive the resended OTP',
+          text:'Please check your registered mobile number '+hidd_mob+' to receive the resended OTP',
           position: 'center',
           closeTimeout: 10000,
         });        
         toastIcon.open();
+        OTPtimer(hidd_pid);
       }  
       app.preloader.hide();    
     } 
