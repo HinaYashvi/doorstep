@@ -2,9 +2,14 @@ var routes = [
   // Index page
   {
     //path: '/index/',
-    path: '/',
+    path: '/index/',
     url: './index.html',
     name: 'index',
+  },
+  {
+    path:'/forgot_password/',
+    url: './forgot_password.html',
+    name: 'forgot_password',
   },
   {
     path: '/login/',

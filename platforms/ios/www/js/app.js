@@ -159,7 +159,7 @@ function checkConnection(){
 }
 // ----------------------- D E V I C E  R E A D Y ------------------------ //
 function onDeviceReady(){
-  onResume();
+  onResume();  
 }
 // ---------------------------- C H E C K  S T O R A G E ---------------------------- //
 function checkStorage(){
@@ -202,7 +202,7 @@ function onBackKeyDown() {
   } 
 }
 // -------------------------------------- DATA NAME : INDEX --------------------------------- //
-var swiper;
+/*var swiper;
 $(document).on('page:init', '.page[data-name="index"]', function (e) {  
   $(".gotit").hide();
   swiper = new Swiper('.swiper-container', {
@@ -224,7 +224,7 @@ $(document).on('page:init', '.page[data-name="index"]', function (e) {
       prevSlideMessage: 'Previous slide',
       nextSlideMessage: 'Next slide',
     },*/
-    pagination: {
+/*    pagination: {
       el: '.swiper-pagination',
       clickable: true, 
       dynamicBullets: true,
@@ -251,7 +251,7 @@ $(document).on('page:init', '.page[data-name="index"]', function (e) {
     alert("clickedSlide "+clickedSlide);*/
 
     //alert(totalSlides+"-----last_slide "+last_slide); 
-    if(totalSlides == last_slide){      
+/*    if(totalSlides == last_slide){      
       //$(".lastslide").html('<a class="link text-white text-uppercase" href="/login/">got it</a>');
       $(".gotit").show();
       $(".fnext").hide();
@@ -269,11 +269,11 @@ $(document).on('page:init', '.page[data-name="index"]', function (e) {
   alert("called"); 
   swiper.slideNext();
 });*/
-function nextSlide(){
+/*function nextSlide(){
   console.log(swiper);  
   swiper.slideNext(); 
   console.log(swiper.snapIndex);
-}
+}*/
 // -------------------------------------- LOGIN CHECK -------------------------------------- //
 function logincheck(){
   checkConnection();    
@@ -1600,17 +1600,23 @@ $$(document).on('page:init', '.page[data-name="customer_service_types"]', functi
     url:base_url+'APP/Appcontroller/getJoblist',
     success:function(job_res){
       var jobparse = $.parseJSON(job_res);
+      var msg = jobparse.msg;
+      if(msg=='not_avail'){
+        //alert("not_avail");
+        jlist='<div class="block text-red fw-600 fs-12">No services available in current city.</div>';
+      }else{
       var job_list = jobparse.job_list;
       var jimg = jobparse.j_img;
       var search = jobparse.search;
       var job = search['jobs'];
       var partner = search['partner'];
-      console.log(job.length);
-      console.log(partner);
+      //console.log(job.length+" job.len");
+      //console.log(partner);
       var jlist = '';
       var slides = ''; 
       if(partner.length==0){
         jlist='<div class="block text-red fw-600 fs-12">No Provider Available In This Location</div>';
+        $(".jobList").html(jlist);
       }else{
         //alert("ELSE");
         if(job.length > 0 ){
@@ -1654,6 +1660,7 @@ $$(document).on('page:init', '.page[data-name="customer_service_types"]', functi
       $("#slides").html(slides);        
     }
   }
+  }
   });
 
   $.ajax({
@@ -1662,60 +1669,67 @@ $$(document).on('page:init', '.page[data-name="customer_service_types"]', functi
     url:base_url+'APP/Appcontroller/getCustReviews', 
     success:function(rev_res){
       var rev = $.parseJSON(rev_res);
-      var review_rate = rev.review_rate;      
-      var partner_rev = review_rate.partner;
+      var msg = rev.msg;
+      
       //console.log(partner_rev);
       //console.log(partner_rev.length+"***************");
       var rev_list='';
-      if(partner_rev.length==0){
-        rev_list='<div class="block text-red fw-600 fs-12">No Provider Available In This Location</div>';
+      if(msg=='not_avail'){
+          rev_list='<div class="block text-red fw-600 fs-12">No services available in current city</div>';
+          $("#reviews").html(rev_list);
       }else{
-        for(var i=0;i<partner_rev.length;i++){
-          var p_name = partner_rev[i].p_name;
-          var rate = partner_rev[i].rate;
-          //alert(rate);
-          var rating = partner_rev[i].rating;
-          var p_addr1 = partner_rev[i].p_addr1;
-          var a_name = partner_rev[i].a_name;
-          var city_name  = partner_rev[i].city_name;
-          var p_phone = partner_rev[i].p_phone;
-          var p_email = partner_rev[i].p_email;
-          var rev2 = partner_rev[i].review2;
-          //console.log(rev2);
-          var add = p_addr1+", "+a_name+", "+city_name;
-          var sub_rate = '';
-          if(rate==undefined){
-            var rt='<span class="text-red fw-600 fs-12">No ratings.</span>';
-          }else{
-            var rt='<i class="f7-icons fs-16 rate_star mr-5">star_fill</i><span class="fs-14 text-grey">'+rate+'</span>';
-          }
-
-          rev_list+='<li class="accordion-item accordion-item-opened lightblue mb-5"><a href="#" class="item-content item-link"><div class="item-inner"><div class="item-title fs-12 text-capitalize"><span class="text-blue fw-600">'+p_name+'</span><br><i class="f7-icons fs-12 fw-600 text-grey">phone :</i> &nbsp;'+p_phone+'<br><i class="f7-icons fs-12 fw-600 text-grey">at_circle :</i> &nbsp;'+p_email+'</div><span class="float-right">'+rt+'</span></div></a><div class="accordion-item-content nobg"><div class="list no-hairlines-between"><ul>'; 
-          if(rev2.length > 0){
-            for(var j=0;j<rev2.length;j++){            
-              var c_name = rev2[j].c_name; 
-              var rates = rev2[j].rate+".0";
-              var review = rev2[j].review;
-              var date_time = rev2[j].date_time;
-              var res_dt = date_time.replace("`", " ");
-              var final_dt = res_dt.replace("`","");
-              sub_rate+=rates; 
-              if(c_name!=null){
-                c_name=c_name;
-              }else{
-                c_name='';
-              }    
-              rev_list+='<li class="list-border"><div class="item-content"><div class="item-media"><i class="f7-icons fs-24 text-grey">person_crop_circle_fill</i></div><div class="item-inner"><div class="item-title fs-14 text-grey fw-600">'+c_name+'<br/><i class="f7-icons fs-12 light-grey mr-5">calendar</i><span class="light-grey fs-12">'+final_dt+'</span></div><div class="item-after lh-12"><i class="f7-icons fs-14 subrate mr-5">star_fill</i><span class="fw-500">'+rates+'</span></div></div></div><span><img class="ml-20" src="img/double-quote-grey.png" height="10" width="10"></span>&nbsp;<div class="fs-12 light-grey rev_div">'+review+'</div></li>';
+        var review_rate = rev.review_rate;      
+        var partner_rev = review_rate.partner;
+        if(partner_rev.length==0){
+          rev_list='<div class="block text-red fw-600 fs-12">No Provider Available In This Location</div>';
+        }else{
+          for(var i=0;i<partner_rev.length;i++){
+            var p_name = partner_rev[i].p_name;
+            var rate = partner_rev[i].rate;
+            //alert(rate);
+            var rating = partner_rev[i].rating;
+            var p_addr1 = partner_rev[i].p_addr1;
+            var a_name = partner_rev[i].a_name;
+            var city_name  = partner_rev[i].city_name;
+            var p_phone = partner_rev[i].p_phone;
+            var p_email = partner_rev[i].p_email;
+            var rev2 = partner_rev[i].review2;
+            //console.log(rev2);
+            var add = p_addr1+", "+a_name+", "+city_name;
+            var sub_rate = '';
+            if(rate==undefined){
+              var rt='<span class="text-red fw-600 fs-12">No ratings.</span>';
+            }else{
+              var rt='<i class="f7-icons fs-16 rate_star mr-5">star_fill</i><span class="fs-14 text-grey">'+rate+'</span>';
             }
-          }else{
-            rev_list+='<li><div class="item-content"><div class="item-inner"><div class="item-title fs-14 text-red fw-500">Reviews not available.</div></div></li>';
+
+            rev_list+='<li class="accordion-item accordion-item-opened lightblue mb-5"><a href="#" class="item-content item-link"><div class="item-inner"><div class="item-title fs-12 text-capitalize"><span class="text-blue fw-600">'+p_name+'</span><br><i class="f7-icons fs-12 fw-600 text-grey">phone :</i> &nbsp;'+p_phone+'<br><i class="f7-icons fs-12 fw-600 text-grey">at_circle :</i> &nbsp;'+p_email+'</div><span class="float-right">'+rt+'</span></div></a><div class="accordion-item-content nobg"><div class="list no-hairlines-between"><ul>'; 
+            if(rev2.length > 0){
+              for(var j=0;j<rev2.length;j++){            
+                var c_name = rev2[j].c_name; 
+                var rates = rev2[j].rate+".0";
+                var review = rev2[j].review;
+                var date_time = rev2[j].date_time;
+                var res_dt = date_time.replace("`", " ");
+                var final_dt = res_dt.replace("`","");
+                sub_rate+=rates; 
+                if(c_name!=null){
+                  c_name=c_name;
+                }else{
+                  c_name='';
+                }    
+                rev_list+='<li class="list-border"><div class="item-content"><div class="item-media"><i class="f7-icons fs-24 text-grey">person_crop_circle_fill</i></div><div class="item-inner"><div class="item-title fs-14 text-grey fw-600">'+c_name+'<br/><i class="f7-icons fs-12 light-grey mr-5">calendar</i><span class="light-grey fs-12">'+final_dt+'</span></div><div class="item-after lh-12"><i class="f7-icons fs-14 subrate mr-5">star_fill</i><span class="fw-500">'+rates+'</span></div></div></div><span><img class="ml-20" src="img/double-quote-grey.png" height="10" width="10"></span>&nbsp;<div class="fs-12 light-grey rev_div">'+review+'</div></li>';
+              }
+            }else{
+              rev_list+='<li><div class="item-content"><div class="item-inner"><div class="item-title fs-14 text-red fw-500">Reviews not available.</div></div></li>';
+            }
+            rev_list+='</ul></div></div></li>';
+            
+            //rev_list+='<li class="accordion-item lightblue mb-5"><a href="#" class="item-content item-link"><div class="item-inner"><div class="item-title fs-12 text-capitalize"><span class="text-blue fw-600">'+p_name+'</span><br><i class="f7-icons fs-12 fw-600 text-grey">phone :</i> &nbsp;'+p_phone+'<br><i class="f7-icons fs-12 fw-600 text-grey">at_circle :</i> &nbsp;'+p_email+'</div><span class="float-right">'+rt+'</span></div></a><div class="accordion-item-content no-bg"><div class="list no-hairlines-between"><ul><li><div class="item-content"><div class="item-media"><i class="f7-icons fs-24 text-grey">person_crop_circle_fill</i></div><div class="item-inner"><div class="item-title">Ivan Petrov</div><div class="item-after">CEO</div></div></div></li></ul></div></div></li>'; 
           }
-          rev_list+='</ul></div></div></li>';
-          
-          //rev_list+='<li class="accordion-item lightblue mb-5"><a href="#" class="item-content item-link"><div class="item-inner"><div class="item-title fs-12 text-capitalize"><span class="text-blue fw-600">'+p_name+'</span><br><i class="f7-icons fs-12 fw-600 text-grey">phone :</i> &nbsp;'+p_phone+'<br><i class="f7-icons fs-12 fw-600 text-grey">at_circle :</i> &nbsp;'+p_email+'</div><span class="float-right">'+rt+'</span></div></a><div class="accordion-item-content no-bg"><div class="list no-hairlines-between"><ul><li><div class="item-content"><div class="item-media"><i class="f7-icons fs-24 text-grey">person_crop_circle_fill</i></div><div class="item-inner"><div class="item-title">Ivan Petrov</div><div class="item-after">CEO</div></div></div></li></ul></div></div></li>'; 
         }
+        $("#reviews").html(rev_list);
       }
-      $("#reviews").html(rev_list);
       app.preloader.hide();
     }
   });
@@ -2037,7 +2051,8 @@ function verifycust_otp(){
       if(status=="Active"){
         app.dialog.alert(v_msg);
         app.preloader.hide(); 
-        mainView.router.navigate('/login/');
+        //mainView.router.navigate('/login/');
+        mainView.router.navigate('/index/');
       }else if(status=="otp_exp"){
         app.dialog.alert(v_msg);
         app.preloader.hide(); 
@@ -2090,7 +2105,8 @@ function customer_exists(mobile_no){
             mainView.router.navigate('/customer_otpverify/'+spl_spl_one+'/'+c_id+'/');
           }else if(spl_zero=='Active'){ 
             app.dialog.alert('Try to login with Doorstep you are an active user.'); 
-            mainView.router.navigate('/login/'); 
+            //mainView.router.navigate('/login/'); 
+            mainView.router.navigate('/index/');
           }else{
             //app.dialog.alert(msg); 
             //mainView.router.navigate('/customer_register/');
@@ -2676,15 +2692,23 @@ function clicked_me(){
 // ********************************** PARTNER FUNCTIONS ********************************** //
 // ------------------------- DATA NAME : PARTNER DASHBOARD ------------------------- //
 $$(document).on('page:init', '.page[data-name="partner_dash"]', function (page) {  
-  checkConnection();
-  app.preloader.show();
-  setInterval(function(){
-    //console.log("called");
-    getPartnerData(); 
-  },2000);
-  app.preloader.hide();
-  //logOut();     
+  //console.log("partner dashboard");
+  checkConnection();  
+    setInterval(function(){
+      var session_pid = window.localStorage.getItem("session_pid"); 
+      //console.log(session_pid);
+      //app.preloader.show();
+      if(session_pid!='' && session_pid!=undefined && session_pid!=null){
+        //console.log("called");
+        getPartnerData();         
+      }
+    },2000);
+    //app.preloader.hide();
 });
+  
+  
+  //logOut();     
+
 $$(document).on('page:init', '.page[data-name="partner_profile"]', function (page) {  
   checkConnection();
   var session_pid = window.localStorage.getItem("session_pid"); 
@@ -3027,7 +3051,8 @@ function partner_exists(mobile_no){
             mainView.router.navigate('/partner_otpverify/'+spl_spl_one+'/'+p_id+'/');
           }else if(spl_zero=='Active'){ 
             app.dialog.alert('Try to login with Doorstep you are an active user.'); 
-            mainView.router.navigate('/login/'); 
+            //mainView.router.navigate('/login/'); 
+            mainView.router.navigate('/index/');
           }else{
             //app.dialog.alert(msg); 
             //mainView.router.navigate('/partner_register/');
@@ -3054,7 +3079,8 @@ function verify_otp(){
       if(status=="Active"){
         app.dialog.alert(v_msg);
         app.preloader.hide();  
-        mainView.router.navigate('/login/');
+        //mainView.router.navigate('/login/');
+        mainView.router.navigate('/index/');
       }else if(status=="otp_exp"){
         app.dialog.alert(v_msg);
         app.preloader.hide(); 
@@ -3587,7 +3613,26 @@ function pass_length(pwd){
   }
 }
 // ----------------------------------- VALIDATIONS ENDS ---------------------------------- //
-
+function sendrandompassword(){
+  app.preloader.show();
+  var registered_mob = $("#mobile_no").val();
+  $.ajax({
+    type:'POST', 
+    url:base_url+'APP/Appcontroller/sendforgotpass',
+    data:{'registered_mob':registered_mob},
+    success:function(mob){
+      var parsemob = $.parseJSON(mob);
+      var updated = parsemob.updated;
+      if(updated=='mob_not_exists'){
+        app.dialog.alert("Sorry! Your mobile no is not registered with Doorstep.");
+      }else{
+        app.dialog.alert("Please check your registered mobile inbox to get the password.Try to login with the sent password.");
+      }
+      mainView.router.navigate("/index/");
+    } 
+  });
+  app.preloader.hide();
+}
 // -------------------------------- L O G O U T -------------------------------- //
 function logOut(){
   checkConnection();
@@ -3611,7 +3656,8 @@ function logOut(){
   window.localStorage.removeItem("session_reg_partcity");
   window.localStorage.removeItem("session_current_city");
   window.localStorage.removeItem("session_current_loc");  
-  mainView.router.navigate("/login/");
+  //mainView.router.navigate("/login/");
+  mainView.router.navigate('/index/');
   app.panel.close();
   //app.panel.destroy(); 
   mainView.router.refreshPage();

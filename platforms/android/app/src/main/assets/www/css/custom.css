@@ -538,7 +538,7 @@ div.container4 img {
   margin-top: 15%; 
 }
 .mt-5{
-  margin-top: 5%; 
+  margin-top: 5%!important; 
 }
 .mt-2{
   margin-top: 2%;
@@ -551,6 +551,9 @@ div.container4 img {
 }
 .nobg{
   background-color: #fff;
+}
+.no_background{
+  background: none!important;
 }
 .tabhgt{
   height: auto!important;

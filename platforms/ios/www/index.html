@@ -76,34 +76,50 @@
   <div class="view view-main view-init" data-url="/">
     <div class="page no-navbar no-swipeback" data-name="index">
     <!-- Fixed Toolbar --> 
-    <div class="toolbar toolbar-bottom no-bg dynamic_toolbar">
-    </div>
-    <div class="toolbar toolbar-bottom no-bg">
-      <div class="toolbar-inner">
-        <a class="link text-white text-uppercase" href="/login/">skip</a>
-        <a class="link text-white"><div class="swiper-pagination"></div></a>
-        <span class="lastslide slideimg">
-          <a class="link text-white text-uppercase fnext" onclick="nextSlide()">next</a>
-          <a class="link text-white text-uppercase gotit" href="/login/">got it</a>
-        </span>
+    <div class="toolbar toolbar-bottom login-toolbar">
+  <div class="toolbar-inner">
+    <a class="col button button-raised button-large text-white fs-12 w-50 no-radius" href="/partner_register/">Sign up as Partner</a>
+    <a class="col button button-raised button-large text-white fs-12 w-50 no-radius" href="/customer_register/">Sign up as Customer</a>
+  </div>
+</div> 
+  <div class="page-content login-screen-content"> 
+    <div class="skipnow"><div class="skipbtn"><a href="/customer_dash/">Skip for now&nbsp;&nbsp;<div class="f7-icons skiparrow">chevron_right_2</div></a></div></div>             
+    <div class="login-content">
+      <div class="logo">
+        <a href="#"><span class="text-white text-uppercase" id="app_ID">d<!--i class="f7-icons text-white">smiley_fill</i><i class="f7-icons text-white">smiley_fill</i-->oorstep</span></a>
       </div>
-    </div>
+      <form id='login_form' class="login_form">
+        <div id="reg_formDiv">      
+          <div class="inputbox">
+              <i class="f7-icons text-white">phone_fill</i> 
+              <input type="number" placeholder="Mobile No" name="mobile_num" id='mob_login' class="pholder mobile_no" onkeyup="isNumber(event,this.value)">
+          </div>
+          <span class="text-left text-red mt-0" id='umoberror'></span>
+                  
+          <div class="inputbox">
+              <i class="f7-icons text-white">lock_fill</i>
+              <span class="showpass" ><span onclick="showpassword('show')" class="f7-icons text-white display-none fs-18" >eye</span></span>
+              <input type="password" placeholder="Password" id='pass' name="u_pass" class="pholder pass l_pass" onkeyup="showeye()">
+          </div>
+          <span class="text-left text-red mt-0" id='passerror'></span>
+                  
+          <div class="login-button submit-box text-uppercase">
+              <a href="#" onclick="logincheck()">Log In</a>
+          </div>
 
-      <div class="page-content">
-        <div id="sliders">           
-          <div class="swiper-container swiper-init demo-swiper ">            
-            <div class="swiper-wrapper">              
-              <div class="swiper-slide"><img src="img/slider_1.jpg" class="w-100"><div class="centered">It's salon time <div class="f7-icons smiley">smiley_fill</div></div></div>
-              <div class="swiper-slide" id="sec_img"><img src="img/slider_2.jpg" class="w-100"><div class="centered">It's yoga time <div class="f7-icons smiley">smiley_fill</div></div></div> 
-              <div class="swiper-slide" id="third_img"><img src="img/slider_3.jpg" class="w-100"><div class="centered">It's gym time <div class="f7-icons smiley">smiley_fill</div></div></div> 
-            </div> 
-            <!--div class="swiper-button-prev"></div>
-            <div class="swiper-button-next"></div--> 
-            <!--div class="skipnow"><div class="skipbtn">Skip for now&nbsp;&nbsp;<div class="f7-icons skiparrow">chevron_right_2</div></div></div-->           
-            <!--div class="swiper-pagination"></div-->
-          </div>                 
+
+          <div class="submit-box text-uppercase mt-5">
+              <a href="/forgot_password/" class="no_background text-white fs-12">Forgot Password?</a>
+          </div> 
+
         </div>
-      </div>      
+      </form>
+      
+      <!--p>Don’t have an account ? <a data-popup=".popup-register" class="open-popup" href="sign-up.html">Sign Up</a></p><br><br-->                  
+    </div>
+  </div>
+
+      <!--div class="page-content"></div-->      
     </div>
   </div>
 </div>  
